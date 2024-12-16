@@ -1,0 +1,161 @@
+{
+  "Steps": [
+    {
+      "StepName": "Choose Focus",
+      "StepValues": [
+        {
+          "name": "Focus",
+          "type": "select",
+          "values": [
+            {
+              "value": "sprachlich",
+              "displayText": "Sprachlich"
+            },
+            {
+              "value": "künstlerisch",
+              "displayText": "Künstlerisch-Musisch"
+            },
+            {
+              "value": "gesellschaftswissenschaftlich",
+              "displayText": "Gesellschaftswissenschaftlich"
+            },
+            {
+              "value": "mathematisch",
+              "displayText": "Mathematisch-Naturwissenschaftlich"
+            },
+            {
+              "value": "sport",
+              "displayText": "Sport"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "StepName": "Select Prüfungsfächer (P1-P5)",
+      "StepValues": [
+        {
+          "name": "P1",
+          "type": "dropdown",
+          "values": [
+            {
+              "value": "Deutsch",
+              "displayText": "Deutsch",
+              "types": [
+                "hauptfach"
+              ],
+              "unique": "*",
+              "conditions": {
+                "Focus": "sprachlich"
+              }
+            },
+            {
+              "value": "Englisch",
+              "displayText": "Englisch",
+              "unique": "*",
+              "conditions": {
+                "Focus": [
+                  "sprachlich",
+                  "künstlerisch"
+                ]
+              }
+            },
+            {
+              "value": "Mathematik",
+              "displayText": "Mathematik",
+              "unique": "*",
+              "conditions": {
+                "Focus": [
+                  "mathematisch",
+                  "sport"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "P2",
+          "type": "dropdown",
+          "values": [
+            {
+              "value": "Kunst",
+              "displayText": "Kunst",
+              "conditions": {
+                "Focus": "künstlerisch"
+              }
+            },
+            {
+              "value": "Geschichte",
+              "displayText": "Geschichte",
+              "conditions": {
+                "Focus": "gesellschaftswissenschaftlich"
+              }
+            }
+          ]
+        },
+        {
+          "name": "P3",
+          "type": "dropdown",
+          "values": [
+            {
+              "value": "Physik",
+              "displayText": "Physik",
+              "types": [
+                "p3_p5"
+              ],
+              "conditions": {
+                "Focus": "mathematisch"
+              }
+            },
+            {
+              "value": "Politik-Wirtschaft",
+              "displayText": "Politik-Wirtschaft",
+              "conditions": {}
+            },
+            {
+              "value": "Sport",
+              "displayText": "Sport",
+              "conditions": {
+                "Focus": "sport"
+              }
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        {
+          "conditionName": "hauptfächer_vorhanden",
+          "conditionError": "Du musst mindestens zwei Hauptfächer als Prüfungsfächer wählen!",
+          "conditionLogic": [
+            {
+              "logicType": "greaterOrEqual",
+              "value": "hauptfächer",
+              "conditionValue": 2
+            }
+          ]
+        },
+        {
+          "conditionName": "aufgabenfelder_abgedeckt",
+          "conditionError": "Du musst alle Aufgabenfelder abgedeckt haben!",
+          "conditionLogic": [
+            {
+              "logicType": "greaterOrEqual",
+              "value": "sprachlich_literarisch_künstlerich",
+              "conditionValue": 1
+            },
+            {
+              "logicType": "greaterOrEqual",
+              "value": "gesellschaftswissenschaftlich",
+              "conditionValue": 1
+            },
+            {
+              "logicType": "greaterOrEqual",
+              "value": "mathematisch_naturwissenschaftlich_technisch",
+              "conditionValue": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

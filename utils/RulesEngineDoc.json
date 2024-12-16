@@ -1,0 +1,136 @@
+{
+  "Steps": [
+    {
+      "StepName": "ExampleStep",
+      "StepKey": "exstep",
+      "StepValues": [
+        {
+          "name": "ExampleSelectStep",
+          "type": "select",
+          "values": [
+            {
+              "value": "value1",
+              "displayText": "Value 1"
+            },
+            {
+              "value": "value2",
+              "displayText": "Value 2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "StepName": "ExampleStep Dropdown",
+      "StepValues": [
+        {
+          "name": "DropDown Uno",
+          "type": "dropdown",
+          "values": [
+            {
+              "value": "dropdownable_1",
+              "displayText": "DropDown 1",
+              "types": [
+                "dropdowngroup1",
+                "dropdowngroup2"
+              ],
+              "unique": "*",
+              "conditions": {
+                "exstep": "value1"
+              }
+            },
+            {
+              "value": "dropdownable_2",
+              "displayText": "DropDown 2",
+              "unique": "*",
+              "conditions": {
+                "exstep": "value2"
+              }
+            },
+            {
+              "value": "Mathematik",
+              "displayText": "Mathematik",
+              "unique": "*",
+              "conditions": {
+                "Focus": [
+                  "mathematisch",
+                  "sport"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DropDown Dos",
+          "type": "dropdown",
+          "values": [
+            {
+              "value": "dropdownable_1",
+              "displayText": "DropDown 1",
+              "types": [
+                "dropdowngroup2"
+              ],
+              "unique": "*",
+              "conditions": {
+                "exstep": "value2"
+              }
+            },
+            {
+              "value": "dropdownable_2",
+              "displayText": "DropDown 2",
+              "unique": "*",
+              "conditions": {
+                "exstep": "value2"
+              }
+            },
+            {
+              "value": "Mathematik",
+              "displayText": "Mathematik",
+              "unique": "*",
+              "conditions": {
+                "Focus": [
+                  "mathematisch",
+                  "sport"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        {
+          "conditionName": "cond_one",
+          "conditionError": "Du musst mindestens zwei Hauptfächer als Prüfungsfächer wählen!",
+          "conditionLogic": [
+            {
+              "logicType": "greaterOrEqual",
+              "value": "hauptfächer",
+              "conditionValue": 2
+            }
+          ]
+        },
+        {
+          "conditionName": "aufgabenfelder_abgedeckt",
+          "conditionError": "Du musst alle Aufgabenfelder abgedeckt haben!",
+          "conditionLogic": [
+            {
+              "logicType": "greaterOrEqual",
+              "value": "sprachlich_literarisch_künstlerich",
+              "conditionValue": 1
+            },
+            {
+              "logicType": "greaterOrEqual",
+              "value": "gesellschaftswissenschaftlich",
+              "conditionValue": 1
+            },
+            {
+              "logicType": "greaterOrEqual",
+              "value": "mathematisch_naturwissenschaftlich_technisch",
+              "conditionValue": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
