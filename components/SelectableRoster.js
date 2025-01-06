@@ -8,7 +8,7 @@ const SelectableRoster = ({ items, onSelectionChange }) => {
         if (id !== selectedId) {
             setSelectedId(id);
             if (onSelectionChange) {
-                const selectedItem = items.find((item) => item.id === id);
+                const selectedItem = items.find((item) => item.value === id);
                 onSelectionChange(selectedItem);
             }
         }
@@ -20,7 +20,7 @@ const SelectableRoster = ({ items, onSelectionChange }) => {
                 <SelectableElement
                     key={item.value}
                     text={item.displayText}
-                    isActive={true}
+                    isActive={!item.disabled}
                     isSelected={selectedId === item.value}
                     infoButton={!!item.info}
                     onClick={() => handleSelect(item.value)}

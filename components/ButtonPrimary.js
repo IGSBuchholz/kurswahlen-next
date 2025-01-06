@@ -4,7 +4,7 @@ import clsx from "clsx";
 function ButtonPrimary({ text = "ButtonPrimary", isActive = true, callback }) {
     return (
         <button
-            onClick={callback}
+            onClick={() => {if(isActive) {callback()}}}
             className={clsx(
                 "p-2 text-white rounded-md text-center",
                 isActive ? "bg-blue-500" : "bg-gray-300"

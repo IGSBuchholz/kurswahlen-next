@@ -1,70 +1,151 @@
 "use client";
 import Step1 from "@/components/steps/step1";
-import { useSearchParams } from 'next/navigation'
-import Step2 from "@/components/steps/step2";
-import {useEffect} from "react";
-import {evaluateRules, getStepUI, setupEngine} from "@/utils/RulesEngine";
+import {usePathname, useSearchParams} from 'next/navigation'
+import { useEffect, useState } from "react";
+import {evaluateRules, getStepUI, setupEngine, StepUI} from "@/utils/RulesEngine";
+import Link from "next/link";
+import ButtonPrimary from "@/components/ButtonPrimary";
 
-export default function Progress(){
+export default function Progress() {
+    const searchParams = useSearchParams();
+    const pathname = usePathname()
+    const initialStepNumber = parseInt(searchParams.get("step")) || 0; // Default to 0 if step is null
+    const [stepNumber, setStepNumber] = useState(initialStepNumber); // Step number state
 
+    const [currentStepData, setCurrentStepData] = useState({});
+    const [context, setContext] = useState(new Map()); // State to hold the JSON data
+    const [loading, setLoading] = useState(true);  // Loading state
 
-    const searchParams = useSearchParams()
-    const stepNumber = searchParams.get("step")
-    console.log(stepNumber)
-    return <>
-        <div className="h-screen flex items-center justify-center drop-shadow-xl ">
-            <div className="bg-white w-96 p-4 rounded-md">
-                {stepNumber == 1 ? getStepUI({
-                    "StepName": "Choose Focus",
-                    "StepValues": [
-                        {
-                                "name": "Focus",
-                                "type": "select",
-                                "values": [
-                                    {"value": "sprachlich", "displayText": "Sprachlich"},
-                                    {"value": "künstlerisch", "displayText": "Künstlerisch-Musisch"},
-                                    {
-                                        "value": "gesellschaftswissenschaftlich",
-                                        "displayText": "Gesellschaftswissenschaftlich"
-                                    },
-                                    {"value": "mathematisch", "displayText": "Mathematisch-Naturwissenschaftlich"},
-                                    {"value": "sport", "displayText": "Sport"}
-                                ]
-                        }
-                    ]
-                }) : (stepNumber == 2) ? getStepUI({
-                    "StepName": "Select Prüfungsfächer (P1-P5)",
-                    "StepValues": [
-                        {
-                            "name": "P1",
-                            "type": "dropdown",
-                            "values": [
-                                { "value": "Deutsch", "displayText": "Deutsch", "conditions": { "Focus": "sprachlich" } },
-                                { "value": "Englisch", "displayText": "Englisch", "conditions": { "Focus": ["sprachlich", "künstlerisch"] } },
-                                { "value": "Mathematik", "displayText": "Mathematik", "conditions": { "Focus": ["mathematisch", "sport"] } }
-                            ]
-                        },
-                        {
-                            "name": "P2",
-                            "type": "dropdown",
-                            "values": [
-                                { "value": "Kunst", "displayText": "Kunst", "conditions": { "Focus": "künstlerisch" } },
-                                { "value": "Geschichte", "displayText": "Geschichte", "conditions": { "Focus": "gesellschaftswissenschaftlich" } }
-                            ]
-                        },
-                        {
-                            "name": "P3",
-                            "type": "dropdown",
-                            "values": [
-                                { "value": "Physik", "displayText": "Physik", "conditions": { "Focus": "mathematisch" } },
-                                { "value": "Politik-Wirtschaft", "displayText": "Politik-Wirtschaft", "conditions": {} },
-                                { "value": "Sport", "displayText": "Sport", "conditions": { "Focus": "sport" } }
-                            ]
-                        }
-                    ]
-                }) : ""}
+    const [canProcced, setCanProcced] = useState(false);
+    const [stepData, setStepData] = useState({});
+    const [messages, setMessages] = useState(new Map([
+        ]
+    ));
+
+    useEffect(() => {
+        // Fetch JSON data from the web file
+        async function fetchStepData() {
+            try {
+                const response = await fetch('/crs/sample.json'); // Replace with your JSON URL
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                setStepData(data); // Set the fetched data
+                setCurrentStepData(data.Steps[initialStepNumber])
+            } catch (error) {
+                console.error("Error fetching JSON:", error);
+            } finally {
+                setLoading(false); // Update loading state
+            }
+        }
+
+        fetchStepData();
+    }, []);
+
+    useEffect(() => {
+        if(!stepData || !stepData.Steps) {
+            return
+        }
+        setCurrentStepData(stepData.Steps[stepNumber])
+    }, [stepNumber]);
+
+    function renderNotifications() {
+        let notifications = [];
+        messages.forEach((value, key) => {
+            switch (value.toLowerCase()) {
+                case "info":
+                    notifications.push(
+                        <div key={value + "_" + key.value + "-" + key.name} className="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
+                            <span className="font-bold">{key.name != "" ? key.name : "Info. "}</span> {key.value}
+                        </div>
+                    );
+                    break;
+                case "error":
+                    notifications.push(
+                        <div key={value + "_" + key.value + "-" + key.name}  className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+                            <span className="font-bold">{key.name != "" ? key.name : "Achtung! "}</span> {key.value}
+                        </div>
+                    )
+                    break;
+                case "success":
+                    notifications.push(
+                        <div  key={value + "_" + key.value + "-" + key.name} className="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+                            <span className="font-bold">{key.name != "" ? key.name : "Erfolg! "}</span> {key.value}
+                        </div>
+                    )
+                    break;
+                case "warning":
+                    notifications.push(
+                        <div key={value + "_" + key.value + "-" + key.name}  className="p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300" role="alert">
+                            <span className="font-bold">{key.name != "" ? key.name : "Warnung! "}</span> {key.value}
+                        </div>
+                    )
+                    break;
+                case "info2":
+                    notifications.push(
+                        <div key={value + "_" + key.value + "-" + key.name}  className="p-4 text-sm text-gray-800 rounded-lg bg-gray-100 dark:bg-gray-800 dark:text-gray-300" role="alert">
+                            <span className="font-bold">{key.name != "" ? key.name : "Info. "}</span> {key.value}
+                        </div>
+                    )
+            }
+        })
+        return notifications;
+    }
+
+    if (loading) {
+        return (
+            <div className="h-screen flex items-center justify-center">
+
+                <div role="status">
+                    <svg aria-hidden="true"
+                         className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+                         viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                            fill="currentColor"/>
+                        <path
+                            d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                            fill="currentFill"/>
+                    </svg>
+                    <span className="sr-only">Loading...</span>
+                </div>
+
             </div>
-        </div>
-    </>
+        );
+    }
 
+    if (!stepData) {
+        return (
+            <div className="h-screen flex items-center justify-center">
+                <p>Error loading data. Please try again later.</p>
+            </div>
+        );
+    }
+
+
+    return (
+        <>
+            <div className={"absolute z-50"}>
+                <div className="w-screen     flex items-center justify-center ">
+                    <div className={"block mt-24"}>
+                        {renderNotifications()}
+                    </div>
+                </div>
+            </div>
+            <div className="h-screen flex items-center justify-center drop-shadow-xl">
+                <div className="bg-white w-96 p-4 rounded-md">
+                    {stepData.Steps != null && stepData.Steps.length > 0 && stepNumber >= 0 ?
+                        <StepUI step={currentStepData} number={stepNumber} initialContext={context}
+                                setContext={setContext} setMessages={setMessages} messages={messages} setCanProcced={setCanProcced}></StepUI>
+                        : <h1>Loading...</h1>
+                    }
+                    <ButtonPrimary isActive={canProcced} text={"Weiter"} callback={() => {
+                        setStepNumber(stepNumber + 1)
+                        setCanProcced(false)
+                    }}></ButtonPrimary>
+                </div>
+            </div>
+        </>
+    );
 }

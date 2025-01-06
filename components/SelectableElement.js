@@ -10,7 +10,11 @@ const SelectableElement = ({
                            }) => {
     return (
         <button
-            onClick={onClick}
+            onClick={() => {
+                if(isActive) {
+                    onClick();
+                }
+            }}
             className={`flex items-center justify-between rounded-md ring-2 text-left ${
                 isActive && isSelected
                     ? "bg-primarybutton text-white"
@@ -18,6 +22,7 @@ const SelectableElement = ({
                         ? "bg-white text-black"
                         : "bg-gray-300"
             }`}
+
         >
             <span className={"p-2"}>{text}</span>
             {infoButton && (
