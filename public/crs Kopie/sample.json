@@ -404,8 +404,7 @@
                 }
               ],
               "groups": [
-                "mathematisch-naturwissenschaftlich-technisch",
-                "naturwissenschaft_p3-p5"
+                "mathematisch-naturwissenschaftlich-technisch"
               ]
             },
             {
@@ -446,8 +445,7 @@
               ],
               "groups":[
                 "hauptfach",
-                "sprachlich-literarisch-kuenstlerisch",
-                "fremdsprache_p3-p5"
+                "sprachlich-literarisch-kuenstlerisch"
               ]
             },
             {
@@ -463,8 +461,7 @@
               ],
               "groups": [
                 "sprachlich-literarisch-kuenstlerisch",
-                "fremdsprache",
-                "fremdsprache_p3-p5"
+                "fremdsprache"
               ]
             },
             {
@@ -501,8 +498,7 @@
               ],
               "groups": [
                 "sprachlich-literarisch-kuenstlerisch",
-                "fremdsprache",
-                "fremdsprache_p3-p5"
+                "fremdsprache"
               ]
             },
             {
@@ -518,8 +514,7 @@
               ],
               "groups": [
                 "sprachlich-literarisch-kuenstlerisch",
-                "fremdsprache",
-                "fremdsprache_p3-p5"
+                "fremdsprache"
               ]
             },
             {
@@ -534,8 +529,7 @@
                 }
               ],
               "groups": [
-                "sprachlich-literarisch-kuenstlerisch",
-                "kuenstler_p3-p5"
+                "sprachlich-literarisch-kuenstlerisch"
               ]
             },
             {
@@ -550,8 +544,7 @@
                 }
               ],
               "groups": [
-                "sprachlich-literarisch-kuenstlerisch",
-                "kuenstler_p3-p5"
+                "sprachlich-literarisch-kuenstlerisch"
               ]
             },
             {
@@ -581,8 +574,7 @@
                 }
               ],
               "groups": [
-                "gesellschafts-wissenschaftlich",
-                "philo-reli_p3-p5"
+                "gesellschafts-wissenschaftlich"
               ]
             },
             {
@@ -613,8 +605,7 @@
                 }
               ],
               "groups": [
-                "gesellschafts-wissenschaftlich",
-                "naturwissenschaft_p3-p5"
+                "gesellschafts-wissenschaftlich"
               ]
             },
             {
@@ -629,8 +620,7 @@
                 }
               ],
               "groups": [
-                "mathematisch-naturwissenschaftlich-technisch",
-                "naturwissenschaft_p3-p5"
+                "mathematisch-naturwissenschaftlich-technisch"
               ]
             },
             {
@@ -643,9 +633,6 @@
                   "value": "0_Focus",
                   "conditionValue": ["mathematisch", "sprachlich", "kuenstlerisch", "sportlich"]
                 }
-              ],
-              "groups":[
-                "philo-reli_p3-p5"
               ]
             }
           ]
@@ -672,8 +659,7 @@
               "conditions": [],
               "groups": [
                 "hauptfach",
-                "sprachlich-literarisch-kuenstlerisch",
-                "fremdsprache_p3-p5"
+                "sprachlich-literarisch-kuenstlerisch"
               ]
             },
             {
@@ -683,8 +669,7 @@
               "conditions": [],
               "groups": [
                 "sprachlich-literarisch-kuenstlerisch",
-                "fremdsprache",
-                "fremdsprache_p3-p5"
+                "fremdsprache"
               ]
             },
             {
@@ -694,8 +679,7 @@
               "conditions": [],
               "groups": [
                 "sprachlich-literarisch-kuenstlerisch",
-                "fremdsprache",
-                "fremdsprache_p3-p5"
+                "fremdsprache"
               ]
             },
             {
@@ -705,8 +689,7 @@
               "conditions": [],
               "groups": [
                 "sprachlich-literarisch-kuenstlerisch",
-                "fremdsprache",
-                "fremdsprache_p3-p5"
+                "fremdsprache"
               ]
             },
             {
@@ -716,8 +699,7 @@
               "conditions": [],
               "groups": [
                 "sprachlich-literarisch-kuenstlerisch",
-                "fremdsprache",
-                "kuenstler_p3-p5"
+                "fremdsprache"
               ]
             },
             {
@@ -726,8 +708,7 @@
               "unique": "*",
               "conditions": [],
               "groups": [
-                "sprachlich-literarisch-kuenstlerisch",
-                "kuenstler_p3-p5"
+                "sprachlich-literarisch-kuenstlerisch"
               ]
             },
             {
@@ -763,8 +744,7 @@
               "unique": "*",
               "conditions": [],
               "groups": [
-                "gesellschafts-wissenschaftlich",
-                "philo-reli_p3-p5"
+                "gesellschafts-wissenschaftlich"
               ]
             },
             {
@@ -783,8 +763,7 @@
               "unique": "*",
               "conditions": [],
               "groups": [
-                "mathematisch-naturwissenschaftlich-technisch",
-                "naturwissenschaft_p3-p5"
+                "mathematisch-naturwissenschaftlich-technisch"
               ]
             },
             {
@@ -793,8 +772,7 @@
               "unique": "*",
               "conditions": [],
               "groups": [
-                "mathematisch-naturwissenschaftlich-technisch",
-                "naturwissenschaft_p3-p5"
+                "mathematisch-naturwissenschaftlich-technisch"
               ]
             },
             {
@@ -803,8 +781,7 @@
               "unique": "*",
               "conditions": [],
               "groups": [
-                "mathematisch-naturwissenschaftlich-technisch",
-                "naturwissenschaft_p3-p5"
+                "mathematisch-naturwissenschaftlich-technisch"
               ]
             },
             {
@@ -813,8 +790,7 @@
               "unique": "*",
               "conditions": [],
               "groups": [
-                "gesellschafts-wissenschaftlich",
-                "philo-reli_p3-p5"
+                "gesellschafts-wissenschaftlich"
               ]
             }
           ]
@@ -840,8 +816,7 @@
               "conditions": [],
               "groups": [
                 "hauptfach",
-                "sprachlich-literarisch-kuenstlerisch",
-                "fremdsprache_p3-p5"
+                "sprachlich-literarisch-kuenstlerisch"
               ]
             },
             {
@@ -851,8 +826,7 @@
               "conditions": [],
               "groups": [
                 "sprachlich-literarisch-kuenstlerisch",
-                "fremdsprache",
-                "fremdsprache_p3-p5"
+                "fremdsprache"
               ]
             },
             {
@@ -862,8 +836,7 @@
               "conditions": [],
               "groups": [
                 "sprachlich-literarisch-kuenstlerisch",
-                "fremdsprache",
-                "fremdsprache_p3-p5"
+                "fremdsprache"
               ]
             },
             {
@@ -873,8 +846,7 @@
               "conditions": [],
               "groups": [
                 "sprachlich-literarisch-kuenstlerisch",
-                "fremdsprache",
-                "fremdsprache_p3-p5"
+                "fremdsprache"
               ]
             },
             {
@@ -883,8 +855,7 @@
               "unique": "*",
               "conditions": [],
               "groups": [
-                "sprachlich-literarisch-kuenstlerisch",
-                "kuenstler_p3-p5"
+                "sprachlich-literarisch-kuenstlerisch"
               ]
             },
             {
@@ -893,8 +864,7 @@
               "unique": "*",
               "conditions": [],
               "groups": [
-                "sprachlich-literarisch-kuenstlerisch",
-                "kuenstler_p3-p5"
+                "sprachlich-literarisch-kuenstlerisch"
               ]
             },
             {
@@ -930,8 +900,7 @@
               "unique": "*",
               "conditions": [],
               "groups": [
-                "gesellschafts-wissenschaftlich",
-                "philo-reli_p3-p5"
+                "gesellschafts-wissenschaftlich"
               ]
             },
             {
@@ -950,8 +919,7 @@
               "unique": "*",
               "conditions": [],
               "groups": [
-                "mathematisch-naturwissenschaftlich-technisch",
-                "naturwissenschaft_p3-p5"
+                "mathematisch-naturwissenschaftlich-technisch"
               ]
             },
             {
@@ -960,8 +928,7 @@
               "unique": "*",
               "conditions": [],
               "groups": [
-                "mathematisch-naturwissenschaftlich-technisch",
-                "naturwissenschaft_p3-p5"
+                "mathematisch-naturwissenschaftlich-technisch"
               ]
             },
             {
@@ -970,8 +937,7 @@
               "unique": "*",
               "conditions": [],
               "groups": [
-                "mathematisch-naturwissenschaftlich-technisch",
-                "naturwissenschaft_p3-p5"
+                "mathematisch-naturwissenschaftlich-technisch"
               ]
             },
             {
@@ -980,8 +946,7 @@
               "unique": "*",
               "conditions": [],
               "groups": [
-                "gesellschafts-wissenschaftlich",
-                "philo-reli_p3-p5"
+                "gesellschafts-wissenschaftlich"
               ]
             },
             {
@@ -990,8 +955,7 @@
               "unique": "*",
               "conditions": [],
               "groups": [
-                "sprachlich-literarisch-kuenstlerisch",
-                "kuenstler_p3-p5"
+                "sprachlich-literarisch-kuenstlerisch"
               ]
             },
             {
@@ -1078,63 +1042,27 @@
           "type":"dropdown",
           "values": [
             {
-              "value": "belegungsverpflichtung_erfüllt_fremdsprache",
-              "displayText": "Belegungsverpflichtung erfüllt",
-              "dontHide": false,
-              "conditions":[
-                {
-                  "logicType": "group_greaterOrEqual",
-                  "value": "fremdsprache_p3-p5",
-                  "conditionValue": 1
-                }
-              ]
-            },
-            {
-              "value": "englisch",
-              "displayText": "Englisch",
-              "dontHide": false,
-              "conditions":[
-                {
-                  "logicType": "!group_greaterOrEqual",
-                  "value": "fremdsprache_p3-p5",
-                  "conditionValue": 1
-                }
-              ]
-            },
-            {
               "value": "franzoesisch",
               "displayText": "Französisch",
-              "dontHide": false,
+              "dontHide": true,
               "conditions":[
-                {
-                  "logicType": "!group_greaterOrEqual",
-                  "value": "fremdsprache_p3-p5",
-                  "conditionValue": 1
-                }
+
               ]
             },
             {
               "value": "spanisch",
               "displayText": "Spanisch",
-              "dontHide": false,
+              "dontHide": true,
               "conditions":[
-                {
-                  "logicType": "!group_greaterOrEqual",
-                  "value": "fremdsprache_p3-p5",
-                  "conditionValue": 1
-                }
+                
               ]
             },
             {
               "value": "latein",
               "displayText": "Latein",
-              "dontHide": false,
+              "dontHide": true,
               "conditions":[
-                {
-                  "logicType": "!group_greaterOrEqual",
-                  "value": "fremdsprache_p3-p5",
-                  "conditionValue": 1
-                }
+                
               ]
             }
           ]
@@ -1144,51 +1072,27 @@
           "type":"dropdown",
           "values": [
             {
-              "value": "belegungsverpflichtung_erfüllt_kuenstler",
-              "displayText": "Belegungsverpflichtung erfüllt",
-              "dontHide": false,
-              "conditions":[
-                {
-                  "logicType": "group_greaterOrEqual",
-                  "value": "kuenstler_p3-p5",
-                  "conditionValue": 1
-                }
-              ]
-            },
-            {
               "value": "kunst",
               "displayText": "Kunst",
-              "dontHide": false,
+              "dontHide": true,
               "conditions":[
-                {
-                  "logicType": "!group_greaterOrEqual",
-                  "value": "kuenstler_p3-p5",
-                  "conditionValue": 1
-                }
+
               ]
             },
             {
               "value": "musik",
               "displayText": "Musik",
-              "dontHide": false,
+              "dontHide": true,
               "conditions":[
-                {
-                  "logicType": "!group_greaterOrEqual",
-                  "value": "kuenstler_p3-p5",
-                  "conditionValue": 1
-                }
+                
               ]
             },
             {
               "value": "dsp",
               "displayText": "Darstellendes Spiel",
-              "dontHide": false,
+              "dontHide": true,
               "conditions":[
-                {
-                  "logicType": "!group_greaterOrEqual",
-                  "value": "kuenstler_p3-p5",
-                  "conditionValue": 1
-                }
+                
               ]
             }
           ]
@@ -1258,39 +1162,19 @@
           "type":"dropdown",
           "values": [
             {
-              "value": "belegungsverpflichtung_erfüllt_philo-reli",
-              "displayText": "Belegungsverpflichtung erfüllt",
-              "dontHide": false,
-              "conditions":[
-                {
-                  "logicType": "group_greaterOrEqual",
-                  "value": "philo-reli_p3-p5",
-                  "conditionValue": 1
-                }
-              ]
-            },
-            {
               "value": "philosophie",
               "displayText": "Philosophie",
-              "dontHide": false,
+              "dontHide": true,
               "conditions":[
-                {
-                  "logicType": "!group_greaterOrEqual",
-                  "value": "philo-reli_p3-p5",
-                  "conditionValue": 1
-                }
+
               ]
             },
             {
               "value": "religion",
               "displayText": "Religion",
-              "dontHide": false,
+              "dontHide": true,
               "conditions":[
-                {
-                  "logicType": "!group_greaterOrEqual",
-                  "value": "philo-reli_p3-p5",
-                  "conditionValue": 1
-                }
+                
               ]
             }
           ]
@@ -1330,51 +1214,27 @@
           "type":"dropdown",
           "values": [
             {
-              "value": "belegungsverpflichtung_erfüllt_naturwissenschaften",
-              "displayText": "Physik",
-              "dontHide": false,
-              "conditions":[
-                {
-                  "logicType": "group_greaterOrEqual",
-                  "value": "naturwissenschaft_p3-p5",
-                  "conditionValue": 1
-                }
-              ]
-            },
-            {
               "value": "physik",
               "displayText": "Physik",
-              "dontHide": false,
+              "dontHide": true,
               "conditions":[
-                {
-                  "logicType": "!group_greaterOrEqual",
-                  "value": "naturwissenschaft_p3-p5",
-                  "conditionValue": 1
-                }
+
               ]
             },
             {
               "value": "chemie",
               "displayText": "Chemie",
-              "dontHide": false,
+              "dontHide": true,
               "conditions":[
-                {
-                  "logicType": "!group_greaterOrEqual",
-                  "value": "naturwissenschaft_p3-p5",
-                  "conditionValue": 1
-                }
+                
               ]
             },
             {
               "value": "biologie",
               "displayText": "Biologie",
-              "dontHide": false,
+              "dontHide": true,
               "conditions":[
-                {
-                  "logicType": "!group_greaterOrEqual",
-                  "value": "naturwissenschaft_p3-p5",
-                  "conditionValue": 1
-                }
+                
               ]
             }
           ]
@@ -1455,144 +1315,7 @@
               "value": "informatik",
               "displayText": "Informatik",
               "dontHide": false,
-              "unique": "*",
               "conditions": [
-                
-              ]
-            },
-            {
-              "value": "kunst",
-              "displayText": "Kunst",
-              "dontHide": false,
-              "unique": "*",
-              "conditions": [
-                
-              ]
-            },
-            {
-              "value": "musik",
-              "displayText": "Musik",
-              "dontHide": false,
-              "unique": "*",
-              "conditions": [
-                
-              ]
-            },
-            {
-              "value": "dsp",
-              "displayText": "Darstellendes Spiel",
-              "dontHide": false,
-              "unique": "*",
-              "conditions": [
-                
-              ]
-            },
-            {
-              "value": "politik-wirtschaft",
-              "displayText": "Politik-Wirtschaft",
-              "dontHide": false,
-	            "unique": "*",
-              "conditions": [
-
-              ]
-            },
-            {
-              "value": "geschichte",
-              "displayText": "Geschichte",
-              "dontHide": false,
-              "unique": "*",
-              "conditions": [
-                
-              ]
-            },
-            {
-              "value": "erdkunde",
-              "displayText": "Erdkunde",
-              "dontHide": false,
-              "unique": "*",
-              "conditions": [
-                
-              ]
-            },
-            {
-              "value": "biologie",
-              "displayText": "Biologie",
-              "dontHide": false,
-              "unique": "*",
-              "conditions": [
-                
-              ]
-            },
-            {
-              "value": "physik",
-              "displayText": "Physik",
-              "dontHide": false,
-              "unique": "*",
-              "conditions": [
-                
-              ]
-            },
-            {
-              "value": "chemie",
-              "displayText": "Chemie",
-              "dontHide": false,
-              "unique": "*",
-              "conditions": [
-                
-              ]
-            },
-            {
-              "value": "franzoesisch",
-              "displayText": "Französisch",
-              "dontHide": false,
-              "unique": "*",
-              "conditions": [
-                
-              ]
-            },
-            {
-              "value": "spanisch",
-              "displayText": "Spanisch",
-              "dontHide": false,
-              "unique": "*",
-              "conditions": [
-              
-              ]
-            },
-            {
-              "value": "latein",
-              "displayText": "Latein",
-              "dontHide": false,
-              "unique": "*",
-              "conditions": [
-                
-              ]
-            },
-            {
-              "value": "philosophie",
-              "displayText": "Philosophie",
-              "dontHide": false,
-              "unique": "*",
-              "conditions": [
-                
-              ]
-            },
-            {
-              "value": "religion",
-              "displayText": "Religion",
-              "dontHide": false,
-	            "unique": "*",
-              "conditions": [
-
-              ]
-            },
-            {
-              "value": "englisch",
-              "displayText": "Englisch",
-	            "unique": "*",
-              "dontHide": false,
-              "conditions": [
-              
               ]
             }
           ]
@@ -1601,3 +1324,4 @@
     }
   ]
 }
+

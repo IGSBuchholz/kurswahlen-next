@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import SelectableElement from "./SelectableElement";
 
-const SelectableRoster = ({ items, onSelectionChange }) => {
+const SelectableRoster = ({ items, onSelectionChange, standardvalue }) => {
     const [selectedId, setSelectedId] = useState(null);
 
     const handleSelect = (id) => {
@@ -14,10 +14,18 @@ const SelectableRoster = ({ items, onSelectionChange }) => {
         }
     };
 
+    useEffect(() => {
+        if(standardvalue) {
+            if(standardvalue != "") {
+                handleSelect(standardvalue)
+            }
+        }
+    }, []);
+
     return (
         <div className="flex flex-col space-y-4">
-            {items.map((item) => (
-                <SelectableElement
+            {items.map((item) => {
+                return <SelectableElement
                     key={item.value}
                     text={item.displayText}
                     isActive={!item.disabled}
@@ -25,7 +33,7 @@ const SelectableRoster = ({ items, onSelectionChange }) => {
                     infoButton={!!item.info}
                     onClick={() => handleSelect(item.value)}
                 />
-            ))}
+            })}
         </div>
     );
 };

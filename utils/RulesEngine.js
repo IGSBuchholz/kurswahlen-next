@@ -48,7 +48,6 @@ function evalLogic(logicType, value, conditionValue, context) {
                     return;
                 }
                 if (cValue.groups.includes(value)) {
-                    console.log(cValue)
                     counterGOE++;
                 }
             });
@@ -99,8 +98,8 @@ function evalLogic(logicType, value, conditionValue, context) {
         case "used_in_step":
             let step = value
             let wasUsed = conditionValue
+            if(name)
             context.forEach((cValue, key, map) => {
-                console.log(key)
                 if(key.startsWith(step + "_")) {
                     if(cValue.value == wasUsed) {
                         returnValue = true;
@@ -169,7 +168,7 @@ function finalCheckConditions(conditions = [], context = new Map(), setMessages,
 
 function stepEntriesInContext(context = new Map(), stepNumber) {
     let entries = 0
-    context.keys().forEach((key) => {
+    Array.from(context.keys()).forEach((key) => {
         if (key.startsWith(stepNumber + "_")) {
             entries++;
         }
@@ -202,6 +201,7 @@ export function StepUI({step, number = -1, initialContext = {}, setContext, setM
                     ...value,
                     disabled: !isValueDisabled || !isValueUnique,
                 });
+                return;
             }
             if(!isValueDisabled) {
                 return;
@@ -221,7 +221,6 @@ export function StepUI({step, number = -1, initialContext = {}, setContext, setM
         setLocalContext(newMap);
         setContext(newMap);
         updateUI()
-
         let filledOut = stepEntriesInContext(localContext, number)
         if (filledOut === StepValues.length) {
             finalCheckConditions(step.Conditions, localContext, setMessages, messages, setCanProcced)
@@ -230,7 +229,8 @@ export function StepUI({step, number = -1, initialContext = {}, setContext, setM
 
     const updateUI = () => {
         setStepValuesUI(StepValues.map((stepValue, index) => {
-            const {name, type, values} = stepValue;
+            const {name, type, values, standardvalue} = stepValue;
+
             const processedValues = reprocessValues(values, name);
             switch (type) {
                 case "dropdown":
@@ -239,6 +239,7 @@ export function StepUI({step, number = -1, initialContext = {}, setContext, setM
                             key={`${name}_${index}`}
                             items={processedValues}
                             context={localContext}
+                            standardvalue={standardvalue}
                             onSelectionChange={(selectedValue) => handleSelectionChange(selectedValue, name)}
                             placeholderText={name}
                         />
@@ -249,6 +250,7 @@ export function StepUI({step, number = -1, initialContext = {}, setContext, setM
                         <SelectableRoster
                             key={`${name}_${index}`}
                             items={processedValues}
+                            standardvalue={standardvalue}
                             context={localContext}
                             onSelectionChange={(selectedValue) => handleSelectionChange(selectedValue, name)}
                         />
@@ -312,7 +314,6 @@ function validateUnique(unique = "*", context = new Map(), inValue = {
             })
             return returnValue; // Beispiel für Schritt-Validierung
         case "groupName":
-            console.log("groupName", context)
             let res = true;
             context.forEach((value, key, map) => {
                 let groupToTest = split[1]
@@ -320,9 +321,7 @@ function validateUnique(unique = "*", context = new Map(), inValue = {
                     return;
                 }
                 if (value.groups.includes(groupToTest)) {
-                    if (((key == (stepNumber + "_" + name) && value.value === inValue.value))) {
-                        console.log("the value we are looking at");
-                    }else {
+                    if (!((key == (stepNumber + "_" + name) && value.value === inValue.value))) {
                         res = false;
                     }
                 }

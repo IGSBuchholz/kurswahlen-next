@@ -15,7 +15,7 @@ const SelectableElement = ({
                     onClick();
                 }
             }}
-            className={`flex items-center justify-between rounded-md ring-2 text-left ${
+            className={`flex items-center justify-between rounded-md ring-1 ring-gray-300 text-left ${
                 isActive && isSelected
                     ? "bg-primarybutton text-white"
                     : isActive

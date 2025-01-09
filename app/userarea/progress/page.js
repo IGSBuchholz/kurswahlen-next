@@ -1,7 +1,7 @@
 "use client";
 import Step1 from "@/components/steps/step1";
 import {usePathname, useSearchParams} from 'next/navigation'
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import {evaluateRules, getStepUI, setupEngine, StepUI} from "@/utils/RulesEngine";
 import Link from "next/link";
 import ButtonPrimary from "@/components/ButtonPrimary";
@@ -18,8 +18,7 @@ export default function Progress() {
 
     const [canProcced, setCanProcced] = useState(false);
     const [stepData, setStepData] = useState({});
-    const [messages, setMessages] = useState(new Map([
-        ]
+    const [messages, setMessages] = useState(new Map([]
     ));
 
     useEffect(() => {
@@ -44,7 +43,7 @@ export default function Progress() {
     }, []);
 
     useEffect(() => {
-        if(!stepData || !stepData.Steps) {
+        if (!stepData || !stepData.Steps) {
             return
         }
         setCurrentStepData(stepData.Steps[stepNumber])
@@ -56,35 +55,45 @@ export default function Progress() {
             switch (value.toLowerCase()) {
                 case "info":
                     notifications.push(
-                        <div key={value + "_" + key.value + "-" + key.name} className="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
-                            <span className="font-bold">{key.name != "" ? key.name : "Info. "}</span> {key.value}
+                        <div key={value + "_" + key.value + "-" + key.name}
+                             className="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
+                             role="alert">
+                            <span className="font-bold">{key.name !== "" ? key.name : "Info. "}</span> {key.value}
                         </div>
                     );
                     break;
                 case "error":
                     notifications.push(
-                        <div key={value + "_" + key.value + "-" + key.name}  className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
-                            <span className="font-bold">{key.name != "" ? key.name : "Achtung! "}</span> {key.value}
+                        <div key={value + "_" + key.value + "-" + key.name}
+                             className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+                             role="alert">
+                            <span className="font-bold">{key.name !== "" ? key.name : "Achtung! "}</span> {key.value}
                         </div>
                     )
                     break;
                 case "success":
                     notifications.push(
-                        <div  key={value + "_" + key.value + "-" + key.name} className="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+                        <div key={value + "_" + key.value + "-" + key.name}
+                             className="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400"
+                             role="alert">
                             <span className="font-bold">{key.name != "" ? key.name : "Erfolg! "}</span> {key.value}
                         </div>
                     )
                     break;
                 case "warning":
                     notifications.push(
-                        <div key={value + "_" + key.value + "-" + key.name}  className="p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300" role="alert">
+                        <div key={value + "_" + key.value + "-" + key.name}
+                             className="p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300"
+                             role="alert">
                             <span className="font-bold">{key.name != "" ? key.name : "Warnung! "}</span> {key.value}
                         </div>
                     )
                     break;
                 case "info2":
                     notifications.push(
-                        <div key={value + "_" + key.value + "-" + key.name}  className="p-4 text-sm text-gray-800 rounded-lg bg-gray-100 dark:bg-gray-800 dark:text-gray-300" role="alert">
+                        <div key={value + "_" + key.value + "-" + key.name}
+                             className="p-4 text-sm text-gray-800 rounded-lg bg-gray-100 dark:bg-gray-800 dark:text-gray-300"
+                             role="alert">
                             <span className="font-bold">{key.name != "" ? key.name : "Info. "}</span> {key.value}
                         </div>
                     )
@@ -115,30 +124,34 @@ export default function Progress() {
         );
     }
 
-    if (!stepData) {
-        return (
-            <div className="h-screen flex items-center justify-center">
-                <p>Error loading data. Please try again later.</p>
-            </div>
-        );
-    }
 
 
     return (
         <>
             <div className={"absolute z-50"}>
-                <div className="w-screen     flex items-center justify-center ">
+                <div className="w-screen flex items-center justify-center ">
                     <div className={"block mt-24"}>
                         {renderNotifications()}
                     </div>
                 </div>
             </div>
-            <div className="h-screen flex items-center justify-center drop-shadow-xl">
+            <div className="grid place-items-center h-screen">
                 <div className="bg-white w-96 p-4 rounded-md">
                     {stepData.Steps != null && stepData.Steps.length > 0 && stepNumber >= 0 ?
                         <StepUI step={currentStepData} number={stepNumber} initialContext={context}
-                                setContext={setContext} setMessages={setMessages} messages={messages} setCanProcced={setCanProcced}></StepUI>
-                        : <h1>Loading...</h1>
+                                setContext={setContext} setMessages={setMessages} messages={messages}
+                                setCanProcced={setCanProcced}></StepUI>
+                        : <h1>
+                            <div role="status"
+                                 className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center">
+                                <div className={"w-full"}>
+                                    <div className="h-4 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4"></div>
+                                    <div className="h-10 bg-gray-200 rounded-xl dark:bg-gray-700 w-full mb-4"></div>
+                                    <div className="h-10 bg-gray-200 rounded-xl dark:bg-gray-700 w-full mb-4"></div>
+                                    <div className="h-10 bg-gray-200 rounded-xl dark:bg-gray-700 w-full mb-4"></div>
+                                </div>
+                            </div>
+                        </h1>
                     }
                     <ButtonPrimary isActive={canProcced} text={"Weiter"} callback={() => {
                         setStepNumber(stepNumber + 1)

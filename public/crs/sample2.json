@@ -404,8 +404,7 @@
                 }
               ],
               "groups": [
-                "mathematisch-naturwissenschaftlich-technisch",
-                "naturwissenschaft_p3-p5"
+                "mathematisch-naturwissenschaftlich-technisch"
               ]
             },
             {
@@ -446,8 +445,7 @@
               ],
               "groups":[
                 "hauptfach",
-                "sprachlich-literarisch-kuenstlerisch",
-                "fremdsprache_p3-p5"
+                "sprachlich-literarisch-kuenstlerisch"
               ]
             },
             {
@@ -463,8 +461,7 @@
               ],
               "groups": [
                 "sprachlich-literarisch-kuenstlerisch",
-                "fremdsprache",
-                "fremdsprache_p3-p5"
+                "fremdsprache"
               ]
             },
             {
@@ -501,8 +498,7 @@
               ],
               "groups": [
                 "sprachlich-literarisch-kuenstlerisch",
-                "fremdsprache",
-                "fremdsprache_p3-p5"
+                "fremdsprache"
               ]
             },
             {
@@ -518,8 +514,7 @@
               ],
               "groups": [
                 "sprachlich-literarisch-kuenstlerisch",
-                "fremdsprache",
-                "fremdsprache_p3-p5"
+                "fremdsprache"
               ]
             },
             {
@@ -534,8 +529,7 @@
                 }
               ],
               "groups": [
-                "sprachlich-literarisch-kuenstlerisch",
-                "kuenstler_p3-p5"
+                "sprachlich-literarisch-kuenstlerisch"
               ]
             },
             {
@@ -550,8 +544,7 @@
                 }
               ],
               "groups": [
-                "sprachlich-literarisch-kuenstlerisch",
-                "kuenstler_p3-p5"
+                "sprachlich-literarisch-kuenstlerisch"
               ]
             },
             {
@@ -581,8 +574,7 @@
                 }
               ],
               "groups": [
-                "gesellschafts-wissenschaftlich",
-                "philo-reli_p3-p5"
+                "gesellschafts-wissenschaftlich"
               ]
             },
             {
@@ -613,8 +605,7 @@
                 }
               ],
               "groups": [
-                "gesellschafts-wissenschaftlich",
-                "naturwissenschaft_p3-p5"
+                "gesellschafts-wissenschaftlich"
               ]
             },
             {
@@ -629,8 +620,7 @@
                 }
               ],
               "groups": [
-                "mathematisch-naturwissenschaftlich-technisch",
-                "naturwissenschaft_p3-p5"
+                "mathematisch-naturwissenschaftlich-technisch"
               ]
             },
             {
@@ -643,9 +633,6 @@
                   "value": "0_Focus",
                   "conditionValue": ["mathematisch", "sprachlich", "kuenstlerisch", "sportlich"]
                 }
-              ],
-              "groups":[
-                "philo-reli_p3-p5"
               ]
             }
           ]
@@ -672,8 +659,7 @@
               "conditions": [],
               "groups": [
                 "hauptfach",
-                "sprachlich-literarisch-kuenstlerisch",
-                "fremdsprache_p3-p5"
+                "sprachlich-literarisch-kuenstlerisch"
               ]
             },
             {
@@ -683,8 +669,7 @@
               "conditions": [],
               "groups": [
                 "sprachlich-literarisch-kuenstlerisch",
-                "fremdsprache",
-                "fremdsprache_p3-p5"
+                "fremdsprache"
               ]
             },
             {
@@ -694,8 +679,7 @@
               "conditions": [],
               "groups": [
                 "sprachlich-literarisch-kuenstlerisch",
-                "fremdsprache",
-                "fremdsprache_p3-p5"
+                "fremdsprache"
               ]
             },
             {
@@ -705,8 +689,7 @@
               "conditions": [],
               "groups": [
                 "sprachlich-literarisch-kuenstlerisch",
-                "fremdsprache",
-                "fremdsprache_p3-p5"
+                "fremdsprache"
               ]
             },
             {
@@ -716,8 +699,7 @@
               "conditions": [],
               "groups": [
                 "sprachlich-literarisch-kuenstlerisch",
-                "fremdsprache",
-                "kuenstler_p3-p5"
+                "fremdsprache"
               ]
             },
             {
@@ -726,8 +708,7 @@
               "unique": "*",
               "conditions": [],
               "groups": [
-                "sprachlich-literarisch-kuenstlerisch",
-                "kuenstler_p3-p5"
+                "sprachlich-literarisch-kuenstlerisch"
               ]
             },
             {
@@ -763,8 +744,7 @@
               "unique": "*",
               "conditions": [],
               "groups": [
-                "gesellschafts-wissenschaftlich",
-                "philo-reli_p3-p5"
+                "gesellschafts-wissenschaftlich"
               ]
             },
             {
@@ -783,8 +763,7 @@
               "unique": "*",
               "conditions": [],
               "groups": [
-                "mathematisch-naturwissenschaftlich-technisch",
-                "naturwissenschaft_p3-p5"
+                "mathematisch-naturwissenschaftlich-technisch"
               ]
             },
             {
@@ -793,8 +772,7 @@
               "unique": "*",
               "conditions": [],
               "groups": [
-                "mathematisch-naturwissenschaftlich-technisch",
-                "naturwissenschaft_p3-p5"
+                "mathematisch-naturwissenschaftlich-technisch"
               ]
             },
             {
@@ -803,8 +781,7 @@
               "unique": "*",
               "conditions": [],
               "groups": [
-                "mathematisch-naturwissenschaftlich-technisch",
-                "naturwissenschaft_p3-p5"
+                "mathematisch-naturwissenschaftlich-technisch"
               ]
             },
             {
@@ -813,8 +790,7 @@
               "unique": "*",
               "conditions": [],
               "groups": [
-                "gesellschafts-wissenschaftlich",
-                "philo-reli_p3-p5"
+                "gesellschafts-wissenschaftlich"
               ]
             }
           ]
@@ -840,8 +816,7 @@
               "conditions": [],
               "groups": [
                 "hauptfach",
-                "sprachlich-literarisch-kuenstlerisch",
-                "fremdsprache_p3-p5"
+                "sprachlich-literarisch-kuenstlerisch"
               ]
             },
             {
@@ -851,8 +826,7 @@
               "conditions": [],
               "groups": [
                 "sprachlich-literarisch-kuenstlerisch",
-                "fremdsprache",
-                "fremdsprache_p3-p5"
+                "fremdsprache"
               ]
             },
             {
@@ -862,8 +836,7 @@
               "conditions": [],
               "groups": [
                 "sprachlich-literarisch-kuenstlerisch",
-                "fremdsprache",
-                "fremdsprache_p3-p5"
+                "fremdsprache"
               ]
             },
             {
@@ -873,8 +846,7 @@
               "conditions": [],
               "groups": [
                 "sprachlich-literarisch-kuenstlerisch",
-                "fremdsprache",
-                "fremdsprache_p3-p5"
+                "fremdsprache"
               ]
             },
             {
@@ -883,8 +855,7 @@
               "unique": "*",
               "conditions": [],
               "groups": [
-                "sprachlich-literarisch-kuenstlerisch",
-                "kuenstler_p3-p5"
+                "sprachlich-literarisch-kuenstlerisch"
               ]
             },
             {
@@ -893,8 +864,7 @@
               "unique": "*",
               "conditions": [],
               "groups": [
-                "sprachlich-literarisch-kuenstlerisch",
-                "kuenstler_p3-p5"
+                "sprachlich-literarisch-kuenstlerisch"
               ]
             },
             {
@@ -930,8 +900,7 @@
               "unique": "*",
               "conditions": [],
               "groups": [
-                "gesellschafts-wissenschaftlich",
-                "philo-reli_p3-p5"
+                "gesellschafts-wissenschaftlich"
               ]
             },
             {
@@ -950,8 +919,7 @@
               "unique": "*",
               "conditions": [],
               "groups": [
-                "mathematisch-naturwissenschaftlich-technisch",
-                "naturwissenschaft_p3-p5"
+                "mathematisch-naturwissenschaftlich-technisch"
               ]
             },
             {
@@ -960,8 +928,7 @@
               "unique": "*",
               "conditions": [],
               "groups": [
-                "mathematisch-naturwissenschaftlich-technisch",
-                "naturwissenschaft_p3-p5"
+                "mathematisch-naturwissenschaftlich-technisch"
               ]
             },
             {
@@ -970,8 +937,7 @@
               "unique": "*",
               "conditions": [],
               "groups": [
-                "mathematisch-naturwissenschaftlich-technisch",
-                "naturwissenschaft_p3-p5"
+                "mathematisch-naturwissenschaftlich-technisch"
               ]
             },
             {
@@ -980,8 +946,7 @@
               "unique": "*",
               "conditions": [],
               "groups": [
-                "gesellschafts-wissenschaftlich",
-                "philo-reli_p3-p5"
+                "gesellschafts-wissenschaftlich"
               ]
             },
             {
@@ -990,8 +955,7 @@
               "unique": "*",
               "conditions": [],
               "groups": [
-                "sprachlich-literarisch-kuenstlerisch",
-                "kuenstler_p3-p5"
+                "sprachlich-literarisch-kuenstlerisch"
               ]
             },
             {
@@ -1081,23 +1045,35 @@
               "value": "belegungsverpflichtung_erfüllt_fremdsprache",
               "displayText": "Belegungsverpflichtung erfüllt",
               "dontHide": false,
+              "unique": "none",
               "conditions":[
                 {
-                  "logicType": "group_greaterOrEqual",
-                  "value": "fremdsprache_p3-p5",
-                  "conditionValue": 1
-                }
-              ]
-            },
-            {
-              "value": "englisch",
-              "displayText": "Englisch",
-              "dontHide": false,
-              "conditions":[
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "conditionValue": "franzoesisch"
+                },
                 {
-                  "logicType": "!group_greaterOrEqual",
-                  "value": "fremdsprache_p3-p5",
-                  "conditionValue": 1
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "conditionValue": "spanisch"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "latein"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "franzoesisch"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "englisch"
                 }
               ]
             },
@@ -1107,9 +1083,32 @@
               "dontHide": false,
               "conditions":[
                 {
-                  "logicType": "!group_greaterOrEqual",
-                  "value": "fremdsprache_p3-p5",
-                  "conditionValue": 1
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "conditionValue": "franzoesisch"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "conditionValue": "spanisch"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "latein"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "franzoesisch"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "englisch"
                 }
               ]
             },
@@ -1119,9 +1118,27 @@
               "dontHide": false,
               "conditions":[
                 {
-                  "logicType": "!group_greaterOrEqual",
-                  "value": "fremdsprache_p3-p5",
-                  "conditionValue": 1
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "franzoesisch"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "conditionValue": "spanisch"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "latein"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "englisch"
                 }
               ]
             },
@@ -1131,9 +1148,88 @@
               "dontHide": false,
               "conditions":[
                 {
-                  "logicType": "!group_greaterOrEqual",
-                  "value": "fremdsprache_p3-p5",
-                  "conditionValue": 1
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "franzoesisch"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "spanisch"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "conditionValue": "latein"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "englisch"
+                }
+              ]
+            },
+            {
+              "value": "englisch",
+              "displayText": "Englisch",
+              "dontHide": true,
+              "conditions":[
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "conditionValue": "englisch"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "franzoesisch"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "spanisch"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "latein"
+                }
+              ]
+            },
+            {
+              "value": "belegungsverpflichtung_erfüllt_fremdsprache",
+              "displayText": "Belegungsverpflichtung erfüllt",
+              "dontHide": false,
+              "conditions":[
+                {
+                  "logicType": "used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "franzoesisch"
+                },
+                {
+                  "logicType": "used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "spanisch"
+                },
+                {
+                  "logicType": "used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "latein"
+                },
+                {
+                  "logicType": "used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "englisch"
                 }
               ]
             }
@@ -1144,50 +1240,99 @@
           "type":"dropdown",
           "values": [
             {
-              "value": "belegungsverpflichtung_erfüllt_kuenstler",
-              "displayText": "Belegungsverpflichtung erfüllt",
-              "dontHide": false,
-              "conditions":[
-                {
-                  "logicType": "group_greaterOrEqual",
-                  "value": "kuenstler_p3-p5",
-                  "conditionValue": 1
-                }
-              ]
-            },
-            {
               "value": "kunst",
               "displayText": "Kunst",
-              "dontHide": false,
+              "dontHide": true,
               "conditions":[
                 {
-                  "logicType": "!group_greaterOrEqual",
-                  "value": "kuenstler_p3-p5",
-                  "conditionValue": 1
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "conditionValue": "kunst"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "musik"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "dsp"
                 }
               ]
             },
             {
               "value": "musik",
               "displayText": "Musik",
-              "dontHide": false,
+              "dontHide": true,
               "conditions":[
                 {
-                  "logicType": "!group_greaterOrEqual",
-                  "value": "kuenstler_p3-p5",
-                  "conditionValue": 1
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "conditionValue": "musik"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "kunst"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "dsp"
                 }
               ]
             },
             {
               "value": "dsp",
               "displayText": "Darstellendes Spiel",
+              "dontHide": true,
+              "conditions":[
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "conditionValue": "dsp"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "kunst"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "musik"
+                }
+              ]
+            },
+            {
+              "value": "belegungsverpflichtung_erfüllt_kunst_musik_dsp",
+              "displayText": "Belegungsverpflichtung erfüllt",
               "dontHide": false,
               "conditions":[
                 {
-                  "logicType": "!group_greaterOrEqual",
-                  "value": "kuenstler_p3-p5",
-                  "conditionValue": 1
+                  "logicType": "used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "kunst"
+                },
+                {
+                  "logicType": "used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "musik"
+                },
+                {
+                  "logicType": "used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "dsp"
                 }
               ]
             }
@@ -1200,7 +1345,7 @@
             {
               "value": "politik-wirtschaft",
               "displayText": "Politik-Wirtschaft",
-              "dontHide": false,
+              "dontHide": true,
               "conditions": [
                 {
                   "logicType": "!used_in_step",
@@ -1230,7 +1375,7 @@
             {
               "value": "geschichte",
               "displayText": "Geschichte",
-              "dontHide": false,
+              "dontHide": true,
               "conditions": [
                 {
                   "logicType": "!used_in_step",
@@ -1258,38 +1403,57 @@
           "type":"dropdown",
           "values": [
             {
-              "value": "belegungsverpflichtung_erfüllt_philo-reli",
-              "displayText": "Belegungsverpflichtung erfüllt",
-              "dontHide": false,
-              "conditions":[
-                {
-                  "logicType": "group_greaterOrEqual",
-                  "value": "philo-reli_p3-p5",
-                  "conditionValue": 1
-                }
-              ]
-            },
-            {
               "value": "philosophie",
               "displayText": "Philosophie",
-              "dontHide": false,
+              "dontHide": true,
               "conditions":[
                 {
-                  "logicType": "!group_greaterOrEqual",
-                  "value": "philo-reli_p3-p5",
-                  "conditionValue": 1
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "conditionValue": "philosophie"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "religion"
                 }
               ]
             },
             {
               "value": "religion",
               "displayText": "Religion",
+              "dontHide": true,
+              "conditions":[
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "conditionValue": "religion"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "philosophie"
+                }
+              ]
+            },
+            {
+              "value": "belegungsverpflichtung_erfüllt_philosophie_religion",
+              "displayText": "Belegungsverpflichtung erfüllt",
               "dontHide": false,
               "conditions":[
                 {
-                  "logicType": "!group_greaterOrEqual",
-                  "value": "philo-reli_p3-p5",
-                  "conditionValue": 1
+                  "logicType": "used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "philosophie"
+                },
+                {
+                  "logicType": "used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "religion"
                 }
               ]
             }
@@ -1302,7 +1466,7 @@
             {
               "value": "mathematik",
               "displayText": "Mathematik",
-              "dontHide": false,
+              "dontHide": true,
               "conditions": [
                 {
                   "logicType": "!used_in_step",
@@ -1330,50 +1494,99 @@
           "type":"dropdown",
           "values": [
             {
-              "value": "belegungsverpflichtung_erfüllt_naturwissenschaften",
-              "displayText": "Physik",
-              "dontHide": false,
-              "conditions":[
-                {
-                  "logicType": "group_greaterOrEqual",
-                  "value": "naturwissenschaft_p3-p5",
-                  "conditionValue": 1
-                }
-              ]
-            },
-            {
               "value": "physik",
               "displayText": "Physik",
-              "dontHide": false,
+              "dontHide": true,
               "conditions":[
                 {
-                  "logicType": "!group_greaterOrEqual",
-                  "value": "naturwissenschaft_p3-p5",
-                  "conditionValue": 1
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "conditionValue": "physik"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "chemie"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "biologie"
                 }
               ]
             },
             {
               "value": "chemie",
               "displayText": "Chemie",
-              "dontHide": false,
+              "dontHide": true,
               "conditions":[
                 {
-                  "logicType": "!group_greaterOrEqual",
-                  "value": "naturwissenschaft_p3-p5",
-                  "conditionValue": 1
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "conditionValue": "chemie"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "physik"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "biologie"
                 }
               ]
             },
             {
               "value": "biologie",
               "displayText": "Biologie",
+              "dontHide": true,
+              "conditions":[
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "conditionValue": "biologie"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "physik"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "chemie"
+                }
+              ]
+            },
+            {
+              "value": "belegungsverpflichtung_erfüllt_naturwissenschaften",
+              "displayText": "Belegungsverpflichtung erfüllt",
               "dontHide": false,
               "conditions":[
                 {
-                  "logicType": "!group_greaterOrEqual",
-                  "value": "naturwissenschaft_p3-p5",
-                  "conditionValue": 1
+                  "logicType": "used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "physik"
+                },
+                {
+                  "logicType": "used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "chemie"
+                },
+                {
+                  "logicType": "used_in_step",
+                  "value": "1",
+                  "name": ["P3", "P4", "P5"],
+                  "conditionValue": "biologie"
                 }
               ]
             }
@@ -1386,7 +1599,7 @@
             {
               "value": "sport",
               "displayText": "Sport",
-              "dontHide": false,
+              "dontHide": true,
               "conditions": [
                 {
                   "logicType": "!used_in_step",
@@ -1398,7 +1611,7 @@
             {
               "value": "attest",
               "displayText": "Attest",
-              "dontHide": false,
+              "dontHide": true,
               "conditions": [
                 {
                   "logicType": "!used_in_step",
@@ -1447,7 +1660,7 @@
             {
               "value": "keinen_zusatzkurs",
               "displayText": "Keinen Zusatzkurs",
-              "dontHide": false,
+              "dontHide": true,
               "conditions": [
               ]
             },
@@ -1455,144 +1668,534 @@
               "value": "informatik",
               "displayText": "Informatik",
               "dontHide": false,
-              "unique": "*",
               "conditions": [
-                
+                {
+                  "logicType": "used_in_step",
+                  "value": "2",
+                  "conditionValue": "informatik"
+                }
               ]
             },
             {
-              "value": "kunst",
-              "displayText": "Kunst",
-              "dontHide": false,
-              "unique": "*",
+              "value": "informatik",
+              "displayText": "Informatik",
+              "dontHide": true,
               "conditions": [
-                
-              ]
-            },
-            {
-              "value": "musik",
-              "displayText": "Musik",
-              "dontHide": false,
-              "unique": "*",
-              "conditions": [
-                
-              ]
-            },
-            {
-              "value": "dsp",
-              "displayText": "Darstellendes Spiel",
-              "dontHide": false,
-              "unique": "*",
-              "conditions": [
-                
-              ]
-            },
-            {
-              "value": "politik-wirtschaft",
-              "displayText": "Politik-Wirtschaft",
-              "dontHide": false,
-	            "unique": "*",
-              "conditions": [
-
-              ]
-            },
-            {
-              "value": "geschichte",
-              "displayText": "Geschichte",
-              "dontHide": false,
-              "unique": "*",
-              "conditions": [
-                
-              ]
-            },
-            {
-              "value": "erdkunde",
-              "displayText": "Erdkunde",
-              "dontHide": false,
-              "unique": "*",
-              "conditions": [
-                
+                {
+                  "logicType": "!used_in_step",
+                  "value": "2",
+                  "conditionValue": "informatik"
+                }
               ]
             },
             {
               "value": "biologie",
               "displayText": "Biologie",
               "dontHide": false,
-              "unique": "*",
               "conditions": [
-                
+                {
+                  "logicType": "used_in_step",
+                  "value": "2",
+                  "conditionValue": "biologie"
+                },
+                {
+                  "logicType": "used_in_step",
+                  "value": "1",
+                  "conditionValue": "biologie"
+                }
               ]
             },
             {
-              "value": "physik",
-              "displayText": "Physik",
-              "dontHide": false,
-              "unique": "*",
+              "value": "biologie",
+              "displayText": "Biologie",
+              "dontHide": true,
               "conditions": [
-                
+                {
+                  "logicType": "!used_in_step",
+                  "value": "2",
+                  "conditionValue": "biologie"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "conditionValue": "biologie"
+                }
               ]
             },
             {
               "value": "chemie",
               "displayText": "Chemie",
               "dontHide": false,
-              "unique": "*",
               "conditions": [
-                
+                {
+                  "logicType": "used_in_step",
+                  "value": "2",
+                  "conditionValue": "chemie"
+                },
+                {
+                  "logicType": "used_in_step",
+                  "value": "1",
+                  "conditionValue": "chemie"
+                }
               ]
             },
             {
-              "value": "franzoesisch",
-              "displayText": "Französisch",
-              "dontHide": false,
-              "unique": "*",
+              "value": "chemie",
+              "displayText": "Chemie",
+              "dontHide": true,
               "conditions": [
-                
+                {
+                  "logicType": "!used_in_step",
+                  "value": "2",
+                  "conditionValue": "chemie"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "conditionValue": "chemie"
+                }
               ]
             },
             {
-              "value": "spanisch",
-              "displayText": "Spanisch",
+              "value": "physik",
+              "displayText": "Physik",
               "dontHide": false,
-              "unique": "*",
               "conditions": [
-              
+                {
+                  "logicType": "used_in_step",
+                  "value": "2",
+                  "conditionValue": "physik"
+                },
+                {
+                  "logicType": "used_in_step",
+                  "value": "1",
+                  "conditionValue": "physik"
+                }
               ]
             },
             {
-              "value": "latein",
-              "displayText": "Latein",
-              "dontHide": false,
-              "unique": "*",
+              "value": "physik",
+              "displayText": "Physik",
+              "dontHide": true,
               "conditions": [
-                
-              ]
-            },
-            {
-              "value": "philosophie",
-              "displayText": "Philosophie",
-              "dontHide": false,
-              "unique": "*",
-              "conditions": [
-                
+                {
+                  "logicType": "!used_in_step",
+                  "value": "2",
+                  "conditionValue": "physik"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "conditionValue": "physik"
+                }
               ]
             },
             {
               "value": "religion",
               "displayText": "Religion",
               "dontHide": false,
-	            "unique": "*",
               "conditions": [
-
+                {
+                  "logicType": "used_in_step",
+                  "value": "2",
+                  "conditionValue": "religion"
+                },
+                {
+                  "logicType": "used_in_step",
+                  "value": "1",
+                  "conditionValue": "religion"
+                }
+              ]
+            },
+            {
+              "value": "religion",
+              "displayText": "Religion",
+              "dontHide": true,
+              "conditions": [
+                {
+                  "logicType": "!used_in_step",
+                  "value": "2",
+                  "conditionValue": "religion"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "conditionValue": "religion"
+                }
+              ]
+            },
+            {
+              "value": "spanisch",
+              "displayText": "Spanisch",
+              "dontHide": false,
+              "conditions": [
+                {
+                  "logicType": "used_in_step",
+                  "value": "2",
+                  "conditionValue": ["spanisch", "latein", "franzoesisch"]
+                },
+                {
+                  "logicType": "used_in_step",
+                  "value": "1",
+                  "conditionValue": ["spanisch", "latein", "franzoesisch"]
+                }
+              ]
+            },
+            {
+              "value": "spanisch",
+              "displayText": "Spanisch",
+              "dontHide": true,
+              "conditions": [
+                {
+                  "logicType": "!used_in_step",
+                  "value": "2",
+                  "conditionValue": ["spanisch", "latein", "franzoesisch"]
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "conditionValue": ["spanisch", "latein", "franzoesisch"]
+                }
+              ]
+            },
+            {
+              "value": "latein",
+              "displayText": "Latein",
+              "dontHide": false,
+              "conditions": [
+                {
+                  "logicType": "used_in_step",
+                  "value": "2",
+                  "conditionValue": ["spanisch", "latein", "franzoesisch"]
+                },
+                {
+                  "logicType": "used_in_step",
+                  "value": "1",
+                  "conditionValue": ["spanisch", "latein", "franzoesisch"]
+                }
+              ]
+            },
+            {
+              "value": "latein",
+              "displayText": "Latein",
+              "dontHide": true,
+              "conditions": [
+                {
+                  "logicType": "!used_in_step",
+                  "value": "2",
+                  "conditionValue": ["spanisch", "latein", "franzoesisch"]
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "conditionValue": ["spanisch", "latein", "franzoesisch"]
+                }
+              ]
+            },
+            {
+              "value": "franzoesisch",
+              "displayText": "Französisch",
+              "dontHide": false,
+              "conditions": [
+                {
+                  "logicType": "used_in_step",
+                  "value": "2",
+                  "conditionValue": ["spanisch", "latein", "franzoesisch"]
+                },
+                {
+                  "logicType": "used_in_step",
+                  "value": "1",
+                  "conditionValue": ["spanisch", "latein", "franzoesisch"]
+                }
+              ]
+            },
+            {
+              "value": "franzoesisch",
+              "displayText": "Französisch",
+              "dontHide": true,
+              "conditions": [
+                {
+                  "logicType": "!used_in_step",
+                  "value": "2",
+                  "conditionValue": ["spanisch", "latein", "franzoesisch"]
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "conditionValue": ["spanisch", "latein", "franzoesisch"]
+                }
+              ]
+            },
+            {
+              "value": "geschichte",
+              "displayText": "Geschichte",
+              "dontHide": false,
+              "conditions": [
+                {
+                  "logicType": "used_in_step",
+                  "value": "2",
+                  "conditionValue": "geschichte"
+                },
+                {
+                  "logicType": "used_in_step",
+                  "value": "1",
+                  "conditionValue": "geschichte"
+                }
+              ]
+            },
+            {
+              "value": "geschichte",
+              "displayText": "Geschichte",
+              "dontHide": true,
+              "conditions": [
+                {
+                  "logicType": "!used_in_step",
+                  "value": "2",
+                  "conditionValue": "geschichte"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "conditionValue": "geschichte"
+                }
+              ]
+            },
+            {
+              "value": "politik-wirtschaft",
+              "displayText": "Politik-Wirtschaft",
+              "dontHide": false,
+              "conditions": [
+                {
+                  "logicType": "used_in_step",
+                  "value": "2",
+                  "conditionValue": "politik-wirtschaft"
+                },
+                {
+                  "logicType": "used_in_step",
+                  "value": "1",
+                  "conditionValue": "politik-wirtschaft"
+                }
+              ]
+            },
+            {
+              "value": "politik-wirtschaft",
+              "displayText": "Politik-Wirtschaft",
+              "dontHide": true,
+              "conditions": [
+                {
+                  "logicType": "!used_in_step",
+                  "value": "2",
+                  "conditionValue": "politik-wirtschaft"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "conditionValue": "politik-wirtschaft"
+                }
+              ]
+            },
+            {
+              "value": "erdkunde",
+              "displayText": "Erdkunde",
+              "dontHide": false,
+              "conditions": [
+                {
+                  "logicType": "used_in_step",
+                  "value": "2",
+                  "conditionValue": "erdkunde"
+                },
+                {
+                  "logicType": "used_in_step",
+                  "value": "1",
+                  "conditionValue": "erdkunde"
+                }
+              ]
+            },
+            {
+              "value": "erdkunde",
+              "displayText": "Erdkunde",
+              "dontHide": true,
+              "conditions": [
+                {
+                  "logicType": "!used_in_step",
+                  "value": "2",
+                  "conditionValue": "erdkunde"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "conditionValue": "erdkunde"
+                }
+              ]
+            },
+            {
+              "value": "philosophie",
+              "displayText": "Philosophie",
+              "dontHide": false,
+              "conditions": [
+                {
+                  "logicType": "used_in_step",
+                  "value": "2",
+                  "conditionValue": "philosophie"
+                },
+                {
+                  "logicType": "used_in_step",
+                  "value": "1",
+                  "conditionValue": "philosophie"
+                }
+              ]
+            },
+            {
+              "value": "philosophie",
+              "displayText": "Philosophie",
+              "dontHide": true,
+              "conditions": [
+                {
+                  "logicType": "!used_in_step",
+                  "value": "2",
+                  "conditionValue": "philosophie"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "conditionValue": "philosophie"
+                }
+              ]
+            },
+            {
+              "value": "musik",
+              "displayText": "Musik",
+              "dontHide": false,
+              "conditions": [
+                {
+                  "logicType": "used_in_step",
+                  "value": "2",
+                  "conditionValue": "musik"
+                },
+                {
+                  "logicType": "used_in_step",
+                  "value": "1",
+                  "conditionValue": "musik"
+                }
+              ]
+            },
+            {
+              "value": "musik",
+              "displayText": "Musik",
+              "dontHide": true,
+              "conditions": [
+                {
+                  "logicType": "!used_in_step",
+                  "value": "2",
+                  "conditionValue": "musik"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "conditionValue": "musik"
+                }
+              ]
+            },
+            {
+              "value": "kunst",
+              "displayText": "Kunst",
+              "dontHide": false,
+              "conditions": [
+                {
+                  "logicType": "used_in_step",
+                  "value": "2",
+                  "conditionValue": "kunst"
+                },
+                {
+                  "logicType": "used_in_step",
+                  "value": "1",
+                  "conditionValue": "kunst"
+                }
+              ]
+            },
+            {
+              "value": "kunst",
+              "displayText": "Kunst",
+              "dontHide": true,
+              "conditions": [
+                {
+                  "logicType": "!used_in_step",
+                  "value": "2",
+                  "conditionValue": "kunst"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "conditionValue": "kunst"
+                }
+              ]
+            },
+            {
+              "value": "dsp",
+              "displayText": "Darstellendes Spiel",
+              "dontHide": false,
+              "conditions": [
+                {
+                  "logicType": "used_in_step",
+                  "value": "2",
+                  "conditionValue": "dsp"
+                },
+                {
+                  "logicType": "used_in_step",
+                  "value": "1",
+                  "conditionValue": "dsp"
+                }
+              ]
+            },
+            {
+              "value": "dsp",
+              "displayText": "Darstellendes Spiel",
+              "dontHide": true,
+              "conditions": [
+                {
+                  "logicType": "!used_in_step",
+                  "value": "2",
+                  "conditionValue": "dsp"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "conditionValue": "dsp"
+                }
               ]
             },
             {
               "value": "englisch",
               "displayText": "Englisch",
-	            "unique": "*",
               "dontHide": false,
               "conditions": [
-              
+                {
+                  "logicType": "used_in_step",
+                  "value": "2",
+                  "conditionValue": "englisch"
+                },
+                {
+                  "logicType": "used_in_step",
+                  "value": "1",
+                  "conditionValue": "englisch"
+                }
+              ]
+            },
+            {
+              "value": "englisch",
+              "displayText": "Englisch",
+              "dontHide": true,
+              "conditions": [
+                {
+                  "logicType": "!used_in_step",
+                  "value": "2",
+                  "conditionValue": "englisch"
+                },
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "conditionValue": "englisch"
+                }
               ]
             }
           ]

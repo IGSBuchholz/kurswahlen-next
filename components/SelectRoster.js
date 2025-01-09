@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 
-const SelectRoster = ({ items, onSelectionChange, placeholderText }) => {
+const SelectRoster = ({items, onSelectionChange, placeholderText, standardvalue}) => {
     const [isDropdownVisible, setDropdownVisible] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
 
@@ -12,10 +12,47 @@ const SelectRoster = ({ items, onSelectionChange, placeholderText }) => {
         setSelectedItem(item);
         setDropdownVisible(false);
         if (onSelectionChange) {
-            const selectedItem = items.find((items) => items.value.toString() === item.value);
-            onSelectionChange(selectedItem);
+            //const selectedItem = items.find((items) => items.value.toString() === item.value);
+            onSelectionChange(item);
         }
     };
+
+    useEffect(() => {
+        if(items.length === 1) {
+            handleItemClick(items[0]);
+        }
+        if(standardvalue) {
+            console.log("standardvalue", standardvalue);
+            if(standardvalue != "") {
+                const selectedItem = items.find((items) => items.value.toString() === standardvalue);
+                handleItemClick(selectedItem)
+            }
+        }
+    }, []);
+
+    if (items.length === 1) {
+        let item = items[0];
+        return <>
+
+            <div className={"block py-2"}>
+                <div className="relative inline-block text-left">
+                    <h2>{placeholderText}</h2>
+                </div>
+                <div>
+                    <button
+                        type="button"
+                        className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-gray-100 px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 cursor-not-allowed"
+                        id="menu-button"
+                        aria-haspopup="false"
+                    >
+                        {item.displayText}
+                    </button>
+                </div>
+            </div>
+        </>
+
+    }
+
     return (
         <div className={"block py-2"}>
             <div className="relative inline-block text-left">
@@ -47,28 +84,30 @@ const SelectRoster = ({ items, onSelectionChange, placeholderText }) => {
 
                 {isDropdownVisible && (
                     <div
-                        className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
+                        className="absolute left-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
                         role="menu"
                         aria-orientation="vertical"
                         aria-labelledby="menu-button"
                         tabIndex="-1"
                     >
                         <div className="py-1" role="none">
-                            {items.map((item) => (
-                                <button
-                                    key={item.value}
+                            {items.map((item, index) => {
+                                //console.log(item)
+                                //console.log(items.length)
+                                return <button
+                                    key={"Sub" + item.value + "_" + index + "_" + item.index}
                                     className={`block w-full px-4 py-2 text-left text-sm text-gray-700  focus:outline-none ${!item.disabled ? "hover:bg-gray-100" : "bg-gray-300 text-gray-700"}`}
                                     role="menuitem"
                                     tabIndex="-1"
                                     onClick={() => {
-                                        if(!item.disabled) {
+                                        if (!item.disabled) {
                                             handleItemClick(item)
                                         }
                                     }}
                                 >
                                     {item.displayText}
                                 </button>
-                            ))}
+                            })}
                         </div>
                     </div>
                 )}
