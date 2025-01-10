@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Kurswahltool für die 12. Klasse der IGS Buchholz 🎓
 
-## Getting Started
+Willkommen zum **Kurswahltool** der IGS Buchholz! Dieses Tool wurde entwickelt, um den Übergang in die 12. Klasse zu vereinfachen und die Kurswahl effizient und benutzerfreundlich zu gestalten. 🚀
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🌟 Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Voll konfigurierbar**: Alle Regeln und Parameter können an die spezifischen Anforderungen der Schule angepasst werden. ⚙️
+- **Course Rules Engine (CRS)**: Eine leistungsstarke, frei konfigurierbare Logik-Engine zur Validierung der Kurswahl und Einhaltung schulischer Vorgaben. 🧠
+- **OAuth-Integration mit IServ**: Sicheres Login und nahtlose Integration mit dem bestehenden IServ-System. 🔒
+- **Intuitive Benutzeroberfläche**: Einfache Bedienung für Schüler:innen, Lehrkräfte und Administrator:innen. 🖥️
+- **Echtzeit-Validierung**: Überprüfung der Kurswahl auf Basis der konfigurierten Regeln in Echtzeit. ✅
+- **Flexibles Rollensystem**: Anpassbare Rechte für Schüler:innen, Lehrkräfte und Administrator:innen. 👩‍🏫👨‍🎓
+- **Export-Funktionalität**: Einfacher Export der Kurswahl für weitere Bearbeitung und Dokumentation. 📂
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠️ Installation
 
-## Learn More
+### Voraussetzungen
 
-To learn more about Next.js, take a look at the following resources:
+- Node.js (>= 16.x) 🟢
+- Eine IServ-Instanz mit aktiviertem OAuth 🛡️
+- Eine relationale Datenbank (MySQL, PostgreSQL, o.ä.) 🗄️
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Schritte
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. **Repository klonen**:
+   ```bash
+   git clone https://github.com/igs-buchholz/kurswahltool.git
+   cd kurswahltool
+   ```
 
-## Deploy on Vercel
+2. **Abhängigkeiten installieren**:
+   ```bash
+   npm install
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+WIP
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## ⚙️ Konfiguration
+
+WIP
+
+---
+
+## 📡 API-Endpunkte
+
+WIP
+
+---
+
+## 🤝 Beitrag leisten
+
+Beiträge sind willkommen! Forken Sie das Repository und stellen Sie einen Pull-Request. Weitere Informationen finden Sie in der Datei [CONTRIBUTING.md](CONTRIBUTING.md). 🛠️
+
+---
+
+## 📜 Lizenz
+
+Dieses Projekt steht unter der [MIT-Lizenz](LICENSE). ⚖️
+
+---
