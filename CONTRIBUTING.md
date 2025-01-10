@@ -1,4 +1,3 @@
-```markdown
 # Beitrag leisten: Kurswahltool für die 12. Klasse der IGS Buchholz 🎓
 
 Vielen Dank, dass du das Projekt verbessern möchtest! Beiträge sind willkommen und tragen dazu bei, das Kurswahltool weiterzuentwickeln und besser auf die Anforderungen der Nutzer:innen abzustimmen. 🛠️
