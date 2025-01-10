@@ -1,3 +1,4 @@
+![Kurswahltool Banner](https://github.com/IGSBuchholz/kurswahlen-next/blob/master/media/banner/Banner.jpg?raw=true)
 # Kurswahltool für die 12. Klasse der IGS Buchholz 🎓
 
 Willkommen zum **Kurswahltool** der IGS Buchholz! Dieses Tool wurde entwickelt, um den Übergang in die 12. Klasse zu vereinfachen und die Kurswahl effizient und benutzerfreundlich zu gestalten. 🚀
