@@ -27,7 +27,7 @@ export default function AdminDashboard() {
 
                     <div className="bg-white shadow-md rounded-lg p-6">
                         <h2 className="text-xl font-bold text-blue-600">Kurswahl-Deadline</h2>
-                        <p className="text-gray-700 mt-2">Datum bis zur Abgabe, ggf. Anzeige zu verbleibenden Tagen</p>
+                        <p className="text-gray-700 mt-2">Datum bis zur Abgabe, ggf. Anzeige zu verbleibenden Tagen.</p>
                     </div>
                 </div>
             </div>

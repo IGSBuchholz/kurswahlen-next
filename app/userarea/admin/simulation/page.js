@@ -10,7 +10,7 @@ export default function KurswahlSimulationDashboard() {
             {/* Main Content Area */}
             <div className="flex-1 bg-gray-100 p-6 ml-64">
                 <header className="mb-8">
-                    <h1 className="text-3xl font-bold text-gray-800">Simulation des Kurwahltools</h1>
+                    <h1 className="text-3xl font-bold text-gray-800">Simulation des Kurswahltools</h1>
                 </header>
 
                 {/* Editing Content */}

@@ -8,7 +8,7 @@ export default function Sidebar() {
     const pathName = usePathname();
     return (
         <div
-        className={`bg-gray-800 text-white h-full w-64 
+        className={`bg-blue-950 text-white h-full w-64 
             transition-all duration-300 fixed`}
         >
             <nav className="mt-4">
@@ -16,7 +16,7 @@ export default function Sidebar() {
                 <ul>
                     <RoutingLink page={"Dashboard"} text={"Dashboard"}></RoutingLink>
                     <RoutingLink page={"Users"} text={"Nutzer"}></RoutingLink>
-                    <RoutingLink page={"Selectionedit"} text={"Kursanpassung"}></RoutingLink>
+                    <RoutingLink page={"Selectionedit"} text={"Kurswahl-Übersicht"}></RoutingLink>
                     <RoutingLink page={"Simulation"} text={"Simulation"}></RoutingLink>
                     <RoutingLink page={"Config"} text={"Kurswahlkonfiguration"}></RoutingLink>
                     <RoutingLink page={"Settings"} text={"Einstellungen"}></RoutingLink>
