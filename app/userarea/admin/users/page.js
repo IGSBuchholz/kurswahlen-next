@@ -16,18 +16,18 @@ export default function UsersDashboard() {
                 {/* Dashboard Content */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div className="bg-white shadow-md rounded-lg p-6">
-                        <h2 className="text-xl font-bold text-blue-600">Überblick</h2>
-                        <p className="text-gray-700 mt-2">Hier werden ggf. Systemmeldungen angezeigt.</p>
+                        <h2 className="text-xl font-bold text-blue-600">Profil-Überblick</h2>
+                        <p className="text-gray-700 mt-2">Daten zum Admin Nutzer.</p>
                     </div>
 
                     <div className="bg-white shadow-md rounded-lg p-6">
-                        <h2 className="text-xl font-bold text-blue-600">Nutzer</h2>
-                        <p className="text-gray-700 mt-2">Kurze Zusammenfassung der Nutzerabgaben etc.</p>
+                        <h2 className="text-xl font-bold text-blue-600">Verlauf</h2>
+                        <p className="text-gray-700 mt-2">Umgesetzte Konfigurationen von Admins werden angezeigt.</p>
                     </div>
 
                     <div className="bg-white shadow-md rounded-lg p-6">
-                        <h2 className="text-xl font-bold text-blue-600">Konfiguration</h2>
-                        <p className="text-gray-700 mt-2">Konfiguriere die Fächer etc. pp.</p>
+                        <h2 className="text-xl font-bold text-blue-600">Profil bearbeiten</h2>
+                        <p className="text-gray-700 mt-2">Bearbeite Login-, Kontakt- und Nutzerinformationen.</p>
                     </div>
                 </div>
             </div>
