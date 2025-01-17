@@ -1,7 +1,30 @@
 "use client"
 import Sidebar from "@/components/Sidebar";
+import { StepUI } from "@/utils/RulesEngine";
+import { useState, useEffect } from "react";
 
 export default function ConfigDashboard() {
+    const [context, setContext] = useState(new Map());
+    const [dataBeingEdited, setDataBeingEdited] = useState({});
+
+        useEffect(() => {
+            // Fetch JSON data from the web file
+            async function fetchStepData() {
+                try {
+                    const response = await fetch('/crs/sample.json'); // Replace with your JSON URL
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    setDataBeingEdited(data); // Set the fetched data
+                } catch (error) {
+                    console.error("Error fetching JSON:", error);
+                } finally {
+                }
+            }
+    
+            fetchStepData();
+        }, []);
     return (
         <div className="flex h-screen">
             {/* Sidebar */}
@@ -16,18 +39,18 @@ export default function ConfigDashboard() {
                 {/* Editing Content */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div className="bg-white shadow-md rounded-lg p-6">
-                        <h2 className="text-xl font-bold text-blue-600">Schwerpunkt-Bearbeitung</h2>
-                        <p className="text-gray-700 mt-2">Hier wird die Auswahl von Schwerpunkt bearbeitet.</p>
+                        <h2 className="text-xl font-bold underline text-blue-600">Schwerpunkt-Bearbeitung</h2>
+                        {dataBeingEdited && dataBeingEdited.Steps ? <StepUI context={context} setContext={setContext} initialContext={context} setMessages={()=>{}} setCanProcced={()=>{}} step={dataBeingEdited.Steps[0]} number={0} setLoading={() =>{}}></StepUI> : ""}
                     </div>
 
                     <div className="bg-white shadow-md rounded-lg p-6">
-                        <h2 className="text-xl font-bold text-blue-600">Prüfungsfächer-Bearbeitung</h2>
-                        <p className="text-gray-700 mt-2">Hier wird die Auswahl von Prüfungsfächer bearbeitet.</p>
+                        <h2 className="text-xl font-bold underline text-blue-600">Prüfungsfächer-Bearbeitung</h2>
+                        {dataBeingEdited && dataBeingEdited.Steps ? <StepUI context={context} setContext={setContext} initialContext={context} setMessages={()=>{}} setCanProcced={()=>{}} step={dataBeingEdited.Steps[1]} number={1} setLoading={() =>{}}></StepUI> : ""}
                     </div>
 
                     <div className="bg-white shadow-md rounded-lg p-6">
-                        <h2 className="text-xl font-bold text-blue-600">Belegungsfächer-Bearbeitung</h2>
-                        <p className="text-gray-700 mt-2">Hier wird die Auswahl von belegverpflichteten Fächern bearbeitet.</p>
+                        <h2 className="text-xl font-bold underline text-blue-600">Belegungsfächer-Bearbeitung</h2>
+                        {dataBeingEdited && dataBeingEdited.Steps ? <StepUI context={context} setContext={setContext} initialContext={context} setMessages={()=>{}} setCanProcced={()=>{}} step={dataBeingEdited.Steps[2]} number={2} setLoading={() =>{}}></StepUI> : ""}
                     </div>
                 </div>
             </div>
