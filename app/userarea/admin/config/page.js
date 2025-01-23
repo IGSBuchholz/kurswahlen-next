@@ -1,11 +1,12 @@
 "use client";
 import Sidebar from "@/components/Sidebar";
-import { StepUI } from "@/utils/RulesEngine";
+import { countElementsInStep, StepUI } from "@/utils/RulesEngine";
 import { useState, useEffect, useRef } from "react";
 
 export default function ConfigDashboard() {
     const [context, setContext] = useState(new Map());
-    const [dataBeingEdited, setDataBeingEdited] = useState({});
+    const [dataBeingEdited, setDataBeingEdited] = useState({Steps: []}); // State to hold the JSON data
+    const [elementCount, setElementCount] = useState(0); // State to hold the count of elements in step 0
     const stepRefs = useRef([]); // Array von Refs für jedes StepUI-Element
 
     useEffect(() => {
@@ -17,7 +18,9 @@ export default function ConfigDashboard() {
                     throw new Error(`HTTP-Fehler! Status: ${response.status}`);
                 }
                 const data = await response.json();
+                console.log("Fetched data:", data); // Debugging: Log the fetched data
                 setDataBeingEdited(data); // Setze die abgerufenen Daten
+                setElementCount(countElementsInStep(data.Steps)); // Set the count of elements in step 0
             } catch (error) {
                 console.error("Fehler beim Abrufen der JSON-Daten:", error);
             }
@@ -76,8 +79,44 @@ export default function ConfigDashboard() {
     };    
 
     const handleAddStep = () => {
-        // Hier kannst du den Code einfügen, um einen neuen Schritt hinzuzufügen
-        console.log("Neuer Schritt hinzugefügt");
+        const step = dataBeingEdited.Steps[0]; // Schritt 0
+    
+        // Sicherstellen, dass `StepValues` und `values` korrekt initialisiert sind
+        const stepValues = Array.isArray(step.StepValues) ? step.StepValues : [];
+        const values = stepValues[0]?.values ? stepValues[0].values : []; // Zugriff auf values innerhalb von StepValues
+    
+        console.log("Aktuelle values:", values); // Debugging: Zeigt die aktuellen values an
+    
+        const newValue = {
+            name: `Test ${values.length + 1}`, // Hier definieren wir den neuen Namen des Wertes als "Test X"
+            value: `Test ${values.length + 1}` // Wert ebenfalls als "Test X"
+        };
+    
+        // Füge den neuen Wert zu values hinzu
+        const updatedValues = [...values, newValue];
+        console.log("Aktualisierte values:", updatedValues); // Debugging: Zeigt die aktualisierten values an
+    
+        // Aktualisiere StepValues mit den neuen values
+        const updatedStepValues = stepValues.map((stepValue, index) => {
+            if (index === 0) {
+                return { ...stepValue, values: updatedValues }; // Setze die neuen values für Step 0
+            }
+            return stepValue;
+        });
+    
+        // Aktualisiere die Steps mit den neuen StepValues
+        const updatedSteps = dataBeingEdited.Steps.map((step, index) => {
+            if (index === 0) {
+                return { ...step, StepValues: updatedStepValues }; // Update StepValues in Step 0
+            }
+            return step;
+        });
+    
+        console.log("Aktualisierte Steps:", updatedSteps); // Debugging: Zeigt die aktualisierten Steps an
+    
+        // State aktualisieren
+        setDataBeingEdited((prev) => ({ ...prev, Steps: updatedSteps }));
+        setElementCount(countElementsInStep(updatedSteps)); // Update der Anzahl der Elemente
     };
 
     const handleDeleteStep = (index) => {
@@ -88,7 +127,7 @@ export default function ConfigDashboard() {
     const handleEditStep = (index) => {
         // Hier kannst du den Code einfügen, um einen Schritt zu bearbeiten
         console.log(`Schritt ${index} bearbeitet`);
-    };    
+    };
 
     return (
         <div className="flex h-screen">
@@ -122,6 +161,11 @@ export default function ConfigDashboard() {
                             </div>
                         ) : ""}
 
+                        {/* Display the count of elements in step 0 */}
+                        <div className="pt-20">
+                            <p className="text-sm text-gray-600">Anzahl der Elemente in Schritt 0: {elementCount}</p>
+                        </div>
+
                         {/* Dynamisch positionierter Plus-Button nur für Step 0 */}
                         {dataBeingEdited.Steps && dataBeingEdited.Steps.length > 0 && (
                             <div
@@ -150,7 +194,7 @@ export default function ConfigDashboard() {
                                         className="bg-red-700 text-white font-bold rounded-full w-7 h-7 flex items-center justify-center"
                                         onClick={() => handleDeleteStep(0)} // Funktion zum Löschen von Step 0
                                     >
-                                        -
+                                        - 
                                     </button>
                                 </div>
                             );
@@ -167,14 +211,13 @@ export default function ConfigDashboard() {
                                 >
                                     <button
                                         className="bg-yellow-500 text-white font-bold rounded-full w-12 h-7 flex items-center justify-center"
-                                        onClick={() => handleEditStep(0)} // Funktion zum Löschen von Step 0
+                                        onClick={() => handleEditStep(0)} // Funktion zum Bearbeiten von Step 0
                                     >
                                         Edit
                                     </button>
                                 </div>
                             );
                         })}
-
                     </div>
 
                     {/* Weitere Sektionen für Bearbeitung */}

@@ -1,22 +1,19 @@
 import SelectableRoster from "@/components/SelectableRoster";
 import SelectRoster from "@/components/SelectRoster";
 
-
 export function init(inputFrontEndRules) {
     let steps = extractSteps(inputFrontEndRules);
-
 }
 
 export function exportUIComponents(steps) {
     let stepUI = []
 
-    stepUI = steps.forEach((step, index) => {
-
+    stepUI = steps.map((step, index) => {
         return {
             "index": index,
-            "ui": getStepUI(step)
+            "ui": getStepUI(step),
+            "elementCount": countElements(step) // Add element count
         }
-
     })
 
     return stepUI;
@@ -332,11 +329,23 @@ function validateUnique(unique = "*", context = new Map(), inValue = {
     return returnValue
 }
 
-export function extractSteps(jsonObj) {
-    return jsonObj["Steps"].map(step => {
-        return {
-            ...step,
-            Conditions: step.Conditions || []
-        };
-    });
+export function countElementsInStep(steps, stepNumber = 0) {
+    if (steps && steps[stepNumber]) {
+        const step = steps[stepNumber];
+        let valueCount = 0;
+
+        // Sicherstellen, dass StepValues ein Array ist
+        const stepValues = Array.isArray(step.StepValues) ? step.StepValues : [];
+
+        // Iteriere über jedes StepValue und zähle die 'values'
+        stepValues.forEach((stepValue) => {
+            if (stepValue.values) {
+                valueCount += stepValue.values.length; // Zählt die Elemente in 'values'
+            }
+        });
+
+        console.log("Counting elements in step:", stepNumber, "-> Total 'values' count:", valueCount);
+        return valueCount;
+    }
+    return 0;
 }
