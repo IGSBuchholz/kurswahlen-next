@@ -1,6 +1,6 @@
 "use client";
 import Sidebar from "@/components/Sidebar";
-import { countElementsInStep, StepUI } from "@/utils/RulesEngine";
+import { countElementsInStep, StepUI } from "@/app/userarea/admin/StepUI-Admin/StepUI-Admin";
 import { useState, useEffect, useRef } from "react";
 
 export default function ConfigDashboard() {
@@ -87,16 +87,17 @@ export default function ConfigDashboard() {
     
         console.log("Aktuelle values:", values); // Debugging: Zeigt die aktuellen values an
     
+        // Neues Element mit Namen und Wert erstellen
         const newValue = {
-            name: `Test ${values.length + 1}`, // Hier definieren wir den neuen Namen des Wertes als "Test X"
-            value: `Test ${values.length + 1}` // Wert ebenfalls als "Test X"
+            name: `Schwerpunkt ${values.length + 1}`, // Der angezeigte Name des neuen Schwerpunkts
+            value: `Value_${values.length + 1}`, // Der Wert des Schwerpunkts, z.B. "Value_1"
         };
     
-        // Füge den neuen Wert zu values hinzu
+        // Füge das neue Element zu `values` hinzu
         const updatedValues = [...values, newValue];
         console.log("Aktualisierte values:", updatedValues); // Debugging: Zeigt die aktualisierten values an
     
-        // Aktualisiere StepValues mit den neuen values
+        // Aktualisiere StepValues mit den neuen `values`
         const updatedStepValues = stepValues.map((stepValue, index) => {
             if (index === 0) {
                 return { ...stepValue, values: updatedValues }; // Setze die neuen values für Step 0
@@ -118,6 +119,7 @@ export default function ConfigDashboard() {
         setDataBeingEdited((prev) => ({ ...prev, Steps: updatedSteps }));
         setElementCount(countElementsInStep(updatedSteps)); // Update der Anzahl der Elemente
     };
+    
 
     const handleDeleteStep = (index) => {
         // Hier kannst du den Code einfügen, um einen Schritt zu löschen
