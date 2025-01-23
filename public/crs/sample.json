@@ -1065,7 +1065,7 @@
               "dontHide": false,
               "conditions": [
                 {
-                  "logicType": "used_in_step",
+                  "logicType": "!used_in_step",
                   "value": "1",
                   "conditionValue": "deutsch"
                 }
@@ -1215,7 +1215,7 @@
               "dontHide": false,
               "conditions": [
                 {
-                  "logicType": "used_in_step",
+                  "logicType": "!used_in_step",
                   "value": "1",
                   "conditionValue": "politik-wirtschaft"
                 }
@@ -1245,7 +1245,7 @@
               "dontHide": false,
               "conditions": [
                 {
-                  "logicType": "used_in_step",
+                  "logicType": "!used_in_step",
                   "value": "1",
                   "conditionValue": "geschichte"
                 }
@@ -1317,7 +1317,7 @@
               "dontHide": false,
               "conditions": [
                 {
-                  "logicType": "used_in_step",
+                  "logicType": "!used_in_step",
                   "value": "1",
                   "conditionValue": "mathematik"
                 }
@@ -1427,9 +1427,21 @@
           "values": [
             {
               "value": "seminarfach",
-              "displayText": "verpflichtend",
+              "displayText": "seminarfach",
               "dontHide": false,
               "unique": "none"
+            },
+            {
+              "value": "belegungsverpflichtung_erfüllt_seminarfach",
+              "displayText": "Belegungsverpflichtung erfüllt",
+              "dontHide": false,
+              "conditions": [
+                {
+                  "logicType": "!used_in_step",
+                  "value": "1",
+                  "conditionValue": "seminarfach"
+                }
+              ]
             }
           ]
         }

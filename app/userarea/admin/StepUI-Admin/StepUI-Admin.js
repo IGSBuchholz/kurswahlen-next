@@ -226,37 +226,48 @@ export function StepUI({step, number = -1, initialContext = {}, setContext, setM
 
     const updateUI = () => {
         setStepValuesUI(StepValues.map((stepValue, index) => {
-            const {name, type, values, standardvalue} = stepValue;
-
+            const { name, type, values, standardvalue } = stepValue;
+        
+            // Verarbeite die Werte für die Anzeige
             const processedValues = reprocessValues(values, name);
-            switch (type) {
-                case "dropdown":
-                    return (
+        
+            // Füge eine Anzeige für den Namen hinzu
+            return (
+                <div key={`${name}_${index}`} className="mb-4">
+                    {/* Name des Schwerpunkts anzeigen */}
+                    <h2 className="text-lg font-semibold">{name || "Standardname (z. B. Test)"}</h2>
+        
+                    {/* Wert nur für Step 0 anzeigen */}
+                    {number === 0 && (
+                        <p>{`Wert: ${"Sprich Deutsch du Hurensohn"}`}</p> // Wert nur für Step 0 anzeigen
+                    )}
+        
+                    {/* Bestehende Logik für die Typen */}
+                    {type === "dropdown" && (
                         <SelectRoster
-                            key={`${name}_${index}`}
                             items={processedValues}
                             context={localContext}
                             standardvalue={standardvalue}
                             onSelectionChange={(selectedValue) => handleSelectionChange(selectedValue, name)}
                             placeholderText={name}
                         />
-                    );
-
-                case "select":
-                    return (
+                    )}
+                    {type === "select" && (
                         <SelectableRoster
-                            key={`${name}_${index}`}
                             items={processedValues}
                             standardvalue={standardvalue}
                             context={localContext}
                             onSelectionChange={(selectedValue) => handleSelectionChange(selectedValue, name)}
                         />
-                    );
-
-                default:
-                    return <h1 key={index} className="text-red-700">Unknown type: {type}</h1>;
-            }
-        }))
+                    )}
+        
+                    {/* Fallback für unbekannte Typen */}
+                    {type !== "dropdown" && type !== "select" && (
+                        <h1 className="text-red-700">Unknown type: {type}</h1>
+                    )}
+                </div>
+            );
+        }));
     };
 
     useEffect(() => {
@@ -329,28 +340,23 @@ function validateUnique(unique = "*", context = new Map(), inValue = {
     return returnValue
 }
 
-export function extractSteps(jsonObj) {
-    return jsonObj["Steps"].map(step => {
-        return {
-            ...step,
-            Conditions: step.Conditions || []
-        };
-    });
-}
-
-// Function to count elements in a step
-export function countElements(step) {
-    if (step && step.StepValues) {
-        return step.StepValues.length;
-    }
-    return 0;
-}
-
-// Function to count elements in step 0
-export function countElementsInStep (steps, stepNumber = 0) {
+export function countElementsInStep(steps, stepNumber = 0) {
     if (steps && steps[stepNumber]) {
-        console.log("Counting elements in step 0")
-        return countElements(steps[stepNumber]);
+        const step = steps[stepNumber];
+        let valueCount = 0;
+
+        // Sicherstellen, dass StepValues ein Array ist
+        const stepValues = Array.isArray(step.StepValues) ? step.StepValues : [];
+
+        // Iteriere über jedes StepValue und zähle die 'values'
+        stepValues.forEach((stepValue) => {
+            if (stepValue.values) {
+                valueCount += stepValue.values.length; // Zählt die Elemente in 'values'
+            }
+        });
+
+        console.log("Counting elements in step:", stepNumber, "-> Total 'values' count:", valueCount);
+        return valueCount;
     }
     return 0;
 }
