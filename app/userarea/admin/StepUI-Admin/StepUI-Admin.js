@@ -189,25 +189,41 @@ export function StepUI({step, number = -1, initialContext = {}, setContext, setM
 
     const reprocessValues = (values, stepName) => {
         const newValues = [];
+    
         values.map((value, valueIndex) => {
-            value.index = valueIndex+1
+            value.index = valueIndex + 1;
+    
+            // Prüfen, ob der Wert bereits im localContext existiert
+            const existingValue = localContext.get(`${number}_${stepName}`);
+    
+            // Wenn der Wert existiert, verwende ihn, andernfalls Standardname
+            const displayText = existingValue && existingValue.value === value.value 
+                ? existingValue.displayText 
+                : value.displayText || `Neuer Schwerpunkt: ${valueIndex + 1}`;
+    
             const isValueDisabled = validateConditions(value.conditions || [], localContext);
-            const isValueUnique = validateUnique(value.unique, localContext, value, number, stepName, valueIndex+1)
-            if(value.dontHide) {
+            const isValueUnique = validateUnique(value.unique, localContext, value, number, stepName, valueIndex + 1);
+    
+            if (value.dontHide) {
                 newValues.push({
                     ...value,
+                    displayText,
                     disabled: !isValueDisabled || !isValueUnique,
                 });
                 return;
             }
-            if(!isValueDisabled) {
+    
+            if (!isValueDisabled) {
                 return;
             }
-            newValues.push( {
+    
+            newValues.push({
                 ...value,
+                displayText,
                 disabled: !isValueUnique,
             });
         });
+    
         return newValues;
     };
 
@@ -227,46 +243,38 @@ export function StepUI({step, number = -1, initialContext = {}, setContext, setM
     const updateUI = () => {
         setStepValuesUI(StepValues.map((stepValue, index) => {
             const { name, type, values, standardvalue } = stepValue;
-        
+    
             // Verarbeite die Werte für die Anzeige
             const processedValues = reprocessValues(values, name);
-        
-            // Füge eine Anzeige für den Namen hinzu
-            return (
-                <div key={`${name}_${index}`} className="mb-4">
-                    {/* Name des Schwerpunkts anzeigen */}
-                    <h2 className="text-lg font-semibold">{name || "Standardname (z. B. Test)"}</h2>
-        
-                    {/* Wert nur für Step 0 anzeigen */}
-                    {number === 0 && (
-                        <p>{`Wert: ${"Sprich Deutsch du Hurensohn"}`}</p> // Wert nur für Step 0 anzeigen
-                    )}
-        
-                    {/* Bestehende Logik für die Typen */}
-                    {type === "dropdown" && (
+    
+            // Je nach Typ der UI-Komponente die richtigen Komponenten zurückgeben
+            switch (type) {
+                case "dropdown":
+                    return (
                         <SelectRoster
+                            key={`${name}_${index}`}
                             items={processedValues}
                             context={localContext}
                             standardvalue={standardvalue}
                             onSelectionChange={(selectedValue) => handleSelectionChange(selectedValue, name)}
                             placeholderText={name}
                         />
-                    )}
-                    {type === "select" && (
+                    );
+    
+                case "select":
+                    return (
                         <SelectableRoster
+                            key={`${name}_${index}`}
                             items={processedValues}
                             standardvalue={standardvalue}
                             context={localContext}
                             onSelectionChange={(selectedValue) => handleSelectionChange(selectedValue, name)}
                         />
-                    )}
-        
-                    {/* Fallback für unbekannte Typen */}
-                    {type !== "dropdown" && type !== "select" && (
-                        <h1 className="text-red-700">Unknown type: {type}</h1>
-                    )}
-                </div>
-            );
+                    );
+    
+                default:
+                    return <h1 key={index} className="text-red-700">Unknown type: {type}</h1>;
+            }
         }));
     };
 
@@ -359,4 +367,7 @@ export function countElementsInStep(steps, stepNumber = 0) {
         return valueCount;
     }
     return 0;
+}
+function isValueInSample(value, sample) {
+    return sample.some(sampleValue => sampleValue.value === value.value);
 }
