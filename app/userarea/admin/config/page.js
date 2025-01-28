@@ -31,7 +31,8 @@ export default function ConfigDashboard() {
 
     // Berechnung der Position des Plus-Buttons
     const getPositionForPlusButton = () => {
-        const firstStepRef = stepRefs.current[0]; // Nur den ersten Schritt (Step 0) betrachten
+        const steps = stepRefs.current; // Alle Schritte (Step 0 und nachfolgende)
+        
         if (dataBeingEdited.Steps && dataBeingEdited.Steps.length === 0) {
             // Wenn keine Schwerpunkte existieren, setze die Position an den Anfang
             return {
@@ -39,16 +40,21 @@ export default function ConfigDashboard() {
                 left: "50%",
                 transform: "translateX(-50%)",
             };
-        } else if (firstStepRef) {
-            // Wenn Schwerpunkte existieren, berechne die Position unter dem ersten hinzugefügten Element
-            const stepHeight = firstStepRef.offsetHeight;
+        } else if (steps.length > 0) {
+            // Berechne die Höhe des letzten hinzugefügten Schritts
+            const lastStepRef = steps[steps.length - 1]; // Das letzte Element in steps
+            const lastStepHeight = lastStepRef.offsetHeight;
+    
+            // Berechne die Position direkt unter dem letzten Schritt
             return {
-                top: stepHeight + 20, // 20px unter dem ersten Schritt
+                top: lastStepRef.offsetTop + lastStepHeight + 80, // 20px unter dem letzten Schritt
                 left: "50%",
                 transform: "translateX(-50%)",
             };
         }
-        return { top: "42%", left: "50%", transform: "translateX(-50%)" }; // Standardposition, falls keine Steps vorhanden sind
+    
+        // Standardposition, falls keine Steps vorhanden sind
+        return { top: "42%", left: "50%", transform: "translateX(-50%)" };
     };
 
     // Berechnung der Position für den Minus-Button
@@ -121,9 +127,43 @@ export default function ConfigDashboard() {
     };
     
 
-    const handleDeleteStep = (index) => {
-        // Hier kannst du den Code einfügen, um einen Schritt zu löschen
-        console.log(`Schritt ${index} gelöscht`);
+    const handleDeleteStep = (stepIndex) => {
+        // Zugriff auf den entsprechenden Schritt
+        const step = dataBeingEdited.Steps[stepIndex]; // Hole den spezifischen Schritt basierend auf dem Index
+        
+        // Zugriff auf die StepValues des Schrittes
+        const stepValues = Array.isArray(step.StepValues) ? step.StepValues : [];
+        
+        // Sicherstellen, dass StepValues und die Werte korrekt initialisiert sind
+        const values = stepValues[0]?.values ? stepValues[0].values : [];
+    
+        // Überprüfen, ob es Werte gibt
+        if (values.length > 0) {
+            // Entferne das letzte Element im values-Array (neuesten Schwerpunkt löschen)
+            const updatedValues = values.slice(0, values.length - 1); // Nimmt alles außer dem letzten Element
+            
+            // StepValues mit den aktualisierten Werten versehen
+            const updatedStepValues = stepValues.map((stepValue, index) => {
+                if (index === 0) {
+                    return { ...stepValue, values: updatedValues }; // Setze die neuen values für Step 0
+                }
+                return stepValue;
+            });
+    
+            // Die Steps mit den neuen StepValues updaten
+            const updatedSteps = dataBeingEdited.Steps.map((step, index) => {
+                if (index === stepIndex) {
+                    return { ...step, StepValues: updatedStepValues }; // Update StepValues für den Schritt
+                }
+                return step;
+            });
+    
+            console.log("Aktualisierte Steps nach Löschung des neuesten Schwerpunktes:", updatedSteps); // Debugging: Zeigt die aktualisierten Steps an
+    
+            // Den State mit den neuen Steps updaten
+            setDataBeingEdited((prev) => ({ ...prev, Steps: updatedSteps }));
+            setElementCount(countElementsInStep(updatedSteps)); // Update der Anzahl der Elemente
+        }
     };
 
     const handleEditStep = (index) => {
@@ -184,7 +224,7 @@ export default function ConfigDashboard() {
                         )}
 
                         {/* Fünf Minus-Buttons für Step 0 */}
-                        {[...Array(5)].map((_, index) => {
+                        {[...Array(elementCount)].map((_, index) => {
                             const positionTop = 102 + index * 56; // Position für jeden Button anpassen
                             return (
                                 <div
@@ -194,7 +234,7 @@ export default function ConfigDashboard() {
                                 >
                                     <button
                                         className="bg-red-700 text-white font-bold rounded-full w-7 h-7 flex items-center justify-center"
-                                        onClick={() => handleDeleteStep(0)} // Funktion zum Löschen von Step 0
+                                        onClick={() => handleDeleteStep(0)} // Verwende 0 als `stepIndex` (Step 0)
                                     >
                                         - 
                                     </button>
@@ -203,7 +243,7 @@ export default function ConfigDashboard() {
                         })}
 
                         {/* Fünf Edit-Buttons für Step 0 */}
-                        {[...Array(5)].map((_, index) => {
+                        {[...Array(elementCount)].map((_, index) => {
                             const positionTop = 102 + index * 56; // Position für jeden Button anpassen
                             return (
                                 <div
