@@ -10,24 +10,35 @@ export default function ConfigDashboard() {
     const stepRefs = useRef([]); // Array von Refs für jedes StepUI-Element
 
     useEffect(() => {
-        // JSON-Daten abrufen
-        async function fetchStepData() {
-            try {
-                const response = await fetch('/crs/sample.json'); // Ersetze dies mit deiner URL
-                if (!response.ok) {
-                    throw new Error(`HTTP-Fehler! Status: ${response.status}`);
-                }
-                const data = await response.json();
-                console.log("Fetched data:", data); // Debugging: Log the fetched data
-                setDataBeingEdited(data); // Setze die abgerufenen Daten
-                setElementCount(countElementsInStep(data.Steps)); // Set the count of elements in step 0
-            } catch (error) {
-                console.error("Fehler beim Abrufen der JSON-Daten:", error);
-            }
+        // Lade die Daten aus localStorage
+        const storedData = localStorage.getItem("stepsData");
+        if (storedData) {
+            // Wenn es gespeicherte Daten gibt, setze diese in den State
+            const parsedData = JSON.parse(storedData);
+            setDataBeingEdited(parsedData);
+            setElementCount(countElementsInStep(parsedData.Steps)); // Setze die Anzahl der Elemente
+        } else {
+            // Wenn keine Daten vorhanden sind, initialisiere mit einem leeren Zustand
+            fetchStepData();
         }
-
-        fetchStepData();
     }, []); // Der Effekt wird nur einmal nach dem ersten Rendern ausgeführt
+
+    const fetchStepData = async () => {
+        try {
+            const response = await fetch('/crs/sample.json'); // Ersetze dies mit deiner URL
+            if (!response.ok) {
+                throw new Error(`HTTP-Fehler! Status: ${response.status}`);
+            }
+            const data = await response.json();
+            console.log("Fetched data:", data); // Debugging: Log the fetched data
+            setDataBeingEdited(data); // Setze die abgerufenen Daten
+            setElementCount(countElementsInStep(data.Steps)); // Set the count of elements in step 0
+            // Speichere die abgerufenen Daten in localStorage
+            localStorage.setItem("stepsData", JSON.stringify(data));
+        } catch (error) {
+            console.error("Fehler beim Abrufen der JSON-Daten:", error);
+        }
+    };
 
     // Berechnung der Position des Plus-Buttons
     const getPositionForPlusButton = () => {
@@ -124,6 +135,9 @@ export default function ConfigDashboard() {
         // State aktualisieren
         setDataBeingEdited((prev) => ({ ...prev, Steps: updatedSteps }));
         setElementCount(countElementsInStep(updatedSteps)); // Update der Anzahl der Elemente
+
+        // Speichere die Änderungen in localStorage
+        localStorage.setItem("stepsData", JSON.stringify({ ...dataBeingEdited, Steps: updatedSteps }));
     };
     
 
@@ -163,6 +177,9 @@ export default function ConfigDashboard() {
             // Den State mit den neuen Steps updaten
             setDataBeingEdited((prev) => ({ ...prev, Steps: updatedSteps }));
             setElementCount(countElementsInStep(updatedSteps)); // Update der Anzahl der Elemente
+
+            // Speichere die Änderungen in localStorage
+            localStorage.setItem("stepsData", JSON.stringify({ ...dataBeingEdited, Steps: updatedSteps }));
         }
     };
 
