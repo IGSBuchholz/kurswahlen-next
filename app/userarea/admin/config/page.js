@@ -1,27 +1,25 @@
 "use client";
 import Sidebar from "@/components/Sidebar";
 import { countElementsInStep, StepUI } from "@/app/userarea/admin/StepUI-Admin/StepUI-Admin";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 export default function ConfigDashboard() {
     const [context, setContext] = useState(new Map());
     const [dataBeingEdited, setDataBeingEdited] = useState({Steps: []}); // State to hold the JSON data
     const [elementCount, setElementCount] = useState(0); // State to hold the count of elements in step 0
     const stepRefs = useRef([]); // Array von Refs für jedes StepUI-Element
+    const [isDeleteStepActive, setIsDeleteStepActive] = useState(false); // Zustand für das Löschen eines Schritts
 
     useEffect(() => {
-        // Lade die Daten aus localStorage
         const storedData = localStorage.getItem("stepsData");
         if (storedData) {
-            // Wenn es gespeicherte Daten gibt, setze diese in den State
             const parsedData = JSON.parse(storedData);
             setDataBeingEdited(parsedData);
-            setElementCount(countElementsInStep(parsedData.Steps)); // Setze die Anzahl der Elemente
+            setElementCount(countElementsInStep(parsedData.Steps));
         } else {
-            // Wenn keine Daten vorhanden sind, initialisiere mit einem leeren Zustand
             fetchStepData();
         }
-    }, []); // Der Effekt wird nur einmal nach dem ersten Rendern ausgeführt
+    }, []);
 
     const fetchStepData = async () => {
         try {
@@ -56,18 +54,26 @@ export default function ConfigDashboard() {
             const lastStepRef = steps[steps.length - 1]; // Das letzte Element in steps
             const lastStepHeight = lastStepRef.offsetHeight;
     
+            // Falls der Minus-Button aktiv war, setze die Höhe entsprechend
+            const adjustedTop = isDeleteStepActive
+                ? lastStepRef.offsetTop + lastStepHeight - 40  // Minus-Button gedrückt
+                : lastStepRef.offsetTop + lastStepHeight + 80; // Standardhöhe beim Plus-Button
+            
+
+
             // Berechne die Position direkt unter dem letzten Schritt
             return {
-                top: lastStepRef.offsetTop + lastStepHeight + 80, // 20px unter dem letzten Schritt
+                top: adjustedTop,
                 left: "50%",
                 transform: "translateX(-50%)",
             };
         }
     
         // Standardposition, falls keine Steps vorhanden sind
-        return { top: "42%", left: "50%", transform: "translateX(-50%)" };
+        return { top: "5%", left: "90%", transform: "translateX(-50%)" };
     };
 
+    
     // Berechnung der Position für den Minus-Button
     const getPositionForMinusButton = (index) => {
         const stepRef = stepRefs.current[index]; // Ref für das aktuelle StepUI-Element
@@ -102,8 +108,6 @@ export default function ConfigDashboard() {
         const stepValues = Array.isArray(step.StepValues) ? step.StepValues : [];
         const values = stepValues[0]?.values ? stepValues[0].values : []; // Zugriff auf values innerhalb von StepValues
     
-        console.log("Aktuelle values:", values); // Debugging: Zeigt die aktuellen values an
-    
         // Neues Element mit Namen und Wert erstellen
         const newValue = {
             name: `Schwerpunkt ${values.length + 1}`, // Der angezeigte Name des neuen Schwerpunkts
@@ -112,7 +116,6 @@ export default function ConfigDashboard() {
     
         // Füge das neue Element zu `values` hinzu
         const updatedValues = [...values, newValue];
-        console.log("Aktualisierte values:", updatedValues); // Debugging: Zeigt die aktualisierten values an
     
         // Aktualisiere StepValues mit den neuen `values`
         const updatedStepValues = stepValues.map((stepValue, index) => {
@@ -130,59 +133,66 @@ export default function ConfigDashboard() {
             return step;
         });
     
-        console.log("Aktualisierte Steps:", updatedSteps); // Debugging: Zeigt die aktualisierten Steps an
-    
         // State aktualisieren
         setDataBeingEdited((prev) => ({ ...prev, Steps: updatedSteps }));
         setElementCount(countElementsInStep(updatedSteps)); // Update der Anzahl der Elemente
 
+        // Hier setzen wir einen Zustand, um zu markieren, dass ein Schritt gelöscht wurde
+        setIsDeleteStepActive(false); // Indiziert, dass ein Schritt hinzugefügt wurde
+        getPositionForPlusButton(); // Aktualisiere die Position des Plus-Buttons
+
         // Speichere die Änderungen in localStorage
         localStorage.setItem("stepsData", JSON.stringify({ ...dataBeingEdited, Steps: updatedSteps }));
+
+
     };
     
 
     const handleDeleteStep = (stepIndex) => {
-        // Zugriff auf den entsprechenden Schritt
-        const step = dataBeingEdited.Steps[stepIndex]; // Hole den spezifischen Schritt basierend auf dem Index
+    // Zugriff auf den entsprechenden Schritt
+    const step = dataBeingEdited.Steps[stepIndex]; // Hole den spezifischen Schritt basierend auf dem Index
+    
+    // Zugriff auf die StepValues des Schrittes
+    const stepValues = Array.isArray(step.StepValues) ? step.StepValues : [];
+    
+    // Sicherstellen, dass StepValues und die Werte korrekt initialisiert sind
+    const values = stepValues[0]?.values ? stepValues[0].values : [];
+    
+    // Überprüfen, ob es Werte gibt
+    if (values.length > 0) {
+        // Entferne das letzte Element im values-Array (neuesten Schwerpunkt löschen)
+        const updatedValues = values.slice(0, values.length - 1); // Nimmt alles außer dem letzten Element
         
-        // Zugriff auf die StepValues des Schrittes
-        const stepValues = Array.isArray(step.StepValues) ? step.StepValues : [];
-        
-        // Sicherstellen, dass StepValues und die Werte korrekt initialisiert sind
-        const values = stepValues[0]?.values ? stepValues[0].values : [];
+        // StepValues mit den aktualisierten Werten versehen
+        const updatedStepValues = stepValues.map((stepValue, index) => {
+            if (index === 0) {
+                return { ...stepValue, values: updatedValues }; // Setze die neuen values für Step 0
+            }
+            return stepValue;
+        });
     
-        // Überprüfen, ob es Werte gibt
-        if (values.length > 0) {
-            // Entferne das letzte Element im values-Array (neuesten Schwerpunkt löschen)
-            const updatedValues = values.slice(0, values.length - 1); // Nimmt alles außer dem letzten Element
-            
-            // StepValues mit den aktualisierten Werten versehen
-            const updatedStepValues = stepValues.map((stepValue, index) => {
-                if (index === 0) {
-                    return { ...stepValue, values: updatedValues }; // Setze die neuen values für Step 0
-                }
-                return stepValue;
-            });
+        // Die Steps mit den neuen StepValues updaten
+        const updatedSteps = dataBeingEdited.Steps.map((step, index) => {
+            if (index === stepIndex) {
+                return { ...step, StepValues: updatedStepValues }; // Update StepValues für den Schritt
+            }
+            return step;
+        });
     
-            // Die Steps mit den neuen StepValues updaten
-            const updatedSteps = dataBeingEdited.Steps.map((step, index) => {
-                if (index === stepIndex) {
-                    return { ...step, StepValues: updatedStepValues }; // Update StepValues für den Schritt
-                }
-                return step;
-            });
+        // Den State mit den neuen Steps updaten
+        setDataBeingEdited((prev) => ({ ...prev, Steps: updatedSteps }));
+        setElementCount(countElementsInStep(updatedSteps)); // Update der Anzahl der Elemente
     
-            console.log("Aktualisierte Steps nach Löschung des neuesten Schwerpunktes:", updatedSteps); // Debugging: Zeigt die aktualisierten Steps an
-    
-            // Den State mit den neuen Steps updaten
-            setDataBeingEdited((prev) => ({ ...prev, Steps: updatedSteps }));
-            setElementCount(countElementsInStep(updatedSteps)); // Update der Anzahl der Elemente
+        // Hier setzen wir einen Zustand, um zu markieren, dass ein Schritt gelöscht wurde
+        setIsDeleteStepActive(true); // Indiziert, dass ein Schritt gelöscht wurde
+        getPositionForPlusButton(); // Aktualisiere die Position des Plus-Buttons
 
-            // Speichere die Änderungen in localStorage
-            localStorage.setItem("stepsData", JSON.stringify({ ...dataBeingEdited, Steps: updatedSteps }));
-        }
+        // Speichere die Änderungen in localStorage
+        localStorage.setItem("stepsData", JSON.stringify({ ...dataBeingEdited, Steps: updatedSteps }));
+
     };
-
+    
+};
     const handleEditStep = (index) => {
         // Hier kannst du den Code einfügen, um einen Schritt zu bearbeiten
         console.log(`Schritt ${index} bearbeitet`);
