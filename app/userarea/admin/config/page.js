@@ -11,6 +11,7 @@ export default function ConfigDashboard() {
     const [isDeleteStepActive, setIsDeleteStepActive] = useState(false); // Zustand für das Löschen eines Schritts
 
     useEffect(() => {
+        //localStorage.clear(); // Debugging: Lösche den localStorage
         const storedData = localStorage.getItem("stepsData");
         if (storedData) {
             const parsedData = JSON.parse(storedData);
