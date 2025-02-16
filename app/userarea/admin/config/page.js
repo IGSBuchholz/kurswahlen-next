@@ -7,20 +7,27 @@ export default function ConfigDashboard() {
     const [context, setContext] = useState(new Map());
     const [dataBeingEdited, setDataBeingEdited] = useState({Steps: []}); // State to hold the JSON data
     const [elementCount, setElementCount] = useState(0); // State to hold the count of elements in step 0
+    const [stepIds, setStepIds] = useState([]); // Array to store the IDs of the steps
     const stepRefs = useRef([]); // Array von Refs für jedes StepUI-Element
     const [isDeleteStepActive, setIsDeleteStepActive] = useState(false); // Zustand für das Löschen eines Schritts
+    const [isEditMode, setIsEditMode] = useState(false); // Zustand für den Bearbeitungsmodus
 
     useEffect(() => {
-        //localStorage.clear(); // Debugging: Lösche den localStorage
+        // localStorage.clear(); // Debugging: Lösche den localStorage
         const storedData = localStorage.getItem("stepsData");
         if (storedData) {
             const parsedData = JSON.parse(storedData);
             setDataBeingEdited(parsedData);
             setElementCount(countElementsInStep(parsedData.Steps));
+
+            // Hier fügen wir die IDs der Schritte hinzu, falls sie vorhanden sind
+            const ids = parsedData.Steps.map((step, index) => step.id || index); // Verwende die ID aus dem Step oder den Index
+            setStepIds(ids);
         } else {
             fetchStepData();
         }
     }, []);
+
 
     const fetchStepData = async () => {
         try {
@@ -100,7 +107,7 @@ export default function ConfigDashboard() {
             };
         }
         return { top: "20%", left: "50%", transform: "translateX(-50%)" }; // Standardposition
-    };    
+    };   
 
     const handleAddStep = () => {
         const step = dataBeingEdited.Steps[0]; // Schritt 0
@@ -112,7 +119,7 @@ export default function ConfigDashboard() {
         // Neues Element mit Namen und Wert erstellen
         const newValue = {
             name: `Schwerpunkt ${values.length + 1}`, // Der angezeigte Name des neuen Schwerpunkts
-            value: `Value_${values.length + 1}`, // Der Wert des Schwerpunkts, z.B. "Value_1"
+            value: `Value_${Date.now()}`, // Einzigartiger Wert mit Zeitstempel, um Kollisionen zu vermeiden
         };
     
         // Füge das neue Element zu `values` hinzu
@@ -195,7 +202,7 @@ export default function ConfigDashboard() {
     
 };
     const handleEditStep = (index) => {
-        // Hier kannst du den Code einfügen, um einen Schritt zu bearbeiten
+        setIsEditMode(!isEditMode);
         console.log(`Schritt ${index} bearbeitet`);
     };
 
@@ -226,7 +233,6 @@ export default function ConfigDashboard() {
                                     setCanProcced={() => {}} 
                                     step={dataBeingEdited.Steps[0]} 
                                     number={0} 
-                                    setLoading={() => {}} 
                                 />
                             </div>
                         ) : ""}
@@ -235,6 +241,18 @@ export default function ConfigDashboard() {
                         <div className="pt-20">
                             <p className="text-sm text-gray-600">Anzahl der Elemente in Schritt 0: {elementCount}</p>
                         </div>
+
+                        {/* Anzeige der IDs als Liste, nur wenn Daten vorhanden sind */}
+                        {dataBeingEdited.Steps.length > 0 && (
+                            <div className="pt-4">
+                                <p className="text-sm text-gray-600">IDs der Schritte:</p>
+                                <ul>
+                                    {stepIds.map((id, index) => (
+                                        <li key={index} className="text-gray-500">{`Step ${index}: ID = ${id}`}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
 
                         {/* Dynamisch positionierter Plus-Button nur für Step 0 */}
                         {dataBeingEdited.Steps && dataBeingEdited.Steps.length > 0 && (
@@ -270,7 +288,7 @@ export default function ConfigDashboard() {
                             );
                         })}
 
-                        {/* Fünf Edit-Buttons für Step 0 */}
+                        {/* Edit-Buttons für Step 0 */}
                         {[...Array(elementCount)].map((_, index) => {
                             const positionTop = 102 + index * 56; // Position für jeden Button anpassen
                             return (
@@ -280,21 +298,19 @@ export default function ConfigDashboard() {
                                     style={{ top: `${positionTop}px`, left: "80%", transform: "translateX(-50%)" }}
                                 >
                                     <button
-                                        className="bg-yellow-500 text-white font-bold rounded-full w-12 h-7 flex items-center justify-center"
-                                        onClick={() => handleEditStep(0)} // Funktion zum Bearbeiten von Step 0
+                                        className="bg-yellow-500 text-white font-bold rounded-full w-9 h-7 flex items-center justify-center"
+                                        onClick={() => handleEditStep(index)} // Hier wird der Index des Schwerpunkts übergeben
                                     >
-                                        Edit
+                                        ✏️
                                     </button>
                                 </div>
                             );
                         })}
                     </div>
 
-                    {/* Weitere Sektionen für Bearbeitung */}
-                    {/* Nur Step 1 und Step 2 werden hier angezeigt, ohne den Plus-Button */}
                     <div className="bg-white shadow-md rounded-lg p-6">
                         <h2 className="text-xl font-bold underline text-blue-600">Prüfungsfächer-Bearbeitung</h2>
-                        {dataBeingEdited && dataBeingEdited.Steps && dataBeingEdited.Steps[1] ? (
+                        {!isEditMode && dataBeingEdited && dataBeingEdited.Steps && dataBeingEdited.Steps[1] ? (
                             <StepUI 
                                 context={context} 
                                 setContext={setContext} 
@@ -303,7 +319,6 @@ export default function ConfigDashboard() {
                                 setCanProcced={() => {}} 
                                 step={dataBeingEdited.Steps[1]} 
                                 number={1} 
-                                setLoading={() => {}} 
                             />
                         ) : ""}
                     </div>
@@ -319,7 +334,6 @@ export default function ConfigDashboard() {
                                 setCanProcced={() => {}} 
                                 step={dataBeingEdited.Steps[2]} 
                                 number={2} 
-                                setLoading={() => {}} 
                             />
                         ) : ""}
                     </div>
