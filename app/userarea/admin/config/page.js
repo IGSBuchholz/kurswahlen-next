@@ -5,29 +5,30 @@ import { useState, useEffect, useRef, useCallback } from "react";
 
 export default function ConfigDashboard() {
     const [context, setContext] = useState(new Map());
-    const [dataBeingEdited, setDataBeingEdited] = useState({Steps: []}); // State to hold the JSON data
-    const [elementCount, setElementCount] = useState(0); // State to hold the count of elements in step 0
-    const [stepIds, setStepIds] = useState([]); // Array to store the IDs of the steps
-    const stepRefs = useRef([]); // Array von Refs für jedes StepUI-Element
-    const [isDeleteStepActive, setIsDeleteStepActive] = useState(false); // Zustand für das Löschen eines Schritts
-    const [isEditMode, setIsEditMode] = useState(false); // Zustand für den Bearbeitungsmodus
+    const [dataBeingEdited, setDataBeingEdited] = useState({ Steps: [] });
+    const [elementCount, setElementCount] = useState(0);
+    const stepRefs = useRef([]);
+    const [isDeleteStepActive, setIsDeleteStepActive] = useState(false);
+    const [updatedValuesWithIds, setUpdatedValuesWithIds] = useState([]); // Zustand für aktualisierte Werte mit IDs
 
     useEffect(() => {
-        // localStorage.clear(); // Debugging: Lösche den localStorage
+        //localStorage.clear(); // Uncomment this line to clear localStorage
         const storedData = localStorage.getItem("stepsData");
         if (storedData) {
             const parsedData = JSON.parse(storedData);
             setDataBeingEdited(parsedData);
             setElementCount(countElementsInStep(parsedData.Steps));
-
-            // Hier fügen wir die IDs der Schritte hinzu, falls sie vorhanden sind
-            const ids = parsedData.Steps.map((step, index) => step.id || index); // Verwende die ID aus dem Step oder den Index
-            setStepIds(ids);
+            setUpdatedValuesWithIds(assignIdsToUpdatedValues(parsedData.Steps[0]?.StepValues[0]?.values || []));
         } else {
             fetchStepData();
         }
     }, []);
 
+    const assignIdsToUpdatedValues = (updatedValues) => {
+        return updatedValues.map((value, index) => {
+            return { ...value, id: index }; // Füge die ID hinzu, basierend auf dem Index
+        });
+    };
 
     const fetchStepData = async () => {
         try {
@@ -49,7 +50,7 @@ export default function ConfigDashboard() {
     // Berechnung der Position des Plus-Buttons
     const getPositionForPlusButton = () => {
         const steps = stepRefs.current; // Alle Schritte (Step 0 und nachfolgende)
-        
+
         if (dataBeingEdited.Steps && dataBeingEdited.Steps.length === 0) {
             // Wenn keine Schwerpunkte existieren, setze die Position an den Anfang
             return {
@@ -61,12 +62,12 @@ export default function ConfigDashboard() {
             // Berechne die Höhe des letzten hinzugefügten Schritts
             const lastStepRef = steps[steps.length - 1]; // Das letzte Element in steps
             const lastStepHeight = lastStepRef.offsetHeight;
-    
+
             // Falls der Minus-Button aktiv war, setze die Höhe entsprechend
             const adjustedTop = isDeleteStepActive
                 ? lastStepRef.offsetTop + lastStepHeight - 40  // Minus-Button gedrückt
                 : lastStepRef.offsetTop + lastStepHeight + 80; // Standardhöhe beim Plus-Button
-            
+
 
 
             // Berechne die Position direkt unter dem letzten Schritt
@@ -76,12 +77,12 @@ export default function ConfigDashboard() {
                 transform: "translateX(-50%)",
             };
         }
-    
+
         // Standardposition, falls keine Steps vorhanden sind
         return { top: "5%", left: "90%", transform: "translateX(-50%)" };
     };
 
-    
+
     // Berechnung der Position für den Minus-Button
     const getPositionForMinusButton = (index) => {
         const stepRef = stepRefs.current[index]; // Ref für das aktuelle StepUI-Element
@@ -107,7 +108,7 @@ export default function ConfigDashboard() {
             };
         }
         return { top: "20%", left: "50%", transform: "translateX(-50%)" }; // Standardposition
-    };   
+    };    
 
     const handleAddStep = () => {
         const step = dataBeingEdited.Steps[0]; // Schritt 0
@@ -119,16 +120,22 @@ export default function ConfigDashboard() {
         // Neues Element mit Namen und Wert erstellen
         const newValue = {
             name: `Schwerpunkt ${values.length + 1}`, // Der angezeigte Name des neuen Schwerpunkts
-            value: `Value_${Date.now()}`, // Einzigartiger Wert mit Zeitstempel, um Kollisionen zu vermeiden
+            value: `Value_${Date.now()}`, // Der Wert des Schwerpunkts, z.B. "Value_1"
         };
     
         // Füge das neue Element zu `values` hinzu
         const updatedValues = [...values, newValue];
     
+        // IDs zu den bestehenden Werten zuweisen (diesmal direkt nach dem Hinzufügen)
+        const updatedValuesWithIds = assignIdsToUpdatedValues(updatedValues);
+
+        // IDs erneut verteilen, falls notwendig (Anpassung wie bei dem Beispielbefehl)
+        setUpdatedValuesWithIds(assignIdsToUpdatedValues(updatedValuesWithIds));
+    
         // Aktualisiere StepValues mit den neuen `values`
         const updatedStepValues = stepValues.map((stepValue, index) => {
             if (index === 0) {
-                return { ...stepValue, values: updatedValues }; // Setze die neuen values für Step 0
+                return { ...stepValue, values: updatedValuesWithIds }; // Setze die neuen values für Step 0
             }
             return stepValue;
         });
@@ -140,37 +147,41 @@ export default function ConfigDashboard() {
             }
             return step;
         });
-    
+        
+
         // State aktualisieren
         setDataBeingEdited((prev) => ({ ...prev, Steps: updatedSteps }));
         setElementCount(countElementsInStep(updatedSteps)); // Update der Anzahl der Elemente
-
+    
         // Hier setzen wir einen Zustand, um zu markieren, dass ein Schritt gelöscht wurde
         setIsDeleteStepActive(false); // Indiziert, dass ein Schritt hinzugefügt wurde
         getPositionForPlusButton(); // Aktualisiere die Position des Plus-Buttons
-
+    
         // Speichere die Änderungen in localStorage
         localStorage.setItem("stepsData", JSON.stringify({ ...dataBeingEdited, Steps: updatedSteps }));
-
-
     };
-    
 
     const handleDeleteStep = (stepIndex) => {
     // Zugriff auf den entsprechenden Schritt
     const step = dataBeingEdited.Steps[stepIndex]; // Hole den spezifischen Schritt basierend auf dem Index
-    
+
     // Zugriff auf die StepValues des Schrittes
     const stepValues = Array.isArray(step.StepValues) ? step.StepValues : [];
-    
+
     // Sicherstellen, dass StepValues und die Werte korrekt initialisiert sind
     const values = stepValues[0]?.values ? stepValues[0].values : [];
-    
+
     // Überprüfen, ob es Werte gibt
     if (values.length > 0) {
         // Entferne das letzte Element im values-Array (neuesten Schwerpunkt löschen)
         const updatedValues = values.slice(0, values.length - 1); // Nimmt alles außer dem letzten Element
-        
+
+        // IDs zu den bestehenden Werten zuweisen (diesmal direkt nach dem Hinzufügen)
+        const updatedValuesWithIds = assignIdsToUpdatedValues(updatedValues);
+
+        // IDs erneut verteilen, falls notwendig (Anpassung wie bei dem Beispielbefehl)
+        setUpdatedValuesWithIds(assignIdsToUpdatedValues(updatedValuesWithIds));
+
         // StepValues mit den aktualisierten Werten versehen
         const updatedStepValues = stepValues.map((stepValue, index) => {
             if (index === 0) {
@@ -178,7 +189,7 @@ export default function ConfigDashboard() {
             }
             return stepValue;
         });
-    
+
         // Die Steps mit den neuen StepValues updaten
         const updatedSteps = dataBeingEdited.Steps.map((step, index) => {
             if (index === stepIndex) {
@@ -186,11 +197,11 @@ export default function ConfigDashboard() {
             }
             return step;
         });
-    
+
         // Den State mit den neuen Steps updaten
         setDataBeingEdited((prev) => ({ ...prev, Steps: updatedSteps }));
         setElementCount(countElementsInStep(updatedSteps)); // Update der Anzahl der Elemente
-    
+
         // Hier setzen wir einen Zustand, um zu markieren, dass ein Schritt gelöscht wurde
         setIsDeleteStepActive(true); // Indiziert, dass ein Schritt gelöscht wurde
         getPositionForPlusButton(); // Aktualisiere die Position des Plus-Buttons
@@ -199,10 +210,10 @@ export default function ConfigDashboard() {
         localStorage.setItem("stepsData", JSON.stringify({ ...dataBeingEdited, Steps: updatedSteps }));
 
     };
-    
 };
+
     const handleEditStep = (index) => {
-        setIsEditMode(!isEditMode);
+        // Hier kannst du den Code einfügen, um einen Schritt zu bearbeiten
         console.log(`Schritt ${index} bearbeitet`);
     };
 
@@ -221,7 +232,7 @@ export default function ConfigDashboard() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div className="bg-white shadow-md rounded-lg p-6 relative">
                         <h2 className="text-xl font-bold underline text-blue-600">Schwerpunkte</h2>
-                        
+
                         {/* Rendern von Step 0 */}
                         {dataBeingEdited && dataBeingEdited.Steps && dataBeingEdited.Steps[0] ? (
                             <div ref={(el) => stepRefs.current[0] = el}>
@@ -233,6 +244,7 @@ export default function ConfigDashboard() {
                                     setCanProcced={() => {}} 
                                     step={dataBeingEdited.Steps[0]} 
                                     number={0} 
+                                    setLoading={() => {}} 
                                 />
                             </div>
                         ) : ""}
@@ -241,19 +253,19 @@ export default function ConfigDashboard() {
                         <div className="pt-20">
                             <p className="text-sm text-gray-600">Anzahl der Elemente in Schritt 0: {elementCount}</p>
                         </div>
-
-                        {/* Anzeige der IDs als Liste, nur wenn Daten vorhanden sind */}
-                        {dataBeingEdited.Steps.length > 0 && (
-                            <div className="pt-4">
-                                <p className="text-sm text-gray-600">IDs der Schritte:</p>
+                        <div className="pt-20">
+                            <p className="text-sm text-gray-600">Anzahl der Schwerpunkte: {updatedValuesWithIds.length}</p>
+                            <div>
+                                <h2 className="text-lg font-semibold">Schwerpunkte mit IDs:</h2>
                                 <ul>
-                                    {stepIds.map((id, index) => (
-                                        <li key={index} className="text-gray-500">{`Step ${index}: ID = ${id}`}</li>
+                                    {updatedValuesWithIds.map((value) => (
+                                        <li key={value.id} className="text-sm text-gray-700">
+                                            {value.name} (ID: {value.id})
+                                        </li>
                                     ))}
                                 </ul>
                             </div>
-                        )}
-
+                        </div>
                         {/* Dynamisch positionierter Plus-Button nur für Step 0 */}
                         {dataBeingEdited.Steps && dataBeingEdited.Steps.length > 0 && (
                             <div
@@ -288,7 +300,7 @@ export default function ConfigDashboard() {
                             );
                         })}
 
-                        {/* Edit-Buttons für Step 0 */}
+                        {/* Fünf Edit-Buttons für Step 0 */}
                         {[...Array(elementCount)].map((_, index) => {
                             const positionTop = 102 + index * 56; // Position für jeden Button anpassen
                             return (
@@ -299,7 +311,7 @@ export default function ConfigDashboard() {
                                 >
                                     <button
                                         className="bg-yellow-500 text-white font-bold rounded-full w-9 h-7 flex items-center justify-center"
-                                        onClick={() => handleEditStep(index)} // Hier wird der Index des Schwerpunkts übergeben
+                                        onClick={() => handleEditStep(0)} // Funktion zum Bearbeiten von Step 0
                                     >
                                         ✏️
                                     </button>
@@ -308,9 +320,11 @@ export default function ConfigDashboard() {
                         })}
                     </div>
 
+                    {/* Weitere Sektionen für Bearbeitung */}
+                    {/* Nur Step 1 und Step 2 werden hier angezeigt, ohne den Plus-Button */}
                     <div className="bg-white shadow-md rounded-lg p-6">
                         <h2 className="text-xl font-bold underline text-blue-600">Prüfungsfächer-Bearbeitung</h2>
-                        {!isEditMode && dataBeingEdited && dataBeingEdited.Steps && dataBeingEdited.Steps[1] ? (
+                        {dataBeingEdited && dataBeingEdited.Steps && dataBeingEdited.Steps[1] ? (
                             <StepUI 
                                 context={context} 
                                 setContext={setContext} 
@@ -319,6 +333,7 @@ export default function ConfigDashboard() {
                                 setCanProcced={() => {}} 
                                 step={dataBeingEdited.Steps[1]} 
                                 number={1} 
+                                setLoading={() => {}} 
                             />
                         ) : ""}
                     </div>
@@ -334,6 +349,7 @@ export default function ConfigDashboard() {
                                 setCanProcced={() => {}} 
                                 step={dataBeingEdited.Steps[2]} 
                                 number={2} 
+                                setLoading={() => {}} 
                             />
                         ) : ""}
                     </div>
