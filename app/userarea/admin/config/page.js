@@ -161,56 +161,53 @@ export default function ConfigDashboard() {
         localStorage.setItem("stepsData", JSON.stringify({ ...dataBeingEdited, Steps: updatedSteps }));
     };
 
-    const handleDeleteStep = (stepIndex) => {
-    // Zugriff auf den entsprechenden Schritt
-    const step = dataBeingEdited.Steps[stepIndex]; // Hole den spezifischen Schritt basierend auf dem Index
-
-    // Zugriff auf die StepValues des Schrittes
-    const stepValues = Array.isArray(step.StepValues) ? step.StepValues : [];
-
-    // Sicherstellen, dass StepValues und die Werte korrekt initialisiert sind
-    const values = stepValues[0]?.values ? stepValues[0].values : [];
-
-    // Überprüfen, ob es Werte gibt
-    if (values.length > 0) {
-        // Entferne das letzte Element im values-Array (neuesten Schwerpunkt löschen)
-        const updatedValues = values.slice(0, values.length - 1); // Nimmt alles außer dem letzten Element
-
-        // IDs zu den bestehenden Werten zuweisen (diesmal direkt nach dem Hinzufügen)
-        const updatedValuesWithIds = assignIdsToUpdatedValues(updatedValues);
-
-        // IDs erneut verteilen, falls notwendig (Anpassung wie bei dem Beispielbefehl)
-        setUpdatedValuesWithIds(assignIdsToUpdatedValues(updatedValuesWithIds));
-
-        // StepValues mit den aktualisierten Werten versehen
-        const updatedStepValues = stepValues.map((stepValue, index) => {
-            if (index === 0) {
-                return { ...stepValue, values: updatedValues }; // Setze die neuen values für Step 0
-            }
-            return stepValue;
-        });
-
-        // Die Steps mit den neuen StepValues updaten
-        const updatedSteps = dataBeingEdited.Steps.map((step, index) => {
-            if (index === stepIndex) {
-                return { ...step, StepValues: updatedStepValues }; // Update StepValues für den Schritt
-            }
-            return step;
-        });
-
-        // Den State mit den neuen Steps updaten
-        setDataBeingEdited((prev) => ({ ...prev, Steps: updatedSteps }));
-        setElementCount(countElementsInStep(updatedSteps)); // Update der Anzahl der Elemente
-
-        // Hier setzen wir einen Zustand, um zu markieren, dass ein Schritt gelöscht wurde
-        setIsDeleteStepActive(true); // Indiziert, dass ein Schritt gelöscht wurde
-        getPositionForPlusButton(); // Aktualisiere die Position des Plus-Buttons
-
-        // Speichere die Änderungen in localStorage
-        localStorage.setItem("stepsData", JSON.stringify({ ...dataBeingEdited, Steps: updatedSteps }));
-
+    const handleDeleteStep = (stepIndex, id) => {
+        // Zugriff auf den entsprechenden Schritt
+        const step = dataBeingEdited.Steps[stepIndex]; // Hole den spezifischen Schritt basierend auf dem Index
+    
+        // Zugriff auf die StepValues des Schrittes
+        const stepValues = Array.isArray(step.StepValues) ? step.StepValues : [];
+    
+        // Sicherstellen, dass StepValues und die Werte korrekt initialisiert sind
+        const values = stepValues[0]?.values ? stepValues[0].values : [];
+    
+        // Überprüfen, ob es Werte gibt
+        if (values.length > 0) {
+            // Entferne das Element mit der übergebenen ID aus dem values-Array
+            const updatedValues = values.filter((value) => value.id !== id);
+    
+            // IDs zu den bestehenden Werten zuweisen (falls notwendig)
+            const updatedValuesWithIds = assignIdsToUpdatedValues(updatedValues);
+    
+            // StepValues mit den aktualisierten Werten versehen
+            const updatedStepValues = stepValues.map((stepValue, index) => {
+                if (index === 0) {
+                    return { ...stepValue, values: updatedValuesWithIds }; // Setze die neuen values für Step 0
+                }
+                return stepValue;
+            });
+    
+            // Die Steps mit den neuen StepValues updaten
+            const updatedSteps = dataBeingEdited.Steps.map((step, index) => {
+                if (index === stepIndex) {
+                    return { ...step, StepValues: updatedStepValues }; // Update StepValues für den Schritt
+                }
+                return step;
+            });
+    
+            // Den State mit den neuen Steps updaten
+            setDataBeingEdited((prev) => ({ ...prev, Steps: updatedSteps }));
+            setElementCount(countElementsInStep(updatedSteps)); // Update der Anzahl der Elemente
+    
+            // Hier setzen wir einen Zustand, um zu markieren, dass ein Schritt gelöscht wurde
+            setIsDeleteStepActive(true); // Indiziert, dass ein Schritt gelöscht wurde
+            getPositionForPlusButton(); // Aktualisiere die Position des Plus-Buttons
+    
+            // Speichere die Änderungen in localStorage
+            localStorage.setItem("stepsData", JSON.stringify({ ...dataBeingEdited, Steps: updatedSteps }));
+        }
     };
-};
+
 
     const handleEditStep = (index) => {
         // Hier kannst du den Code einfügen, um einen Schritt zu bearbeiten
@@ -282,19 +279,19 @@ export default function ConfigDashboard() {
                         )}
 
                         {/* Fünf Minus-Buttons für Step 0 */}
-                        {[...Array(elementCount)].map((_, index) => {
+                        {dataBeingEdited.Steps[0]?.StepValues[0]?.values?.map((value, index) => {
                             const positionTop = 102 + index * 56; // Position für jeden Button anpassen
                             return (
                                 <div
-                                    key={index}
+                                    key={value.id} // Verwende die ID des Schwerpunkts als Key
                                     className="absolute"
                                     style={{ top: `${positionTop}px`, left: "90%", transform: "translateX(-50%)" }}
                                 >
                                     <button
                                         className="bg-red-700 text-white font-bold rounded-full w-7 h-7 flex items-center justify-center"
-                                        onClick={() => handleDeleteStep(0)} // Verwende 0 als `stepIndex` (Step 0)
+                                        onClick={() => handleDeleteStep(0, value.id)} // Übergabe des Schritts und der ID des Schwerpunkts
                                     >
-                                        - 
+                                        -
                                     </button>
                                 </div>
                             );
