@@ -10,6 +10,7 @@ export default function ConfigDashboard() {
     const stepRefs = useRef([]);
     const [isDeleteStepActive, setIsDeleteStepActive] = useState(false);
     const [updatedValuesWithIds, setUpdatedValuesWithIds] = useState([]); // Zustand für aktualisierte Werte mit IDs
+    const [showStep1, setShowStep1] = useState(true);
 
     useEffect(() => {
         //localStorage.clear(); // Uncomment this line to clear localStorage
@@ -210,8 +211,11 @@ export default function ConfigDashboard() {
 
 
     const handleEditStep = (index) => {
-        // Hier kannst du den Code einfügen, um einen Schritt zu bearbeiten
-        console.log(`Schritt ${index} bearbeitet`);
+        if (showStep1 === false) {
+            setShowStep1(true); // Zeigt Step 1 an
+        } else {
+            setShowStep1(false); // Versteckt Step 1
+        }
     };
 
     return (
@@ -321,7 +325,7 @@ export default function ConfigDashboard() {
                     {/* Nur Step 1 und Step 2 werden hier angezeigt, ohne den Plus-Button */}
                     <div className="bg-white shadow-md rounded-lg p-6">
                         <h2 className="text-xl font-bold underline text-blue-600">Prüfungsfächer-Bearbeitung</h2>
-                        {dataBeingEdited && dataBeingEdited.Steps && dataBeingEdited.Steps[1] ? (
+                        {showStep1 && dataBeingEdited && dataBeingEdited.Steps && dataBeingEdited.Steps[1] ? (
                             <StepUI 
                                 context={context} 
                                 setContext={setContext} 
@@ -332,6 +336,11 @@ export default function ConfigDashboard() {
                                 number={1} 
                                 setLoading={() => {}} 
                             />
+                        ) : ""}
+                        {!showStep1 && dataBeingEdited && dataBeingEdited.Steps && dataBeingEdited.Steps[1] ? (
+                            <div className="pt-20">
+                                <p className="text-sm text-gray-600">...___Individuelle Bearbeitung___...</p>
+                            </div>
                         ) : ""}
                     </div>
 
