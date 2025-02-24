@@ -11,6 +11,8 @@ export default function ConfigDashboard() {
     const [isDeleteStepActive, setIsDeleteStepActive] = useState(false);
     const [updatedValuesWithIds, setUpdatedValuesWithIds] = useState([]); // Zustand für aktualisierte Werte mit IDs
     const [showStep1, setShowStep1] = useState(true);
+    const [activeStepIdEdit, setActiveStepIdEdit] = useState(null);
+    const [editedName, setEditedName] = useState(""); // Temporärer Name
 
     useEffect(() => {
         //localStorage.clear(); // Uncomment this line to clear localStorage
@@ -120,7 +122,7 @@ export default function ConfigDashboard() {
     
         // Neues Element mit Namen und Wert erstellen
         const newValue = {
-            name: `Schwerpunkt ${values.length + 1}`, // Der angezeigte Name des neuen Schwerpunkts
+            displayText: `Schwerpunkt ${values.length + 1}`, // Der angezeigte Name des neuen Schwerpunkts
             value: `Value_${Date.now()}`, // Der Wert des Schwerpunkts, z.B. "Value_1"
         };
     
@@ -210,11 +212,13 @@ export default function ConfigDashboard() {
     };
 
 
-    const handleEditStep = (index) => {
-        if (showStep1 === false) {
-            setShowStep1(true); // Zeigt Step 1 an
+    const handleEditStep = (id) => {
+        if (activeStepIdEdit === id) {
+            setActiveStepIdEdit(null); // Schließen, falls bereits aktiv
+            setShowStep1(true);
         } else {
-            setShowStep1(false); // Versteckt Step 1
+            setActiveStepIdEdit(id); // Öffnen für diesen Schwerpunkt
+            setShowStep1(false);
         }
     };
 
@@ -261,7 +265,7 @@ export default function ConfigDashboard() {
                                 <ul>
                                     {updatedValuesWithIds.map((value) => (
                                         <li key={value.id} className="text-sm text-gray-700">
-                                            {value.name} (ID: {value.id})
+                                            {value.displayText} (ID: {value.id})
                                         </li>
                                     ))}
                                 </ul>
@@ -274,7 +278,7 @@ export default function ConfigDashboard() {
                                 style={getPositionForPlusButton()}
                             >
                                 <button
-                                    className="bg-blue-800 text-white font-bold rounded-full w-7 h-7 flex items-center justify-center"
+                                    className="bg-blue-400 text-white font-bold rounded-full w-7 h-7 flex items-center justify-center"
                                     onClick={handleAddStep} // Funktion zum Hinzufügen eines Schwerpunkts
                                 >
                                     +
@@ -292,7 +296,7 @@ export default function ConfigDashboard() {
                                     style={{ top: `${positionTop}px`, left: "90%", transform: "translateX(-50%)" }}
                                 >
                                     <button
-                                        className="bg-red-700 text-white font-bold rounded-full w-7 h-7 flex items-center justify-center"
+                                        className="bg-red-600 text-white font-bold rounded-full w-7 h-7 flex items-center justify-center"
                                         onClick={() => handleDeleteStep(0, value.id)} // Übergabe des Schritts und der ID des Schwerpunkts
                                     >
                                         -
@@ -301,22 +305,30 @@ export default function ConfigDashboard() {
                             );
                         })}
 
-                        {/* Fünf Edit-Buttons für Step 0 */}
-                        {[...Array(elementCount)].map((_, index) => {
+                        {dataBeingEdited.Steps[0]?.StepValues[0]?.values?.map((value, index) => {
                             const positionTop = 102 + index * 56; // Position für jeden Button anpassen
                             return (
-                                <div
-                                    key={index}
-                                    className="absolute"
-                                    style={{ top: `${positionTop}px`, left: "80%", transform: "translateX(-50%)" }}
+                            <div
+                                key={value.id} // Verwende die ID des Schwerpunkts als Key
+                                className="absolute"
+                                style={{ top: `${positionTop}px`, left: "80%", transform: "translateX(-50%)" }}
+                            >
+                                {/* Fokus auf den Namen setzen, wenn dieser aktiv bearbeitet wird */}
+                                <span
+                                onClick={() => handleEditStep(value.id)} // Toggle Edit-Status beim Klicken
+                                className={activeStepIdEdit === value.id ? "text-red-500 cursor-pointer" : "cursor-pointer"}
                                 >
-                                    <button
-                                        className="bg-yellow-500 text-white font-bold rounded-full w-9 h-7 flex items-center justify-center"
-                                        onClick={() => handleEditStep(0)} // Funktion zum Bearbeiten von Step 0
-                                    >
-                                        ✏️
-                                    </button>
-                                </div>
+                                {value.displayText}
+                                </span>
+
+                                {/* Edit-Button */}
+                                <button
+                                className="bg-yellow-400 text-black font-bold rounded-full w-7 h-7 flex items-center justify-center"
+                                onClick={() => handleEditStep(value.id)} // Toggle Edit-Status beim Klicken
+                                >
+                                ✎
+                                </button>
+                            </div>
                             );
                         })}
                     </div>
