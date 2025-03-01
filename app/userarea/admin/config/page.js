@@ -13,6 +13,10 @@ export default function ConfigDashboard() {
     const [showStep1, setShowStep1] = useState(true);
     const [activeStepIdEdit, setActiveStepIdEdit] = useState(null);
     const [editedName, setEditedName] = useState(""); // Temporärer Name
+    const [isRenaming, setIsRenaming] = useState(false); // Indikator für den Umbenennungsstatus
+    const [newValueName, setNewValueName] = useState(""); // Neuer Name für den Schwerpunkt
+    const [askingInput, setAskingInput] = useState(false); // Indikator für die Eingabeaufforderung
+    const [updatedData, setUpdatedData] = useState(null); // Zustand für die angezeigten Daten
 
     useEffect(() => {
         //localStorage.clear(); // Uncomment this line to clear localStorage
@@ -122,8 +126,8 @@ export default function ConfigDashboard() {
     
         // Neues Element mit Namen und Wert erstellen
         const newValue = {
-            displayText: `Schwerpunkt ${values.length + 1}`, // Der angezeigte Name des neuen Schwerpunkts
             value: `Value_${Date.now()}`, // Der Wert des Schwerpunkts, z.B. "Value_1"
+            displayText: `Schwerpunkt ${values.length + 1}`, // Der angezeigte Name des neuen Schwerpunkts
         };
     
         // Füge das neue Element zu `values` hinzu
@@ -216,9 +220,63 @@ export default function ConfigDashboard() {
         if (activeStepIdEdit === id) {
             setActiveStepIdEdit(null); // Schließen, falls bereits aktiv
             setShowStep1(true);
+            setIsRenaming(false);
         } else {
             setActiveStepIdEdit(id); // Öffnen für diesen Schwerpunkt
             setShowStep1(false);
+            setIsRenaming(true);
+        }
+    };
+
+    const handleRenameChange = (e) => {
+        setNewValueName(e.target.value);
+      };
+
+    const renamingProcess = () => {
+        if (activeStepIdEdit !== null) {
+            setDataBeingEdited(prevData => {
+                const updatedSteps = prevData.Steps.map((step, index) => {
+                    if (index === 0) { 
+                        const stepValues = Array.isArray(step.StepValues) ? step.StepValues : [];
+                        const values = stepValues[0]?.values ? stepValues[0].values : [];
+    
+                        // Prüfen, ob der Name oder Wert bereits existiert
+                        const alreadyExists = values.some(value => value.displayText === newValueName || value.value === newValueName);
+                        if (alreadyExists) {
+                            alert("Bereits vorhanden");
+                            return step;
+                        }
+    
+                        // ID finden und aktualisieren
+                        const valueIndex = values.findIndex(value => value.id === activeStepIdEdit);
+                        if (valueIndex !== -1) {
+                            const updatedValues = [...values];
+                            updatedValues[valueIndex] = {
+                                ...updatedValues[valueIndex],
+                                displayText: newValueName,
+                                value: newValueName
+                            };
+    
+                            // IDs neu zuweisen, um saubere Reihenfolge sicherzustellen
+                            const updatedValuesWithIds = assignIdsToUpdatedValues(updatedValues);
+    
+                            const updatedStepValues = [{ ...stepValues[0], values: updatedValuesWithIds }];
+                            return { ...step, StepValues: updatedStepValues };
+                        }
+                    }
+                    return step; 
+                });
+    
+                const updatedData = { ...dataBeingEdited, Steps: updatedSteps };
+                
+                // **localStorage sofort updaten**
+                localStorage.setItem("stepsData", JSON.stringify(updatedData));
+    
+                return updatedData; // Direkte Aktualisierung von dataBeingEdited
+            });
+            window.location.reload();
+    
+            console.log(`✅ Der Name wurde erfolgreich geändert: ${newValueName}`);
         }
     };
 
@@ -254,9 +312,11 @@ export default function ConfigDashboard() {
                             </div>
                         ) : ""}
 
-                        {/* Display the count of elements in step 0 */}
                         <div className="pt-20">
-                            <p className="text-sm text-gray-600">Anzahl der Elemente in Schritt 0: {elementCount}</p>
+                            <p className="text-sm text-gray-600">Inhalt von updatedSteps:</p>
+                            <pre className="bg-gray-100 p-2 text-xs text-gray-800 rounded">
+                                {JSON.stringify(updatedValuesWithIds)}
+                            </pre>
                         </div>
                         <div className="pt-20">
                             <p className="text-sm text-gray-600">Anzahl der Schwerpunkte: {updatedValuesWithIds.length}</p>
@@ -318,7 +378,6 @@ export default function ConfigDashboard() {
                                 onClick={() => handleEditStep(value.id)} // Toggle Edit-Status beim Klicken
                                 className={activeStepIdEdit === value.id ? "text-red-500 cursor-pointer" : "cursor-pointer"}
                                 >
-                                {value.displayText}
                                 </span>
 
                                 {/* Edit-Button */}
@@ -331,6 +390,49 @@ export default function ConfigDashboard() {
                             </div>
                             );
                         })}
+
+                        {isRenaming && activeStepIdEdit !== null && (
+                            <div
+                                className="absolute"
+                                style={{ top: `20px`, left: "70%", transform: "translateX(-50%)" }}
+                            >
+                                <button
+                                className="bg-red-500 text-white p-1 rounded"
+                                onClick={() => {
+                                    // Umbenennen-Button sichtbar machen
+                                    setAskingInput(true); // Toggle visibility of the rename input
+                                    setIsRenaming(false); // Toggle the renaming status
+                                }}
+                                >
+                                Umbenennen
+                                </button>
+                            </div>
+                        )}
+
+                        {askingInput && (
+                            <div
+                                className="absolute"
+                                style={{ top: `20px`, left: "70%", transform: "translateX(-50%)" }}
+                            >
+                                <input
+                                    type="text"
+                                    value={newValueName}
+                                    onChange={handleRenameChange} // Neue Name-Änderung erfassen
+                                    className="border p-1 rounded"
+                                    placeholder="Name eingeben"
+                                />
+                                <button
+                                    onClick={() => {
+                                        renamingProcess(); // Renaming-Prozess durchführen
+                                        setAskingInput(false); // Input wieder ausblenden
+                                    }}
+                                        className="bg-blue-500 text-white p-1 rounded ml-2"
+                                        style={{ transform: "translateX(40%)" }}
+                                    >
+                                        Bestätigen
+                                    </button>
+                            </div>
+                        )}
                     </div>
 
                     {/* Weitere Sektionen für Bearbeitung */}
@@ -351,7 +453,17 @@ export default function ConfigDashboard() {
                         ) : ""}
                         {!showStep1 && dataBeingEdited && dataBeingEdited.Steps && dataBeingEdited.Steps[1] ? (
                             <div className="pt-20">
-                                <p className="text-sm text-gray-600">...___Individuelle Bearbeitung___...</p>
+                                <h3 className="text-lg font-bold">Prüfungsfächer (Step 1)</h3>
+                                {dataBeingEdited.Steps[1]?.StepValues.map((stepValue, index) => (
+                                    <div key={index} className="mb-4">
+                                        <h4 className="text-md font-semibold">{stepValue.name}</h4>
+                                        <ul>
+                                            {stepValue.values?.map((subject, i) => (
+                                                <li key={i}>{subject.displayText}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                ))}
                             </div>
                         ) : ""}
                     </div>

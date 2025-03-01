@@ -8,7 +8,7 @@ export default function Sidebar() {
     const pathName = usePathname();
     return (
         <div
-        className={`bg-gray-800 text-white h-full w-64 
+        className={`bg-blue-950 text-white h-full w-64 
             transition-all duration-300 fixed`}
         >
             <nav className="mt-4">
