@@ -453,7 +453,7 @@ export default function ConfigDashboard() {
                         ) : ""}
                         {!showStep1 && dataBeingEdited && dataBeingEdited.Steps && dataBeingEdited.Steps[1] ? (
                             <div className="pt-20">
-                                <h3 className="text-lg font-bold">Prüfungsfächer (Step 1)</h3>
+                                <h3 className="text-lg font-bold">Prüfungsfaecher (Step 1)</h3>
                                 {dataBeingEdited.Steps[1]?.StepValues.map((stepValue, index) => (
                                     <div key={index} className="mb-4">
                                         <h4 className="text-md font-semibold">{stepValue.name}</h4>
