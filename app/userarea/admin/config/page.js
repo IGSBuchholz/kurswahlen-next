@@ -346,6 +346,80 @@ export default function ConfigDashboard() {
         setIsAddingExamSection(false);
     };
 
+    const handleRenameChange = (e) => {
+        setNewValueName(e.target.value);
+      };
+
+    const renamingProcess = () => {
+        if (activeStepIdEdit !== null) {
+            setDataBeingEdited(prevData => {
+                const updatedSteps = prevData.Steps.map((step, index) => {
+                    if (index === 0) { 
+                        const stepValues = Array.isArray(step.StepValues) ? step.StepValues : [];
+                        const values = stepValues[0]?.values ? stepValues[0].values : [];
+    
+                        // Prüfen, ob der Name oder Wert bereits existiert
+                        const alreadyExists = values.some(value => value.displayText === newValueName || value.value === newValueName);
+                        if (alreadyExists) {
+                            alert("Bereits vorhanden");
+                            return step;
+                        }
+    
+                        // ID finden und aktualisieren
+                        const valueIndex = values.findIndex(value => value.id === activeStepIdEdit);
+                        if (valueIndex !== -1) {
+                            const updatedValues = [...values];
+                            updatedValues[valueIndex] = {
+                                ...updatedValues[valueIndex],
+                                displayText: newValueName,
+                                value: newValueName
+                            };
+    
+                            // IDs neu zuweisen, um saubere Reihenfolge sicherzustellen
+                            const updatedValuesWithIds = assignIdsToUpdatedValues(updatedValues);
+    
+                            const updatedStepValues = [{ ...stepValues[0], values: updatedValuesWithIds }];
+                            return { ...step, StepValues: updatedStepValues };
+                        }
+                    }
+                    return step; 
+                });
+    
+                const updatedData = { ...dataBeingEdited, Steps: updatedSteps };
+                
+                // **localStorage sofort updaten**
+                localStorage.setItem("stepsData", JSON.stringify(updatedData));
+    
+                return updatedData; // Direkte Aktualisierung von dataBeingEdited
+            });
+            window.location.reload();
+    
+            console.log(`✅ Der Name wurde erfolgreich geändert: ${newValueName}`);
+        }
+    };
+
+    // Funktion zum Hinzufügen eines neuen Prüfungsfachs
+    const addExamSubject = () => {
+        if (newExamSubject.trim() !== "" && !examSubjects.includes(newExamSubject)) {
+            const updatedSubjects = [...examSubjects, newExamSubject];
+            setExam_subjects(updatedSubjects);
+            localStorage.setItem("exam_subjects", JSON.stringify(updatedSubjects));
+        }
+        setNewExamSubject("");
+        setIsAddingExamSubject(false);
+    };
+
+    // Funktion zum Hinzufügen einer neuen Prüfungssektion
+    const addExamSection = () => {
+        if (newExamSection.trim() !== "" && !examSections.includes(newExamSection)) {
+            const updatedSections = [...examSections, newExamSection];
+            setExam_sections(updatedSections);
+            localStorage.setItem("exam_sections", JSON.stringify(updatedSections));
+        }
+        setNewExamSection("");
+        setIsAddingExamSection(false);
+    };
+
     return (
         <div className="flex h-screen">
             {/* Sidebar */}
