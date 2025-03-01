@@ -21,7 +21,7 @@ export default function Sidebar() {
                     <RoutingLink page={"Config"} text={"Kurswahlkonfiguration"}></RoutingLink>
                     <RoutingLink page={"Settings"} text={"Einstellungen"}></RoutingLink>
                     <li className="p-4 hover:bg-gray-700 underline font-bold">
-                        <Link href="/logout">Logout</Link>
+                        <Link href="/userarea/admin/logout">Logout</Link>
                     </li>
                 </ul>
             </nav>
