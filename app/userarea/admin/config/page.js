@@ -17,6 +17,12 @@ export default function ConfigDashboard() {
     const [newValueName, setNewValueName] = useState(""); // Neuer Name für den Schwerpunkt
     const [askingInput, setAskingInput] = useState(false); // Indikator für die Eingabeaufforderung
     const [updatedData, setUpdatedData] = useState(null); // Zustand für die angezeigten Daten
+    const [exam_subjects, setExam_subjects] = useState(""); // Zustand für Prüfungsfächer
+    const [exam_sections, setExam_sections] = useState(""); // Zustand für Prüfungsfächer-Sektionen
+    const [newExamSubject, setNewExamSubject] = useState(""); // Neue Eingabe für Prüfungsfach
+    const [newExamSection, setNewExamSection] = useState(""); // Neue Eingabe für Prüfungssektion
+    const [isAddingExamSubject, setIsAddingExamSubject] = useState(false); // Zustand für Hinzufügen von Prüfungsfach
+    const [isAddingExamSection, setIsAddingExamSection] = useState(false); // Zustand für Hinzufügen von Prüfungssektion
 
     useEffect(() => {
         //localStorage.clear(); // Uncomment this line to clear localStorage
@@ -280,6 +286,24 @@ export default function ConfigDashboard() {
         }
     };
 
+    // Funktion zum Hinzufügen eines neuen Prüfungsfachs
+    const addExamSubject = () => {
+        if (newExamSubject.trim()) {
+            setExam_subjects([...exam_subjects, newExamSubject.trim()]);
+            setNewExamSubject(""); // Eingabefeld zurücksetzen
+            setIsAddingExamSubject(false); // Hinzufügen-Funktion beenden
+        }
+    };
+
+    // Funktion zum Hinzufügen einer neuen Prüfungssektion
+    const addExamSection = () => {
+        if (newExamSection.trim()) {
+            setExam_sections([...exam_sections, newExamSection.trim()]);
+            setNewExamSection(""); // Eingabefeld zurücksetzen
+            setIsAddingExamSection(false); // Hinzufügen-Funktion beenden
+        }
+    };
+
     return (
         <div className="flex h-screen">
             {/* Sidebar */}
@@ -436,24 +460,117 @@ export default function ConfigDashboard() {
                     </div>
 
                     {/* Weitere Sektionen für Bearbeitung */}
-                    {/* Nur Step 1 und Step 2 werden hier angezeigt, ohne den Plus-Button */}
                     <div className="bg-white shadow-md rounded-lg p-6">
-                        <h2 className="text-xl font-bold underline text-blue-600">Prüfungsfächer-Bearbeitung</h2>
-                        {showStep1 && dataBeingEdited && dataBeingEdited.Steps && dataBeingEdited.Steps[1] ? (
-                            <StepUI 
-                                context={context} 
-                                setContext={setContext} 
-                                initialContext={context} 
-                                setMessages={() => {}} 
-                                setCanProcced={() => {}} 
-                                step={dataBeingEdited.Steps[1]} 
-                                number={1} 
-                                setLoading={() => {}} 
-                            />
-                        ) : ""}
+    <h2 className="text-xl font-bold underline text-blue-600">Prüfungsfächer-Bearbeitung</h2>
+
+    {showStep1 && dataBeingEdited && dataBeingEdited.Steps && dataBeingEdited.Steps[1] ? (
+        <div>
+            {/* Dropdown für Auswählbare Fächer (exam_subjects) */}
+            <div className="mb-4">
+                <label className="block text-sm font-semibold text-gray-700">Auswählbare Fächer</label>
+                <select
+                    value={exam_subjects || ""}
+                    onChange={(e) => {
+                        const value = e.target.value;
+                        setExam_subjects(value);
+                        if (value === "+") {
+                            setIsAddingExamSubject(true); // Aktiviert die Eingabe für neues Fach
+                        }
+                    }}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                >
+                    <option value="">Bitte auswählen</option>
+                    {/* Zeige "Keine Fächer verfügbar" wenn exam_subjects leer ist */}
+                    {exam_subjects === "" && <option value="">Keine Fächer verfügbar</option>}
+                    {/* Zeige die Option zum Hinzufügen eines neuen Faches */}
+                    <option value="+">Hinzufügen</option>
+                </select>
+
+                {/* Eingabefeld für neues Fach, wenn "Hinzufügen" geklickt wird */}
+                {isAddingExamSubject && (
+                    <div className="mt-2">
+                        <input
+                            type="text"
+                            value={newExamSubject}
+                            onChange={(e) => setNewExamSubject(e.target.value)}
+                            placeholder="Neues Fach eingeben"
+                            className="w-full p-2 border border-gray-300 rounded-lg"
+                        />
+                        <button
+                            onClick={addExamSubject}
+                            className="text-white bg-green-500 p-2 rounded-lg mt-2"
+                        >
+                            ✔ Hinzufügen
+                        </button>
+                    </div>
+                )}
+            </div>
+
+            {/* Dropdown für Prüfungsfächer-Sektionen (exam_sections) */}
+            <div className="mb-4">
+                <label className="block text-sm font-semibold text-gray-700">Anzahl der Prüfungsfächer</label>
+                <select
+                    value={exam_sections || ""}
+                    onChange={(e) => {
+                        const value = e.target.value;
+                        setExam_sections(value);
+                        if (value === "+") {
+                            setIsAddingExamSection(true); // Aktiviert die Eingabe für neue Prüfungssektion
+                        }
+                    }}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                >
+                    <option value="">Bitte auswählen</option>
+                    {/* Zeige "Keine Prüfungssektionen verfügbar" wenn exam_sections leer ist */}
+                    {exam_sections === "" && <option value="">Keine Prüfungssektionen verfügbar</option>}
+                    {/* Zeige die Option zum Hinzufügen einer neuen Prüfungssektion */}
+                    <option value="">Hinzufügen</option>
+                </select>
+
+                {/* Eingabefeld für neue Prüfungssektion, wenn "Hinzufügen" geklickt wird */}
+                {isAddingExamSection && (
+                    <div className="mt-2">
+                        <input
+                            type="text"
+                            value={newExamSection}
+                            onChange={(e) => setNewExamSection(e.target.value)}
+                            placeholder="Neue Prüfungssektion eingeben"
+                            className="w-full p-2 border border-gray-300 rounded-lg"
+                        />
+                        <button
+                            onClick={addExamSection}
+                            className="text-white bg-green-500 p-2 rounded-lg mt-2"
+                        >
+                            ✔ Hinzufügen
+                        </button>
+                    </div>
+                )}
+            </div>
+
+            {/* Optional: Anzeige der ausgewählten Werte */}
+            <div className="mt-4">
+                {exam_subjects && (
+                    <div className="mb-4">
+                        <h4 className="text-md font-semibold">Ausgewähltes Auswählbare Fach:</h4>
+                        <p>{exam_subjects}</p>
+                    </div>
+                )}
+
+                {exam_sections && (
+                    <div className="mb-4">
+                        <h4 className="text-md font-semibold">Ausgewählte Anzahl der Prüfungsfächer:</h4>
+                        <p>{exam_sections}</p>
+                    </div>
+                )}
+            </div>
+        </div>
+    ) : null}
+
+
+                        {/* Falls showStep1 false ist */}
                         {!showStep1 && dataBeingEdited && dataBeingEdited.Steps && dataBeingEdited.Steps[1] ? (
                             <div className="pt-20">
-                                <h3 className="text-lg font-bold">Prüfungsfaecher (Step 1)</h3>
+                                <h3 className="text-lg font-bold">Prüfungsfächer (Step 1)</h3>
                                 {dataBeingEdited.Steps[1]?.StepValues.map((stepValue, index) => (
                                     <div key={index} className="mb-4">
                                         <h4 className="text-md font-semibold">{stepValue.name}</h4>
