@@ -2,26 +2,67 @@
 import Step1 from "@/components/steps/step1";
 import {usePathname, useSearchParams} from 'next/navigation'
 import {useEffect, useState} from "react";
-import {evaluateRules, getStepUI, setupEngine, StepUI} from "@/utils/RulesEngine";
+import {StepUI} from "@/utils/RulesEngine";
 import Link from "next/link";
 import ButtonPrimary from "@/components/ButtonPrimary";
+import HoursPreview from "@/components/HoursPreview";
+import FinalView from "@/components/FinalView";
+import ContextViewer from "@/components/vis/ContextViewer";
+import SaveDialog from "@/components/SaveDialog";
+import {NextResponse as res} from "next/server";
 
 export default function Progress() {
     const searchParams = useSearchParams();
     const pathname = usePathname()
     const initialStepNumber = parseInt(searchParams.get("step")) || 0; // Default to 0 if step is null
-    const [stepNumber, setStepNumber] = useState(initialStepNumber); // Step number state
-
+    const [stepNumber, setStepNumber] = useState(-1); // Step number state
+    const debugMode = true;
     const [currentStepData, setCurrentStepData] = useState({});
     const [context, setContext] = useState(new Map()); // State to hold the JSON data
     const [loading, setLoading] = useState(true);  // Loading state
-
+    const [saveId, setSaveId] = useState(null);
     const [canProcced, setCanProcced] = useState(false);
     const [stepData, setStepData] = useState({});
+    const [changesSinceSave, setChangesSinceSave] = useState(false);
     const [messages, setMessages] = useState(new Map([]
     ));
 
+    const [hours, setHours] = useState([]);
+    const [saveDialogTriggeredExternally, setSaveDialogTriggeredExternally] = useState(new Map([]
+    ));
+
     useEffect(() => {
+
+        async function initializeGivenContext() {
+            let loadedContext = new Map()
+            let conTxt = [];
+            if(!searchParams.has("contextText")) {
+               return false;
+            }
+            try {
+                conTxt = JSON.parse(searchParams.get("contextText"))
+            }catch (error) {
+
+            }
+
+            let lastEl = "";
+            for (const key in conTxt) {
+                lastEl = key;
+                loadedContext.set(key, conTxt[key]);
+            }
+            const extractedStepNumber = parseInt(lastEl.split("_")[0])
+            setContext(loadedContext);
+            setStepNumber(extractedStepNumber);
+        }
+        initializeGivenContext();
+
+        function initializeSaveID() {
+            if(searchParams.has("id")) {
+                setSaveId(parseInt(searchParams.get("id")));
+            }
+        }
+        initializeSaveID();
+
         // Fetch JSON data from the web file
         async function fetchStepData() {
             try {
@@ -31,7 +72,6 @@ export default function Progress() {
                 }
                 const data = await response.json();
                 setStepData(data); // Set the fetched data
-                setCurrentStepData(data.Steps[initialStepNumber])
             } catch (error) {
                 console.error("Error fetching JSON:", error);
             } finally {
@@ -39,7 +79,8 @@ export default function Progress() {
             }
         }
 
-        fetchStepData();
+        fetchStepData()
+
     }, []);
 
     useEffect(() => {
@@ -47,7 +88,13 @@ export default function Progress() {
             return
         }
         setCurrentStepData(stepData.Steps[stepNumber])
-    }, [stepNumber]);
+
+        if(stepNumber+1 > stepData.Steps.length) {
+            if(saveId) {
+                updateSave(saveId, context, setChangesSinceSave())
+            }
+        }
+    }, [stepNumber, stepData]);
 
     function renderNotifications() {
         let notifications = [];
@@ -128,6 +175,7 @@ export default function Progress() {
 
     return (
         <>
+            <SaveDialog setDialogTriggered={setSaveDialogTriggeredExternally} dialogTriggered={saveDialogTriggeredExternally} saveID={saveId} onSave={(name)=>{updateSave(saveId, context, setChangesSinceSave)}} onSaveAs={(name)=>{saveProgressAs(name, context, setSaveId, setChangesSinceSave)}}></SaveDialog>
             <div className={"absolute z-50"}>
                 <div className="w-screen flex items-center justify-center ">
                     <div className={"block mt-24"}>
@@ -135,12 +183,21 @@ export default function Progress() {
                     </div>
                 </div>
             </div>
+            {debugMode == true ? <ContextViewer context={context} hours={hours} /> : ""}
             <div className="grid place-items-center h-screen">
-                <div className="bg-white w-96 p-4 rounded-md">
-                    {stepData.Steps != null && stepData.Steps.length > 0 && stepNumber >= 0 ?
-                        <StepUI step={currentStepData} number={stepNumber} initialContext={context}
-                                setContext={setContext} setMessages={setMessages} messages={messages}
-                                setCanProcced={setCanProcced}></StepUI>
+                <div className="bg-white min-w-96 p-4 rounded-md">
+                    {stepData && stepData.Steps != null && stepData.Steps.length > 0 && stepNumber >= 0 && currentStepData ?
+                        ((stepNumber+1 > stepData.Steps.length) ? <FinalView hours={hours} categorysort={stepData.CategorySort} lines={stepData.FileLayout}></FinalView> :
+                            <div>
+                                <StepUI step={currentStepData} number={stepNumber} initialContext={context}
+                                    setContext={setContext} setMessages={setMessages} messages={messages}
+                                    setCanProcced={setCanProcced} allSteps={stepData.Steps} subjectConfig={stepData.SubjectConfig} hours={hours} setHours={setHours} changesSinceSave={changesSinceSave} setChangesSinceSave={setChangesSinceSave} saveMethod={() => {saveProgressAuto(setChangesSinceSave, setSaveDialogTriggeredExternally, saveId, context)}}></StepUI>
+                                <ButtonPrimary isActive={canProcced} text={"Weiter"} callback={() => {
+                                    setStepNumber(stepNumber + 1)
+                                    setCanProcced(false)
+                                }}></ButtonPrimary>
+                            </div>
+                                )
                         : <h1>
                             <div role="status"
                                  className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center">
@@ -153,12 +210,48 @@ export default function Progress() {
                             </div>
                         </h1>
                     }
-                    <ButtonPrimary isActive={canProcced} text={"Weiter"} callback={() => {
-                        setStepNumber(stepNumber + 1)
-                        setCanProcced(false)
-                    }}></ButtonPrimary>
+
                 </div>
             </div>
         </>
     );
 }
+
+async function saveProgressAs(name, context, setId, setChangesSinceSave) {
+    const re = await fetch("/api/progress/saved/new", {
+            method: "POST",
+            body: JSON.stringify(
+                {
+                    name: name,
+                    context: Object.fromEntries(context)
+                }
+            ),
+     })
+    const json = await re.json();
+    setId(json.save.id)
+    setChangesSinceSave(false)
+}
+
+const updateSave = async (id, context, setChangesSinceSave) => {
+    if(!id) return;
+    console.log(context)
+    const re = await fetch("/api/progress/saved/update", {
+        method: "POST",
+        body: JSON.stringify(
+            {
+                id: id,
+                context: Object.fromEntries(context)
+            }
+        ),
+    })
+    const json = await re.json();
+    setChangesSinceSave(false)
+}
+const saveProgressAuto = async (setChangesSinceSave, setSaveDialogTriggered, id, context) => {
+    if(id) {
+        await updateSave(id, context, setChangesSinceSave)
+        return;
+    }
+    setSaveDialogTriggered(true)
+}
+

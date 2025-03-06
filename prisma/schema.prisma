@@ -1,0 +1,27 @@
+datasource db {
+  provider = "postgresql" // Adjust based on your database type
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model saves {
+  id        Int      @id @default(autoincrement()) // Primary key with auto-increment
+  email     String
+  savename  String
+  savedata  String
+  pinned    Boolean
+  created_at DateTime @default(now())
+
+  @@map("saves") // Maps to the database table "saves"
+}
+
+model users {
+  email      String   @id // Primary key
+  isadmin    Boolean
+  created_at DateTime @default(now())
+
+  @@map("users") // Maps to the database table "users"
+}

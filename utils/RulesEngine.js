@@ -1,6 +1,6 @@
 import SelectableRoster from "@/components/SelectableRoster";
 import SelectRoster from "@/components/SelectRoster";
-
+import Image from "next/image";
 
 export function init(inputFrontEndRules) {
     let steps = extractSteps(inputFrontEndRules);
@@ -20,6 +20,12 @@ export function exportUIComponents(steps) {
     })
 
     return stepUI;
+}
+
+
+export function getPlan(context, step) {
+    context.forEach((value, key)  => {
+    })
 }
 
 export function validateConditions(conditions = [], context = new Map()) {
@@ -98,7 +104,6 @@ function evalLogic(logicType, value, conditionValue, context) {
         case "used_in_step":
             let step = value
             let wasUsed = conditionValue
-            if(name)
             context.forEach((cValue, key, map) => {
                 if(key.startsWith(step + "_")) {
                     if(cValue.value == wasUsed) {
@@ -178,24 +183,38 @@ function stepEntriesInContext(context = new Map(), stepNumber) {
 
 import {useState, useEffect} from "react";
 import ButtonPrimary from "@/components/ButtonPrimary";
+import HoursPreview from "@/components/HoursPreview";
 
-export function StepUI({step, number = -1, initialContext = {}, setContext, setMessages, messages, setCanProcced}) {
+export function StepUI({step, number = -1, initialContext = {}, setContext, setMessages, messages, setCanProcced, allSteps, hours, setHours, subjectConfig, saveMethod, setChangesSinceSave, changesSinceSave}) {
     const {StepName, StepValues} = step;
-
     const [localContext, setLocalContext] = useState(initialContext);
     const [stepValuesUI, setStepValuesUI] = useState();
+    let hashSubjectConfig = new Map();
 
     useEffect(() => {
         updateUI()
     }, [step]);
 
 
-    const reprocessValues = (values, stepName) => {
+    useEffect(() => {
+        subjectConfig.forEach((config) => {
+            hashSubjectConfig.set(config.value, config)
+        })
+    },[subjectConfig]);
+
+    const  reprocessValues = (values, stepName) => {
         const newValues = [];
         values.map((value, valueIndex) => {
             value.index = valueIndex+1
             const isValueDisabled = validateConditions(value.conditions || [], localContext);
             const isValueUnique = validateUnique(value.unique, localContext, value, number, stepName, valueIndex+1)
+            if(hashSubjectConfig.has(value.value)) {
+                let overrideValues = hashSubjectConfig.get(value.value);
+                if(overrideValues.groups) {
+                    value.groups = value.groups.concat(overrideValues.groups);
+                }
+                value.displayPosition = overrideValues.displayPosition;
+            }
             if(value.dontHide) {
                 newValues.push({
                     ...value,
@@ -216,6 +235,9 @@ export function StepUI({step, number = -1, initialContext = {}, setContext, setM
 
     const handleSelectionChange = (selectedValue, name) => {
         const newMap = localContext;
+        console.log("changes")
+        setChangesSinceSave(true)
+
         newMap.delete(number + "_" + name)
         newMap.set(number + "_" + name, selectedValue)
         setLocalContext(newMap);
@@ -227,11 +249,108 @@ export function StepUI({step, number = -1, initialContext = {}, setContext, setM
         }
     };
 
+    const generateHours = () => {
+        const subjects = []
+        console.log("-------- GENERATE HOURS ---------")
+        localContext.forEach((value, key) => {
+            console.log("Key: ", (key));
+            console.log("Value: ", value)
+            let {hours, semester} = getSpecificHours(key, value, localContext)
+            let displayPosition = "";
+            if(value.displayPosition) {
+                displayPosition = value.displayPosition
+            }
+            let pfachText = getPFachText(key)
+            if(hours == 0 || !semester) {
+                return;
+            }
+            subjects.push({
+                "subject": value.value,
+                "displayName": value.displayText,
+                "displayPosition": displayPosition,
+                "semester": semester,
+                "hours": hours,
+                "pfachText": pfachText,
+            })
+        })
+        console.log(subjects)
+        setHours(subjects)
+        console.log("-------- GENERATE HOURS ---------")
+        return subjects
+    }
+
+    function getPFachText(stepPath) {
+        let step = getStep(stepPath);
+        if(step.pfachText) {
+            return step.pfachText
+        }
+        return ""
+    }
+
+    function getStep(stepPath) {
+        let path = stepPath.split("_");
+        let stepNumber = path[0]
+        let valueName = path[1]
+        if(!allSteps) {
+            return {"error": "allSteps are not loaded yet"};
+        }
+        let values = allSteps[stepNumber].StepValues
+        let returnValue;
+        values.forEach((value, index) => {
+            if(value.name == valueName) {
+                returnValue = value
+            }
+        })
+        return returnValue;
+    }
+
+    function getRegularHours(stepPath) {
+        let hours = 0;
+        let semester = [];
+        let step = getStep(stepPath)
+
+        return {"hours": step.hours, "semester": step.semester}
+    }
+
+    function getSpecificHours(stepPath, value, context) {
+        let {hours, semester} = getRegularHours(stepPath)
+        const overrides = value.overrides;
+        if(!overrides) {
+            return {"hours": hours, "semester": semester};
+        }
+        overrides.forEach(override => {
+           let overrideHours = override.hours;
+           let overrideSemesters = override.semester;
+
+           let overrideActive = true;
+           let overrideConditions = override.conditions;
+           if(overrideConditions.length > 0) {
+               overrideActive = validateConditions(overrideConditions, context)
+           }
+
+           if(overrideActive) {
+               hours = overrideHours;
+               semester = overrideSemesters;
+           }
+        })
+        return {"hours": hours, "semester": semester};
+    }
+
     const updateUI = () => {
+        generateHours()
+        console.log("Step:",step)
+        if(!StepValues){
+            return;
+        }
         setStepValuesUI(StepValues.map((stepValue, index) => {
             const {name, type, values, standardvalue} = stepValue;
 
             const processedValues = reprocessValues(values, name);
+
+            let initialValue = standardvalue;
+            if(localContext.has(number + "_" + name)){
+                initialValue = localContext.get(number + "_" + name).value;
+            }
             switch (type) {
                 case "dropdown":
                     return (
@@ -239,7 +358,7 @@ export function StepUI({step, number = -1, initialContext = {}, setContext, setM
                             key={`${name}_${index}`}
                             items={processedValues}
                             context={localContext}
-                            standardvalue={standardvalue}
+                            standardvalue={initialValue}
                             onSelectionChange={(selectedValue) => handleSelectionChange(selectedValue, name)}
                             placeholderText={name}
                         />
@@ -250,7 +369,7 @@ export function StepUI({step, number = -1, initialContext = {}, setContext, setM
                         <SelectableRoster
                             key={`${name}_${index}`}
                             items={processedValues}
-                            standardvalue={standardvalue}
+                            standardvalue={initialValue}
                             context={localContext}
                             onSelectionChange={(selectedValue) => handleSelectionChange(selectedValue, name)}
                         />
@@ -269,10 +388,16 @@ export function StepUI({step, number = -1, initialContext = {}, setContext, setM
 
     return (
         <div>
-            <h1 className="text-xl mb-4">
-                {number >= 0 ? `${number + 1}. ` : ""}
-                {StepName}
-            </h1>
+            <div className={"w-full flex justify-between"}>
+                <h1 className="text-xl mb-4 inline-block">
+                    {number >= 0 ? `${number + 1}. ` : ""}
+                    {StepName}
+                </h1>
+                <div className={"p-1 z-50 "} onClick={() => {if(changesSinceSave) {saveMethod()}}}>
+                    <SaveLogo clickable={changesSinceSave} className={"inline-block float-right cursor-pointer"} color={changesSinceSave ? "#202124" : "#c5c7c9"} size={25}></SaveLogo>
+                </div>
+            </div>
+
             {stepValuesUI}
             <div className={"mt-4"}></div>
         </div>
@@ -339,4 +464,12 @@ export function extractSteps(jsonObj) {
             Conditions: step.Conditions || []
         };
     });
+}
+
+
+const SaveLogo = ({color = "#32a852", size=10, clickable}) => {
+    return <svg  className={"cursor-pointer"} fill={color} width={size} height={size} viewBox="0 0 448 512">
+            <path style={clickable ? {cursor: "pointer"} : {cursor: "not-allowed"}}
+                d="M433.941 129.941l-83.882-83.882A48 48 0 0 0 316.118 32H48C21.49 32 0 53.49 0 80v352c0 26.51 21.49 48 48 48h352c26.51 0 48-21.49 48-48V163.882a48 48 0 0 0-14.059-33.941zM224 416c-35.346 0-64-28.654-64-64 0-35.346 28.654-64 64-64s64 28.654 64 64c0 35.346-28.654 64-64 64zm96-304.52V212c0 6.627-5.373 12-12 12H76c-6.627 0-12-5.373-12-12V108c0-6.627 5.373-12 12-12h228.52c3.183 0 6.235 1.264 8.485 3.515l3.48 3.48A11.996 11.996 0 0 1 320 111.48z"/>
+        </svg>
 }
