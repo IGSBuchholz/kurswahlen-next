@@ -73,7 +73,7 @@ function Dashboard() {
 
                 <section className={"mx-auto"}>
                     <Link className="p-2 text-white w-full rounded-md text-center bg-blue-500"
-                          href={"/userarea/admin/dashboard"} prefetch={true}>
+                          href={"/userarea/progress"} prefetch={true}>
                         Neue Konfiguration
                     </Link>
                 </section>
