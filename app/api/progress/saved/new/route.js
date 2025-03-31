@@ -9,7 +9,7 @@ async function handler(req, res) {
         return NextResponse.json({message: "NOT AUTHORIZED"}, {status: 401});
     }
     const body = await req.json()
-    const newSave = await prisma.saves.create({ data: {email: token.email, savename: body.name, savedata: JSON.stringify(body.context), pinned: false} })
+    const newSave = await prisma.saves.create({ data: {email: token.email, savename: body.name, savedata: JSON.stringify(body.context), cfv:body.cfv, pinned: false} })
     console.log("Saved Data for " + token.email + " " + body.name + " ( " + newSave.id + " )")
     return NextResponse.json({message: "SUCCESS", save: newSave})
 }

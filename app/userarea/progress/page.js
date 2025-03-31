@@ -26,6 +26,7 @@ export default function Progress() {
     const [changesSinceSave, setChangesSinceSave] = useState(false);
     const [messages, setMessages] = useState(new Map([]
     ));
+    const [cfVersion, setCfVersion] = useState(-1);
 
     const [hours, setHours] = useState([]);
     const [saveDialogTriggeredExternally, setSaveDialogTriggeredExternally] = useState(new Map([]
@@ -37,13 +38,15 @@ export default function Progress() {
             let loadedContext = new Map()
             let conTxt = [];
             if(!searchParams.has("contextText")) {
-               return false;
+                setStepNumber(0);
+                return false;
             }
             try {
                 conTxt = JSON.parse(searchParams.get("contextText"))
             }catch (error) {
 
             }
+
 
             let lastEl = "";
             for (const key in conTxt) {
@@ -56,9 +59,24 @@ export default function Progress() {
         }
         initializeGivenContext();
 
-        function initializeSaveID() {
+        async function initializeSaveID() {
             if(searchParams.has("id")) {
                 setSaveId(parseInt(searchParams.get("id")));
+                if(!searchParams.has("contextText")){
+
+                    const res = await fetch("/api/progress/saved/retrievebyid?id=" + searchParams.get("id"),
+                        {
+                            method: "GET",
+                        })
+                    const json = await res.json();
+                    console.log("EEE", json)
+                    console.log("EEE", res.status)
+                    if(!(res.status === 200)) {
+                        const m = messages;
+                        m.set("Fehler beim Laden des Speichers! " + json.message, "error")
+                        setMessages(m)
+                    }
+                }
             }
         }
         initializeSaveID();
@@ -66,12 +84,16 @@ export default function Progress() {
         // Fetch JSON data from the web file
         async function fetchStepData() {
             try {
-                const response = await fetch('/crs/sample.json'); // Replace with your JSON URL
+                const response = await fetch('/api/rulesengine'); // Replace with your JSON URL
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const data = await response.json();
-                setStepData(data); // Set the fetched data
+                if(data.message !== "SUCCESS") {
+                    console.error(data.message);
+                }
+                setStepData((data.results.data)); // Set the fetched data
+                setCfVersion(data.results.id)
             } catch (error) {
                 console.error("Error fetching JSON:", error);
             } finally {
@@ -88,10 +110,10 @@ export default function Progress() {
             return
         }
         setCurrentStepData(stepData.Steps[stepNumber])
-
+        console.log("Changed to Step: " + stepNumber + " from " + stepData.Steps.length)
         if(stepNumber+1 > stepData.Steps.length) {
             if(saveId) {
-                updateSave(saveId, context, setChangesSinceSave())
+                updateSave(saveId, context, setChangesSinceSave, cfVersion)
             }
         }
     }, [stepNumber, stepData]);
@@ -175,8 +197,8 @@ export default function Progress() {
 
     return (
         <>
-            <SaveDialog setDialogTriggered={setSaveDialogTriggeredExternally} dialogTriggered={saveDialogTriggeredExternally} saveID={saveId} onSave={(name)=>{updateSave(saveId, context, setChangesSinceSave)}} onSaveAs={(name)=>{saveProgressAs(name, context, setSaveId, setChangesSinceSave)}}></SaveDialog>
-            <div className={"absolute z-50"}>
+            <SaveDialog setDialogTriggered={setSaveDialogTriggeredExternally} dialogTriggered={saveDialogTriggeredExternally} saveID={saveId} onSave={(name)=>{updateSave(saveId, context, setChangesSinceSave)}} onSaveAs={(name)=>{saveProgressAs(name, context, setSaveId, setChangesSinceSave, cfVersion)}}></SaveDialog>
+            <div className={"absolute z-50 "}>
                 <div className="w-screen flex items-center justify-center ">
                     <div className={"block mt-24"}>
                         {renderNotifications()}
@@ -184,18 +206,24 @@ export default function Progress() {
                 </div>
             </div>
             {debugMode == true ? <ContextViewer context={context} hours={hours} /> : ""}
-            <div className="grid place-items-center h-screen">
+            <div className="grid place-items-center bg-gray-100 h-screen overflow-auto py-20">
                 <div className="bg-white min-w-96 p-4 rounded-md">
-                    {stepData && stepData.Steps != null && stepData.Steps.length > 0 && stepNumber >= 0 && currentStepData ?
-                        ((stepNumber+1 > stepData.Steps.length) ? <FinalView hours={hours} categorysort={stepData.CategorySort} lines={stepData.FileLayout}></FinalView> :
+                {stepData && stepData.Steps != null && stepData.Steps.length > 0 && stepNumber >= 0 && (currentStepData || (stepNumber+1 > stepData.Steps.length)) ?
+                        ((stepNumber+1 > stepData.Steps.length) ? <FinalView  context={context} hours={hours} categorysort={stepData.CategorySort} lines={stepData.FileLayout}></FinalView> :
                             <div>
-                                <StepUI step={currentStepData} number={stepNumber} initialContext={context}
+                                <StepUI className={"w-full h-auto"} step={currentStepData} number={stepNumber} initialContext={context}
                                     setContext={setContext} setMessages={setMessages} messages={messages}
-                                    setCanProcced={setCanProcced} allSteps={stepData.Steps} subjectConfig={stepData.SubjectConfig} hours={hours} setHours={setHours} changesSinceSave={changesSinceSave} setChangesSinceSave={setChangesSinceSave} saveMethod={() => {saveProgressAuto(setChangesSinceSave, setSaveDialogTriggeredExternally, saveId, context)}}></StepUI>
-                                <ButtonPrimary isActive={canProcced} text={"Weiter"} callback={() => {
-                                    setStepNumber(stepNumber + 1)
-                                    setCanProcced(false)
-                                }}></ButtonPrimary>
+                                    setCanProcced={setCanProcced} allSteps={stepData.Steps} subjectConfig={stepData.SubjectConfig} hours={hours} setHours={setHours} changesSinceSave={changesSinceSave} setChangesSinceSave={setChangesSinceSave} saveMethod={() => {saveProgressAuto(setChangesSinceSave, setSaveDialogTriggeredExternally, saveId, context, cfVersion)}}></StepUI>
+                                <div className="flex justify-between">
+
+                                    <ButtonPrimary isActive={canProcced} text={"Weiter"} callback={() => {
+                                        setStepNumber(stepNumber + 1);
+                                        setCanProcced(false);
+                                    }}></ButtonPrimary>
+                                    {stepNumber > 0 ? <button onClick={() => {
+                                        goBack(context, setContext, stepNumber, setStepNumber)
+                                    }} className={"px-4 bg-gray-100 rounded-md"}>↵</button> : ""}
+                                </div>
                             </div>
                                 )
                         : <h1>
@@ -217,12 +245,26 @@ export default function Progress() {
     );
 }
 
-async function saveProgressAs(name, context, setId, setChangesSinceSave) {
+function goBack(context, setContext, stepNumber, setStepNumber) {
+    let newContext = context;
+
+    context.forEach((value, key) => {
+        if(key.startsWith(stepNumber)) {
+            newContext.delete(key)
+        }
+    })
+
+    setContext(newContext);
+    setStepNumber(stepNumber-1)
+}
+
+async function saveProgressAs(name, context, setId, setChangesSinceSave, cfv) {
     const re = await fetch("/api/progress/saved/new", {
             method: "POST",
             body: JSON.stringify(
                 {
                     name: name,
+                    cfv: cfv,
                     context: Object.fromEntries(context)
                 }
             ),
@@ -232,7 +274,7 @@ async function saveProgressAs(name, context, setId, setChangesSinceSave) {
     setChangesSinceSave(false)
 }
 
-const updateSave = async (id, context, setChangesSinceSave) => {
+const updateSave = async (id, context, setChangesSinceSave, cfv) => {
     if(!id) return;
     console.log(context)
     const re = await fetch("/api/progress/saved/update", {
@@ -240,6 +282,7 @@ const updateSave = async (id, context, setChangesSinceSave) => {
         body: JSON.stringify(
             {
                 id: id,
+                cfv: cfv,
                 context: Object.fromEntries(context)
             }
         ),
@@ -247,11 +290,10 @@ const updateSave = async (id, context, setChangesSinceSave) => {
     const json = await re.json();
     setChangesSinceSave(false)
 }
-const saveProgressAuto = async (setChangesSinceSave, setSaveDialogTriggered, id, context) => {
+const saveProgressAuto = async (setChangesSinceSave, setSaveDialogTriggered, id, context, cfv) => {
     if(id) {
-        await updateSave(id, context, setChangesSinceSave)
+        await updateSave(id, context, setChangesSinceSave, cfv)
         return;
     }
     setSaveDialogTriggered(true)
 }
-

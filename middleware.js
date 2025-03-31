@@ -5,7 +5,6 @@ import handler from "@/app/api/progress/retrievestate/page";
 import {withAuth} from "next-auth/middleware";
 
 export default withAuth(
-    // `withAuth` augments your `Request` with the user's token.
     function middleware(req) {
         console.log(req.nextauth);
         if (

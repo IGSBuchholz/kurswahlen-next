@@ -1,7 +1,14 @@
 import { Document, Page, View, Image, Text, StyleSheet, PDFDownloadLink, Canvas } from '@react-pdf/renderer';
+import {sortHours} from "@/components/HoursPreview";
+import {useEffect, useState} from "react";
+import {getSession} from "next-auth/react";
+import {nameFromEmail} from "@/app/userarea/dashboard/page";
 
-export const ExportAsPDFButton = ({hours, categorysort, studentname, classname, lines}) => {
-    return <PDFDownloadLink className="rounded-xl bg-blue-500 px-6 py-2 mx-auto flex justify-center mb-4" document={<PdfDocument hours={hours} categorysort={categorysort} studentname={studentname} classname={classname} lines={lines}/>} fileName={studentname.split(' ')[0] + "_" + studentname.split(' ')[1] + "_courses.pdf"}>
+export const ExportAsPDFButton = ({hours, context, categorysort, studentname, classname, lines}) => {
+    const [session, setSession] = useState(null);
+    const [fullName, setFullName] = useState("");
+
+    return <PDFDownloadLink className="rounded-xl bg-blue-500 px-6 py-2 mx-auto flex justify-center mb-4 text-white" document={<PdfDocument hours={hours} categorysort={categorysort} studentname={studentname} classname={classname} context={context} lines={lines}/>} fileName={studentname.split(' ')[0] + "_" + studentname.split(' ')[1] + "_courses.pdf"}>
         {({ blob, url, loading, error }) =>
             loading ? 'PDF wird erstellt...' : 'Als PDF herunterladen'
         }
@@ -51,18 +58,15 @@ const styles = StyleSheet.create({
         fontSize: 18,
         marginBottom: 5,
     },
+    text_bold: {
+        fontWeight: 'bold',
+    },
 });
 
-const parseFileLayout = (layout, context, hours, studentname, klasse) => {
 
-
-
-
-}
-
-const parseLine = (line = "", context, hours, studentname, klasse) => {
+const parseLine = (line = "", context, hours, studentname, klasse, categorysort) => {
     console.log("line", line)
-    let styling = ""
+    let styling = styles.text_title
     if(line.includes("_")) {
         let st_config = line.split("_")
         switch (st_config[0]) {
@@ -72,15 +76,18 @@ const parseLine = (line = "", context, hours, studentname, klasse) => {
             case "heading":
                 styling = styles.text_heading
                 break;
+            case "bold":
+                styling = styles.text_bold
+                break;
         }
     }
 
     if(line.includes("$kurse$")) {
-        return <CourseTable hours={hours}></CourseTable>
+        return <CourseTable key={"courses_asdasd"} hours={hours} categorysort={categorysort}></CourseTable>
     }
 
     let hoursMap = new Map();
-    hours.forEach(hour => {
+    hours.forEach   (hour => {
         hoursMap.set(hour.subject, hour)
     })
 
@@ -88,39 +95,38 @@ const parseLine = (line = "", context, hours, studentname, klasse) => {
         line = line.replaceAll("$schuelername$", studentname).replaceAll("$klasse$", klasse);
         const placeholderRegex = /\$(.*?)\$/g;
         line = line.replace(placeholderRegex, (match, path) => {
-            // Fetch the value from the `values` object dynamically
-            if(hoursMap.has(match)) {
-                return hours.get(match).subject;
+            console.log("match", match, path);
+            console.log(context.get(path))
+            if(context.has(path)) {
+                console.log("Subject", context.get(path).subject)
+                return context.get(path).displayText;
             }
             return <Text>"undefined"</Text>;
         });
     }
     console.log("outputline", line)
-    return <Text style={styling}>{line}</Text>
+    return <Text key={"_" + line} style={styling}>{line}</Text>
 
 
 }
 
 const PdfDocument = ({hours, categorysort, studentname, classname, lines, context}) => {
-    console.log("LINES", lines)
     if (!hours) {
         return (
             <Document>
                 <Page style={styles.page}>
-                    <Text>NO DATA</Text>
                 </Page>
             </Document>
         );
     }
-
-
+    console.log("CategorySort", categorysort)
 
     return (
         <Document>
             <Page style={styles.page}>
-                { lines.forEach( (line) => {
-                    return parseLine(line, context, sortHours(hours, categorysort), studentname, classname)
-                })}
+                { lines.map( (line, index) => (
+                    parseLine(line, context, hours, studentname, classname, categorysort)
+                ))}
             </Page>
         </Document>
     );
@@ -128,7 +134,8 @@ const PdfDocument = ({hours, categorysort, studentname, classname, lines, contex
 
 }
 
-const CourseTable = ({hours}) => {
+const CourseTable = ({hours, categorysort}) => {
+    console.log("HOURS", hours)
     return <View style={styles.table}>
         {/* Header Row */}
         <View style={styles.tableRow}>
@@ -142,33 +149,13 @@ const CourseTable = ({hours}) => {
         </View>
 
         {/* Data Rows */}
-        {sortHours(hours).map((hour, index) => (
+        {sortHours(hours, categorysort, true).map((hour, index) => (
             <HoursElement key={index} hour={hour} />
         ))}
     </View>
 }
 
-function sortHours(hours, categorysort) {
-    return hours.sort((a, b) => {
-        const parsePosition = (pos) => {
-            if (!pos) return ["", 0];
-            const [letter, num] = pos.split("_");
-            return [letter || "", parseInt(num || 0, 10)];
-        };
 
-        const [letterA, numA] = parsePosition(a.displayPosition);
-        const [letterB, numB] = parsePosition(b.displayPosition);
-
-        const letterIndexA = categorysort.indexOf(letterA);
-        const letterIndexB = categorysort.indexOf(letterB);
-
-        if (letterIndexA !== letterIndexB) {
-            return letterIndexA - letterIndexB;
-        }
-
-        return numA - numB;
-    });
-}
 
 function HoursElement({ hour }) {
     const displayPositionToDisplay = hour.displayPosition

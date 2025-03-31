@@ -1,42 +1,44 @@
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 
-function HoursPreview({hours, categorysort}){
+
+export function sortHours(hours, categorysort, debug = false) {
+    let sorted = hours.sort((a, b) => {
+
+        const parsePosition = (pos) => {
+            if (!pos) return ["", 0]; // Handle empty or undefined displayPosition
+            const [letter, num] = pos.split("_");
+            return [letter || "", parseInt(num || 0, 10)];
+        };
+
+
+        const [letterA, numA] = parsePosition(a.displayPosition);
+        const [letterB, numB] = parsePosition(b.displayPosition);
+        if(debug){
+            console.log("CategorySort", categorysort);
+            console.log("D1", letterA, numA);
+            console.log("D2", letterB, numB);
+
+        }
+        const letterIndexA = categorysort.indexOf(letterA);
+        const letterIndexB = categorysort.indexOf(letterB);
+        // Sort by letter index first
+        if (letterIndexA !== letterIndexB) {
+            return letterIndexA - letterIndexB;
+        }
+
+        // If letters are the same, sort by number
+        return numA - numB;
+    });
+    console.log(sorted);
+    return sorted;
+
+}
+
+function HoursPreview({hours, categorysort = []}) {
     console.log(hours)
-    if(!hours) {
-       return <><h2>NO DATA</h2></>
+    if (!hours || !categorysort) {
+        return <><h2>NO DATA</h2></>
     }
-
-    useEffect(() => {
-    }, []);
-
-    function sortHours() {
-
-        let sorted = hours.sort((a, b) => {
-            const parsePosition = (pos) => {
-                if (!pos) return ["", 0]; // Handle empty or undefined displayPosition
-                const [letter, num] = pos.split("_");
-                return [letter || "", parseInt(num || 0, 10)];
-            };
-
-            const [letterA, numA] = parsePosition(a.displayPosition);
-            const [letterB, numB] = parsePosition(b.displayPosition);
-
-            const letterIndexA = categorysort.indexOf(letterA);
-            const letterIndexB = categorysort.indexOf(letterB);
-
-            // Sort by letter index first
-            if (letterIndexA !== letterIndexB) {
-                return letterIndexA - letterIndexB;
-            }
-
-            // If letters are the same, sort by number
-            return numA - numB;
-        });
-        console.log(sorted);
-        return sorted;
-
-    }
-
     return <>
         <div className="overflow-x-auto bg-white dark:bg-neutral-700">
 
@@ -70,7 +72,7 @@ function HoursPreview({hours, categorysort}){
 
                 <tbody>
 
-                {sortHours().map((hour, index) => {
+                {sortHours(hours, categorysort).map((hour, index) => {
                     return <HoursElement key={index} hour={hour}></HoursElement>
                 })}
 
@@ -85,7 +87,7 @@ function HoursPreview({hours, categorysort}){
 
 function HoursElement({hour}) {
     let displayPositionToDisplay = ""
-    if(hour.displayPosition) {
+    if (hour.displayPosition) {
         displayPositionToDisplay = hour.displayPosition.split("_")[0];
     }
     console.log(hour)

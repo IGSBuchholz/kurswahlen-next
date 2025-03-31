@@ -8,11 +8,12 @@ generator client {
 }
 
 model saves {
-  id        Int      @id @default(autoincrement()) // Primary key with auto-increment
+  id        String      @id @default(uuid()) // Primary key with auto-increment
   email     String
   savename  String
   savedata  String
   pinned    Boolean
+  cfv       Int
   created_at DateTime @default(now())
 
   @@map("saves") // Maps to the database table "saves"
@@ -24,4 +25,18 @@ model users {
   created_at DateTime @default(now())
 
   @@map("users") // Maps to the database table "users"
+}
+
+model creationfiles {
+  id      Int   @id @default(autoincrement()) // Primary key
+  data    Json
+  created_at DateTime @default(now())
+  @@map("creationfiles") // Maps to the database table "users"
+}
+
+model homepageaccordion {
+  id      Int   @id @default(autoincrement()) // Primary key
+  question    String
+  answer    String
+  @@map("homepageaccordion") // Maps to the database table "users"
 }

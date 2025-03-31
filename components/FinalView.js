@@ -1,19 +1,39 @@
 import ButtonPrimary from "@/components/ButtonPrimary";
 import HoursPreview from "@/components/HoursPreview";
 import dynamic from "next/dynamic";
-import {useRef} from "react";
+import {useEffect, useRef, useState} from "react";
 import {useRouter} from "next/router";
 import Link from "next/link";
 import {ExportAsPDFButton} from "@/utils/PDFCreator";
+import {getSession} from "next-auth/react";
+import {nameFromEmail} from "@/app/userarea/dashboard/page";
 
-export default function FinalView({hours, categorysort, lines}) {
-    let studentName = "Max Mustermann"
+export default function FinalView({hours, categorysort, lines, context}) {
+    let [studentName, setStudentName] = useState("");
+    let [session, setSession] = useState(null);
     let klasse = "11c"
     let digitaleAbgabe = true
 
-    let printFinalView = () => {
+    useEffect(() => {
 
-    }
+        async function mountSession() {
+            setSession(await getSession())
+        }
+
+        mountSession()
+    }, [])
+
+    useEffect(() => {
+
+        if(!session) return;
+        if(!session.user) return;
+
+        const n = nameFromEmail(session.user.email)
+
+        setStudentName(n.firstname + " " + n.lastname)
+
+
+    }, [session]);
 
     return <>
         <div className={"block"}>
@@ -25,7 +45,7 @@ export default function FinalView({hours, categorysort, lines}) {
                 }} text={"Digital abgeben!"} isActive={true}></ButtonPrimary>
             </div> : ""}
             <div className={"mt-4"}>
-                <ExportAsPDFButton hours={hours} lines={lines} categorysort={categorysort} classname={klasse} studentname={studentName}></ExportAsPDFButton>
+                {studentName != "" ? <ExportAsPDFButton context={context} hours={hours} lines={lines} categorysort={categorysort} classname={klasse} studentname={studentName}></ExportAsPDFButton> : ""}
             </div>
         </div>
 
