@@ -1,101 +1,94 @@
-import Image from "next/image";
+"use client";
+import {useEffect, useState} from "react";
+import LoginButton from "@/components/LoginButton";
+import LinkButtonPrimary from "@/components/LinkButtonPrimary";
+import {prisma} from "@/utils/prisma";
+import { GetStaticProps } from "next";
+import React from "react";
 
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+export default function Home({ accordionData }) {
+    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+    const [openFaqIndex, setOpenFaqIndex] = useState(null);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+    const [faqs, setFaqs] = useState([]);
+
+    const toggleFaq = (index) => {
+        setOpenFaqIndex(openFaqIndex === index ? null : index);
+    };
+
+    useEffect(() => {
+        async function loadFaqEl() {
+            const res = await fetch("/api/homepage/accordion", {});
+            const data = await res.json();
+            const sortedData = data.sort((a, b) => a.id - b.id); // Sort FAQs by id
+            console.log(sortedData);
+            setFaqs(sortedData);
+            console.log(sortedData);
+        }
+        loadFaqEl()
+        const handleMouseMove = (event) => {
+            const { clientX, clientY } = event;
+            setMousePosition({ x: clientX, y: clientY });
+        };
+        window.addEventListener("mousemove", handleMouseMove);
+        return () => window.removeEventListener("mousemove", handleMouseMove);
+    }, []);
+
+    const getTransformStyle = (offsetX, offsetY) => {
+        return {
+            transform: `translateY(${Math.sin(Date.now() / 1000 + offsetX) * 5}px) 
+                        rotateX(${(mousePosition.y - window.innerHeight ) / 50 + offsetY}deg) 
+                        rotateY(${(mousePosition.x - window.innerWidth ) / 50 + offsetX}deg)`,
+            transition: "transform 0.1s ease-out",
+        };
+    };
+
+    useEffect(() => {
+        console.log(accordionData)
+    }, [accordionData]);
+
+    return (
+        <>
+            <div className="relative flex items-center justify-center h-screen bg-gray-100" onMouseMove={(e) => setMousePosition({ x: e.clientX, y: e.clientY })}>
+                {/* Floating 3D elements */}
+                <div>
+                    <h2 src="/school.png" alt="School Icon" className="absolute top-10 left-20 w-16 text-7xl"
+                        style={getTransformStyle(10, -10)}>🏫</h2>
+                    <h2 src="/graduation.png" alt="Graduation Cap" className="absolute top-10 right-20 w-16 text-7xl"
+                        style={getTransformStyle(-10, 10)}>🎓</h2>
+                    <h2 src="/pencil.png" alt="Pencil" className="absolute bottom-10 left-40 w-12 text-7xl"
+                        style={getTransformStyle(5, -5)}>✏️</h2>
+                    <h2 src="/book.png" alt="Book" className="absolute bottom-10 right-40 w-14 text-7xl "
+                        style={getTransformStyle(-5, 5)}>📕</h2>
+                </div>
+
+                {/* Centered text */}
+                <div className="text-center">
+                    <h1 className="font-mono text-7xl mb-4">kurswahl<b className={""}>Tool</b></h1>
+                    <LinkButtonPrimary text={"Auf gehts!"} link={"/userarea/dashboard"}></LinkButtonPrimary>
+                </div>
+            </div>
+            <div className={"w-full bg-gray-100"}>
+                <div className="faq-accordion container mx-auto p-4">
+                    <div className="text-left mb-4">
+                      <h2 className="text-3xl font-bold">FAQ</h2>
+                    </div>
+                    {faqs.map((faq, index) => (
+                        <div key={index} className="faq-item border-b border-gray-300 py-2">
+                            <h3
+                                className="faq-question text-lg font-medium cursor-pointer"
+                                onClick={() => toggleFaq(index)}
+                            >
+                                {faq.question}
+                            </h3>
+                            <p className={`faq-answer mt-2 text-gray-700 transition-all duration-300 ease-in-out ${openFaqIndex === index ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+                                {faq.answer}
+                            </p>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+        </>
+    );
 }

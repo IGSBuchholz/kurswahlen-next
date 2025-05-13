@@ -1,6 +1,7 @@
 import {NextResponse} from "next/server";
 
 export function GET(req) {
+    //TODO: Change to retrieve from db
     return NextResponse.json({
             "rules": [
                 {

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 
-function EmailInput({ value = "", placeholder = "vorname.nachname", emailValid = false }) {
-    const [email, setEmail] = useState(value);
+function EmailInput({ email, setEmail, value="", placeholder = "vorname.nachname", emailValid = false }) {
     const [isEmailValid, setIsEmailValid] = useState(emailValid);
     const [uuid, setUuid] = useState(generateUUID());
 
@@ -27,20 +26,21 @@ function EmailInput({ value = "", placeholder = "vorname.nachname", emailValid =
     }
 
     useEffect(() => {
-        setUuid(generateUUID());
+
     }, []);
 
     return (
-        <div className="rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 w-full">
+        <div
+            className="flex justify-between items-center rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 w-full">
             <input
-                id={uuid}
-                className="email-input inline-block p-2"
+                id={"email-input"}
+                className="email-input p-2 flex-grow"
                 type="email"
                 value={email}
                 placeholder={placeholder}
                 onChange={handleInput}
             />
-            <div className="inline-block p-2">
+            <div className="inline-block p-2 text-right">
                 <h4>@igs-buchholz.de</h4>
             </div>
         </div>
