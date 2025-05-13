@@ -1,3 +1,5 @@
+//NEEDS EXTENSION: CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
 datasource db {
   provider = "postgresql" // Adjust based on your database type
   url      = env("DATABASE_URL")
@@ -5,11 +7,12 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions", "relationJoins"]
 }
 
 model saves {
   id        String      @id @default(uuid()) // Primary key with auto-increment
-  email     String
+  email     String      @relation(fields: [email])
   savename  String
   savedata  String
   pinned    Boolean
@@ -39,4 +42,13 @@ model homepageaccordion {
   question    String
   answer    String
   @@map("homepageaccordion") // Maps to the database table "users"
+}
+
+model config {
+  key      String @id
+  valueString      String
+  valueNumber      Int
+  valueBool      Boolean
+  valueArray String[]
+  @@map("config")
 }

@@ -64,7 +64,7 @@ function evalLogic(logicType, value, conditionValue, context) {
             context.forEach((cValue, key, map) => {
                 if (cValue.groups.has(value)) {
                     counterSOE++;
-                }
+                }x
             });
             returnValue = counterSOE <= parseInt(conditionValue);
             break;
@@ -249,95 +249,12 @@ export function StepUI({step, number = -1, initialContext = {}, setContext, setM
         }
     };
 
-    const generateHours = () => {
-        const subjects = []
-        console.log("-------- GENERATE HOURS ---------")
-        localContext.forEach((value, key) => {
-            console.log("Key: ", (key));
-            console.log("Value: ", value)
-            let {hours, semester} = getSpecificHours(key, value, localContext)
-            let displayPosition = "";
-            if(value.displayPosition) {
-                displayPosition = value.displayPosition
-            }
-            let pfachText = getPFachText(key)
-            if(hours == 0 || !semester) {
-                return;
-            }
-            subjects.push({
-                "subject": value.value,
-                "displayName": value.displayText,
-                "displayPosition": displayPosition,
-                "semester": semester,
-                "hours": hours,
-                "pfachText": pfachText,
-            })
-        })
-        console.log(subjects)
-        setHours(subjects)
-        console.log("-------- GENERATE HOURS ---------")
-        return subjects
-    }
 
-    function getPFachText(stepPath) {
-        let step = getStep(stepPath);
-        if(step.pfachText) {
-            return step.pfachText
-        }
-        return ""
-    }
 
-    function getStep(stepPath) {
-        let path = stepPath.split("_");
-        let stepNumber = path[0]
-        let valueName = path[1]
-        if(!allSteps) {
-            return {"error": "allSteps are not loaded yet"};
-        }
-        let values = allSteps[stepNumber].StepValues
-        let returnValue;
-        values.forEach((value, index) => {
-            if(value.name == valueName) {
-                returnValue = value
-            }
-        })
-        return returnValue;
-    }
 
-    function getRegularHours(stepPath) {
-        let hours = 0;
-        let semester = [];
-        let step = getStep(stepPath)
-
-        return {"hours": step.hours, "semester": step.semester}
-    }
-
-    function getSpecificHours(stepPath, value, context) {
-        let {hours, semester} = getRegularHours(stepPath)
-        const overrides = value.overrides;
-        if(!overrides) {
-            return {"hours": hours, "semester": semester};
-        }
-        overrides.forEach(override => {
-           let overrideHours = override.hours;
-           let overrideSemesters = override.semester;
-
-           let overrideActive = true;
-           let overrideConditions = override.conditions;
-           if(overrideConditions.length > 0) {
-               overrideActive = validateConditions(overrideConditions, context)
-           }
-
-           if(overrideActive) {
-               hours = overrideHours;
-               semester = overrideSemesters;
-           }
-        })
-        return {"hours": hours, "semester": semester};
-    }
 
     const updateUI = () => {
-        generateHours()
+        setHours(generateHours(localContext, allSteps))
         console.log("Step:",step)
         if(!StepValues){
             return;
@@ -394,7 +311,7 @@ export function StepUI({step, number = -1, initialContext = {}, setContext, setM
                     {StepName}
                 </h1>
                 <div className={"p-1 z-50 "} onClick={() => {if(changesSinceSave) {saveMethod()}}}>
-                    <SaveLogo clickable={changesSinceSave} className={"inline-block float-right cursor-pointer"} color={changesSinceSave ? "#202124" : "#c5c7c9"} size={25}></SaveLogo>
+                    <SaveLogo className={"inline-block float-right cursor-pointer"} color={changesSinceSave ? "#202124" : "#c5c7c9"} size={25}></SaveLogo>
                 </div>
             </div>
 
@@ -466,7 +383,94 @@ export function extractSteps(jsonObj) {
     });
 }
 
+export function getRegularHours(stepPath, allSteps) {
+    let hours = 0;
+    let semester = [];
+    let step = getStep(stepPath, allSteps)
 
+    return {"hours": step.hours, "semester": step.semester}
+}
+
+export function getSpecificHours(stepPath, value, context, allSteps) {
+    let {hours, semester} = getRegularHours(stepPath, allSteps)
+    const overrides = value.overrides;
+    if(!overrides) {
+        return {"hours": hours, "semester": semester};
+    }
+    overrides.forEach(override => {
+        let overrideHours = override.hours;
+        let overrideSemesters = override.semester;
+
+        let overrideActive = true;
+        let overrideConditions = override.conditions;
+        if(overrideConditions.length > 0) {
+            overrideActive = validateConditions(overrideConditions, context)
+        }
+
+        if(overrideActive) {
+            hours = overrideHours;
+            semester = overrideSemesters;
+        }
+    })
+    return {"hours": hours, "semester": semester};
+}
+
+
+export function getPFachText(stepPath, allSteps) {
+    let step = getStep(stepPath, allSteps);
+    if(step.pfachText) {
+        return step.pfachText
+    }
+    return ""
+}
+
+export function generateHours(context, allSteps) {
+    console.log("generateHours", context)
+    const subjects = []
+    console.log("-------- GENERATE HOURS ---------")
+    context.forEach((value, key) => {
+        console.log("Key: ", (key));
+        console.log("Value: ", value)
+        let {hours, semester} = getSpecificHours(key, value, context, allSteps)
+        console.log("specificHours", hours, semester)
+        let displayPosition = "";
+        if (value.displayPosition) {
+            displayPosition = value.displayPosition
+        }
+        let pfachText = getPFachText(key, allSteps)
+        if (hours == 0 || !semester) {
+            return;
+        }
+        subjects.push({
+            "subject": value.value,
+            "displayName": value.displayText,
+            "displayPosition": displayPosition,
+            "semester": semester,
+            "hours": hours,
+            "pfachText": pfachText,
+        })
+    })
+    console.log("GeneratedHours", subjects)
+    console.log("-------- GENERATE HOURS ---------")
+    return subjects
+}
+
+export function getStep(stepPath, allSteps) {
+    let path = stepPath.split("_");
+    let stepNumber = path[0]
+    let valueName = path[1]
+    if(!allSteps) {
+        return {"error": "allSteps are not loaded yet"};
+    }
+    let values = allSteps[stepNumber].StepValues
+    let returnValue;
+    values.forEach((value, index) => {
+        if(value.name == valueName) {
+            returnValue = value
+        }
+    })
+    return returnValue;
+}
 const SaveLogo = ({color = "#32a852", size=10, clickable}) => {
     return <svg  className={"cursor-pointer"} fill={color} width={size} height={size} viewBox="0 0 448 512">
             <path style={clickable ? {cursor: "pointer"} : {cursor: "not-allowed"}}

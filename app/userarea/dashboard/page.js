@@ -15,9 +15,14 @@ export function nameFromEmail(email) {
     let split = (mail.split("@")[0]).split(".")
     let firstname = capitalizeFirstLetter(split[0])
     let lastname = capitalizeFirstLetter(split[1])
+    if(!split[1]){
+        lastname = ""
+    }
     return {"firstname": firstname, "name": lastname}
 
 }
+
+
 
 function Dashboard() {
     const [debugLogs, setDebugLogs] = useState(["Debug logs will appear here..."]);

@@ -51,7 +51,6 @@ export async function setter(req, res)  {
     if(!token || !token.isadmin) {
         return NextResponse.json({message: "NOT AUTHORIZED"}, {status: 401});
     }
-    //TODO: check for admin
     await redis.del("rulesengine_version")
     await redis.del("rulesengine")
 }

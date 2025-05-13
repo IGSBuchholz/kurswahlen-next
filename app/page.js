@@ -4,6 +4,7 @@ import LoginButton from "@/components/LoginButton";
 import LinkButtonPrimary from "@/components/LinkButtonPrimary";
 import {prisma} from "@/utils/prisma";
 import { GetStaticProps } from "next";
+import React from "react";
 
 export default function Home({ accordionData }) {
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
