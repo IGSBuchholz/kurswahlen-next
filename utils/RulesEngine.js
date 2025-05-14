@@ -225,6 +225,9 @@ export function StepUI({step, number = -1, initialContext = {}, setContext, setM
     };
 
     const updateUI = () => {
+        if(!StepValues){
+            return;
+        }
         setStepValuesUI(StepValues.map((stepValue, index) => {
             const {name, type, values, standardvalue} = stepValue;
 
