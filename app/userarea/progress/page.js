@@ -91,10 +91,11 @@ export default function Progress() {
                 const data = await response.json();
                 if(data.message !== "SUCCESS") {
                     console.error(data.message);
-                }
-                console.log("Data",data.results.data);
-                setStepData((data.results.data)); // Set the fetched data
+                }                
+
+                setStepData(JSON.parse(data.results.data)); // Set the fetched data
                 setCfVersion(data.results.id)
+                console.log("Successfully set step data")
             } catch (error) {
                 console.error("Error fetching JSON:", error);
             } finally {
@@ -103,10 +104,12 @@ export default function Progress() {
         }
 
         fetchStepData()
+        
 
     }, []);
 
     useEffect(() => {
+        console.log("stepss", typeof(stepData))
         if (!stepData || !stepData.Steps) {
             return
         }

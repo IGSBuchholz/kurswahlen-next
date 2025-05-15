@@ -1,5 +1,8 @@
+"use client"
 import React from "react";
-import ReactJson from "react-json-view"; // Import der Bibliothek
+import dynamic from "next/dynamic";
+
+const ReactJson =dynamic(() => import("react-json-view"), {ssr: false}); // Dynamisches Importieren der ReactJson-Komponente
 
 export default function ContextViewer({ context, hours = new Map() }) {
     const contextObject = Object.fromEntries(context); // Map in ein JSON-Objekt umwandeln
