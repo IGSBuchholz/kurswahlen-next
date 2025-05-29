@@ -40,11 +40,20 @@
         {
           "name": "P1",
           "type": "dropdown",
+          "pfachText": "P1",
+          "hours": 5,
+          "semester": [
+            1,
+            2,
+            3,
+            4
+          ],
           "values": [
             {
               "value": "deutsch",
               "displayText": "Deutsch",
               "unique": "*",
+              "displayPosition": "A_0",
               "conditions": [
                 {
                   "logicType": "value_equals",
@@ -244,6 +253,14 @@
         {
           "name": "P2",
           "type": "dropdown",
+          "pfachText": "P2",
+          "hours": 5,
+          "semester": [
+            1,
+            2,
+            3,
+            4
+          ],
           "values": [
             {
               "value": "deutsch",
@@ -253,7 +270,10 @@
                 {
                   "logicType": "value_equals",
                   "value": "0_Focus",
-                  "conditionValue": ["kuenstlerisch", "sprachlich"]
+                  "conditionValue": [
+                    "kuenstlerisch",
+                    "sprachlich"
+                  ]
                 }
               ],
               "groups": [
@@ -269,7 +289,10 @@
                 {
                   "logicType": "value_equals",
                   "value": "0_Focus",
-                  "conditionValue": ["mathematisch", "sportlich"]
+                  "conditionValue": [
+                    "mathematisch",
+                    "sportlich"
+                  ]
                 }
               ],
               "groups": [
@@ -285,7 +308,10 @@
                 {
                   "logicType": "value_equals",
                   "value": "0_Focus",
-                  "conditionValue": ["sprachlich", "gesellschaftswissenschaftlich"]
+                  "conditionValue": [
+                    "sprachlich",
+                    "gesellschaftswissenschaftlich"
+                  ]
                 }
               ],
               "groups": [
@@ -301,7 +327,10 @@
                 {
                   "logicType": "value_equals",
                   "value": "0_Focus",
-                  "conditionValue": ["sprachlich", "gesellschaftswissenschaftlich"]
+                  "conditionValue": [
+                    "sprachlich",
+                    "gesellschaftswissenschaftlich"
+                  ]
                 }
               ],
               "groups": [
@@ -317,7 +346,10 @@
                 {
                   "logicType": "value_equals",
                   "value": "0_Focus",
-                  "conditionValue": ["sprachlich", "gesellschaftswissenschaftlich"]
+                  "conditionValue": [
+                    "sprachlich",
+                    "gesellschaftswissenschaftlich"
+                  ]
                 }
               ],
               "groups": [
@@ -333,7 +365,10 @@
                 {
                   "logicType": "value_equals",
                   "value": "0_Focus",
-                  "conditionValue": ["sprachlich", "gesellschaftswissenschaftlich"]
+                  "conditionValue": [
+                    "sprachlich",
+                    "gesellschaftswissenschaftlich"
+                  ]
                 }
               ],
               "groups": [
@@ -349,7 +384,10 @@
                 {
                   "logicType": "value_equals",
                   "value": "0_Focus",
-                  "conditionValue": ["mathematisch", "sportlich"]
+                  "conditionValue": [
+                    "mathematisch",
+                    "sportlich"
+                  ]
                 }
               ],
               "groups": [
@@ -364,7 +402,10 @@
                 {
                   "logicType": "value_equals",
                   "value": "0_Focus",
-                  "conditionValue": ["mathematisch", "sportlich"]
+                  "conditionValue": [
+                    "mathematisch",
+                    "sportlich"
+                  ]
                 }
               ],
               "groups": [
@@ -379,7 +420,10 @@
                 {
                   "logicType": "value_equals",
                   "value": "0_Focus",
-                  "conditionValue": ["mathematisch", "sportlich"]
+                  "conditionValue": [
+                    "mathematisch",
+                    "sportlich"
+                  ]
                 }
               ],
               "groups": [
@@ -391,6 +435,14 @@
         {
           "name": "P3",
           "type": "dropdown",
+          "pfachText": "P3",
+          "hours": 5,
+          "semester": [
+            1,
+            2,
+            3,
+            4
+          ],
           "values": [
             {
               "value": "physik",
@@ -400,7 +452,12 @@
                 {
                   "logicType": "value_equals",
                   "value": "0_Focus",
-                  "conditionValue": ["mathematisch", "sprachlich", "kuenstlerisch", "sportlich"]
+                  "conditionValue": [
+                    "mathematisch",
+                    "sprachlich",
+                    "kuenstlerisch",
+                    "sportlich"
+                  ]
                 }
               ],
               "groups": [
@@ -425,10 +482,15 @@
                 {
                   "logicType": "value_equals",
                   "value": "0_Focus",
-                  "conditionValue": ["mathematisch", "sprachlich", "kuenstlerisch", "sportlich"]
+                  "conditionValue": [
+                    "mathematisch",
+                    "sprachlich",
+                    "kuenstlerisch",
+                    "sportlich"
+                  ]
                 }
               ],
-              "groups":[
+              "groups": [
                 "hauptfach",
                 "sprachlich-literarisch-kuenstlerisch"
               ]
@@ -441,10 +503,15 @@
                 {
                   "logicType": "value_equals",
                   "value": "0_Focus",
-                  "conditionValue": ["mathematisch", "sprachlich", "kuenstlerisch", "sportlich"]
+                  "conditionValue": [
+                    "mathematisch",
+                    "sprachlich",
+                    "kuenstlerisch",
+                    "sportlich"
+                  ]
                 }
               ],
-              "groups":[
+              "groups": [
                 "hauptfach",
                 "sprachlich-literarisch-kuenstlerisch",
                 "fremdsprache_p3-p5"
@@ -458,7 +525,12 @@
                 {
                   "logicType": "value_equals",
                   "value": "0_Focus",
-                  "conditionValue": ["mathematisch", "sprachlich", "kuenstlerisch", "sportlich"]
+                  "conditionValue": [
+                    "mathematisch",
+                    "sprachlich",
+                    "kuenstlerisch",
+                    "sportlich"
+                  ]
                 }
               ],
               "groups": [
@@ -475,7 +547,12 @@
                 {
                   "logicType": "value_equals",
                   "value": "0_Focus",
-                  "conditionValue": ["mathematisch", "sprachlich", "kuenstlerisch", "sportlich"]
+                  "conditionValue": [
+                    "mathematisch",
+                    "sprachlich",
+                    "kuenstlerisch",
+                    "sportlich"
+                  ]
                 }
               ]
             },
@@ -496,7 +573,12 @@
                 {
                   "logicType": "value_equals",
                   "value": "0_Focus",
-                  "conditionValue": ["mathematisch", "sprachlich", "kuenstlerisch", "sportlich"]
+                  "conditionValue": [
+                    "mathematisch",
+                    "sprachlich",
+                    "kuenstlerisch",
+                    "sportlich"
+                  ]
                 }
               ],
               "groups": [
@@ -513,7 +595,12 @@
                 {
                   "logicType": "value_equals",
                   "value": "0_Focus",
-                  "conditionValue": ["mathematisch", "sprachlich", "kuenstlerisch", "sportlich"]
+                  "conditionValue": [
+                    "mathematisch",
+                    "sprachlich",
+                    "kuenstlerisch",
+                    "sportlich"
+                  ]
                 }
               ],
               "groups": [
@@ -530,7 +617,12 @@
                 {
                   "logicType": "value_equals",
                   "value": "0_Focus",
-                  "conditionValue": ["mathematisch", "sprachlich", "kuenstlerisch", "sportlich"]
+                  "conditionValue": [
+                    "mathematisch",
+                    "sprachlich",
+                    "kuenstlerisch",
+                    "sportlich"
+                  ]
                 }
               ],
               "groups": [
@@ -546,7 +638,12 @@
                 {
                   "logicType": "value_equals",
                   "value": "0_Focus",
-                  "conditionValue": ["mathematisch", "sprachlich", "kuenstlerisch", "sportlich"]
+                  "conditionValue": [
+                    "mathematisch",
+                    "sprachlich",
+                    "kuenstlerisch",
+                    "sportlich"
+                  ]
                 }
               ],
               "groups": [
@@ -562,7 +659,12 @@
                 {
                   "logicType": "value_equals",
                   "value": "0_Focus",
-                  "conditionValue": ["mathematisch", "sprachlich", "kuenstlerisch", "sportlich"]
+                  "conditionValue": [
+                    "mathematisch",
+                    "sprachlich",
+                    "kuenstlerisch",
+                    "sportlich"
+                  ]
                 }
               ],
               "groups": [
@@ -577,7 +679,12 @@
                 {
                   "logicType": "value_equals",
                   "value": "0_Focus",
-                  "conditionValue": ["mathematisch", "sprachlich", "kuenstlerisch", "sportlich"]
+                  "conditionValue": [
+                    "mathematisch",
+                    "sprachlich",
+                    "kuenstlerisch",
+                    "sportlich"
+                  ]
                 }
               ],
               "groups": [
@@ -593,7 +700,12 @@
                 {
                   "logicType": "value_equals",
                   "value": "0_Focus",
-                  "conditionValue": ["mathematisch", "sprachlich", "kuenstlerisch", "sportlich"]
+                  "conditionValue": [
+                    "mathematisch",
+                    "sprachlich",
+                    "kuenstlerisch",
+                    "sportlich"
+                  ]
                 }
               ],
               "groups": [
@@ -609,7 +721,12 @@
                 {
                   "logicType": "value_equals",
                   "value": "0_Focus",
-                  "conditionValue": ["mathematisch", "sprachlich", "kuenstlerisch", "sportlich"]
+                  "conditionValue": [
+                    "mathematisch",
+                    "sprachlich",
+                    "kuenstlerisch",
+                    "sportlich"
+                  ]
                 }
               ],
               "groups": [
@@ -625,7 +742,12 @@
                 {
                   "logicType": "value_equals",
                   "value": "0_Focus",
-                  "conditionValue": ["mathematisch", "sprachlich", "kuenstlerisch", "sportlich"]
+                  "conditionValue": [
+                    "mathematisch",
+                    "sprachlich",
+                    "kuenstlerisch",
+                    "sportlich"
+                  ]
                 }
               ],
               "groups": [
@@ -641,20 +763,32 @@
                 {
                   "logicType": "value_equals",
                   "value": "0_Focus",
-                  "conditionValue": ["mathematisch", "sprachlich", "kuenstlerisch", "sportlich"]
+                  "conditionValue": [
+                    "mathematisch",
+                    "sprachlich",
+                    "kuenstlerisch",
+                    "sportlich"
+                  ]
                 }
               ],
-              "groups":[
+              "groups": [
                 "philo-reli_p3-p5"
               ]
             }
           ]
-
         },
         {
           "name": "P4",
-          "type":"dropdown",
-          "values":[
+          "type": "dropdown",
+          "pfachText": "P4",
+          "hours": 3,
+          "semester": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "values": [
             {
               "value": "deutsch",
               "displayText": "Deutsch",
@@ -821,8 +955,16 @@
         },
         {
           "name": "P5",
-          "type":"dropdown",
-          "values":[
+          "type": "dropdown",
+          "pfachText": "P5",
+          "hours": 3,
+          "semester": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "values": [
             {
               "value": "deutsch",
               "displayText": "Deutsch",
@@ -1046,6 +1188,11 @@
         {
           "name": "Deutsch",
           "type": "dropdown",
+          "hours": 3,
+          "semester": [
+            1,
+            2
+          ],
           "values": [
             {
               "value": "deutsch",
@@ -1069,19 +1216,38 @@
                   "value": "1",
                   "conditionValue": "deutsch"
                 }
+              ],
+              "overrides": [
+                {
+                  "hours": 0,
+                  "semester": [],
+                  "conditions": []
+                }
               ]
             }
           ]
         },
         {
           "name": "Fremdsprache",
-          "type":"dropdown",
+          "type": "dropdown",
+          "hours": 3,
+          "semester": [
+            1,
+            2
+          ],
           "values": [
             {
               "value": "belegungsverpflichtung_erfüllt_fremdsprache",
               "displayText": "Belegungsverpflichtung erfüllt",
               "dontHide": false,
-              "conditions":[
+              "overrides": [
+                {
+                  "hours": 0,
+                  "semester": [],
+                  "conditions": []
+                }
+              ],
+              "conditions": [
                 {
                   "logicType": "group_greaterOrEqual",
                   "value": "fremdsprache_p3-p5",
@@ -1093,7 +1259,7 @@
               "value": "englisch",
               "displayText": "Englisch",
               "dontHide": false,
-              "conditions":[
+              "conditions": [
                 {
                   "logicType": "!group_greaterOrEqual",
                   "value": "fremdsprache_p3-p5",
@@ -1105,7 +1271,7 @@
               "value": "franzoesisch",
               "displayText": "Französisch",
               "dontHide": false,
-              "conditions":[
+              "conditions": [
                 {
                   "logicType": "!group_greaterOrEqual",
                   "value": "fremdsprache_p3-p5",
@@ -1117,7 +1283,7 @@
               "value": "spanisch",
               "displayText": "Spanisch",
               "dontHide": false,
-              "conditions":[
+              "conditions": [
                 {
                   "logicType": "!group_greaterOrEqual",
                   "value": "fremdsprache_p3-p5",
@@ -1129,7 +1295,7 @@
               "value": "latein",
               "displayText": "Latein",
               "dontHide": false,
-              "conditions":[
+              "conditions": [
                 {
                   "logicType": "!group_greaterOrEqual",
                   "value": "fremdsprache_p3-p5",
@@ -1141,13 +1307,25 @@
         },
         {
           "name": "Kunst, Musik, DSP",
-          "type":"dropdown",
+          "type": "dropdown",
+          "hours": 3,
+          "semester": [
+            1,
+            2
+          ],
           "values": [
             {
               "value": "belegungsverpflichtung_erfüllt_kuenstler",
               "displayText": "Belegungsverpflichtung erfüllt",
               "dontHide": false,
-              "conditions":[
+              "overrides": [
+                {
+                  "hours": 0,
+                  "semester": [],
+                  "conditions": []
+                }
+              ],
+              "conditions": [
                 {
                   "logicType": "group_greaterOrEqual",
                   "value": "kuenstler_p3-p5",
@@ -1159,7 +1337,7 @@
               "value": "kunst",
               "displayText": "Kunst",
               "dontHide": false,
-              "conditions":[
+              "conditions": [
                 {
                   "logicType": "!group_greaterOrEqual",
                   "value": "kuenstler_p3-p5",
@@ -1171,7 +1349,7 @@
               "value": "musik",
               "displayText": "Musik",
               "dontHide": false,
-              "conditions":[
+              "conditions": [
                 {
                   "logicType": "!group_greaterOrEqual",
                   "value": "kuenstler_p3-p5",
@@ -1183,7 +1361,7 @@
               "value": "dsp",
               "displayText": "Darstellendes Spiel",
               "dontHide": false,
-              "conditions":[
+              "conditions": [
                 {
                   "logicType": "!group_greaterOrEqual",
                   "value": "kuenstler_p3-p5",
@@ -1196,6 +1374,11 @@
         {
           "name": "PoWi",
           "type": "dropdown",
+          "hours": 3,
+          "semester": [
+            1,
+            2
+          ],
           "values": [
             {
               "value": "politik-wirtschaft",
@@ -1213,6 +1396,13 @@
               "value": "belegungsverpflichtung_erfüllt_politik-wirtschaft",
               "displayText": "Belegungsverpflichtung erfüllt",
               "dontHide": false,
+              "overrides": [
+                {
+                  "hours": 0,
+                  "semester": [],
+                  "conditions": []
+                }
+              ],
               "conditions": [
                 {
                   "logicType": "!used_in_step",
@@ -1226,6 +1416,11 @@
         {
           "name": "Geschichte",
           "type": "dropdown",
+          "hours": 3,
+          "semester": [
+            1,
+            2
+          ],
           "values": [
             {
               "value": "geschichte",
@@ -1243,6 +1438,13 @@
               "value": "belegungsverpflichtung_erfüllt_geschichte",
               "displayText": "Belegungsverpflichtung erfüllt",
               "dontHide": false,
+              "overrides": [
+                {
+                  "hours": 0,
+                  "semester": [],
+                  "conditions": []
+                }
+              ],
               "conditions": [
                 {
                   "logicType": "!used_in_step",
@@ -1255,13 +1457,25 @@
         },
         {
           "name": "Philosophie, Religion",
-          "type":"dropdown",
+          "type": "dropdown",
+          "hours": 3,
+          "semester": [
+            1,
+            2
+          ],
           "values": [
             {
               "value": "belegungsverpflichtung_erfüllt_philo-reli",
               "displayText": "Belegungsverpflichtung erfüllt",
               "dontHide": false,
-              "conditions":[
+              "overrides": [
+                {
+                  "hours": 0,
+                  "semester": [],
+                  "conditions": []
+                }
+              ],
+              "conditions": [
                 {
                   "logicType": "group_greaterOrEqual",
                   "value": "philo-reli_p3-p5",
@@ -1273,7 +1487,7 @@
               "value": "philosophie",
               "displayText": "Philosophie",
               "dontHide": false,
-              "conditions":[
+              "conditions": [
                 {
                   "logicType": "!group_greaterOrEqual",
                   "value": "philo-reli_p3-p5",
@@ -1285,7 +1499,7 @@
               "value": "religion",
               "displayText": "Religion",
               "dontHide": false,
-              "conditions":[
+              "conditions": [
                 {
                   "logicType": "!group_greaterOrEqual",
                   "value": "philo-reli_p3-p5",
@@ -1298,6 +1512,11 @@
         {
           "name": "Mathematik",
           "type": "dropdown",
+          "hours": 3,
+          "semester": [
+            1,
+            2
+          ],
           "values": [
             {
               "value": "mathematik",
@@ -1315,6 +1534,13 @@
               "value": "belegungsverpflichtung_erfüllt_mathematik",
               "displayText": "Belegungsverpflichtung erfüllt",
               "dontHide": false,
+              "overrides": [
+                {
+                  "hours": 0,
+                  "semester": [],
+                  "conditions": []
+                }
+              ],
               "conditions": [
                 {
                   "logicType": "!used_in_step",
@@ -1327,13 +1553,25 @@
         },
         {
           "name": "Naturwissenschaften",
-          "type":"dropdown",
+          "type": "dropdown",
+          "hours": 3,
+          "semester": [
+            1,
+            2
+          ],
           "values": [
             {
               "value": "belegungsverpflichtung_erfüllt_naturwissenschaften",
               "displayText": "Physik",
               "dontHide": false,
-              "conditions":[
+              "overrides": [
+                {
+                  "hours": 0,
+                  "semester": [],
+                  "conditions": []
+                }
+              ],
+              "conditions": [
                 {
                   "logicType": "group_greaterOrEqual",
                   "value": "naturwissenschaft_p3-p5",
@@ -1345,7 +1583,7 @@
               "value": "physik",
               "displayText": "Physik",
               "dontHide": false,
-              "conditions":[
+              "conditions": [
                 {
                   "logicType": "!group_greaterOrEqual",
                   "value": "naturwissenschaft_p3-p5",
@@ -1357,7 +1595,7 @@
               "value": "chemie",
               "displayText": "Chemie",
               "dontHide": false,
-              "conditions":[
+              "conditions": [
                 {
                   "logicType": "!group_greaterOrEqual",
                   "value": "naturwissenschaft_p3-p5",
@@ -1369,7 +1607,7 @@
               "value": "biologie",
               "displayText": "Biologie",
               "dontHide": false,
-              "conditions":[
+              "conditions": [
                 {
                   "logicType": "!group_greaterOrEqual",
                   "value": "naturwissenschaft_p3-p5",
@@ -1382,6 +1620,11 @@
         {
           "name": "Sport",
           "type": "dropdown",
+          "hours": 3,
+          "semester": [
+            1,
+            2
+          ],
           "values": [
             {
               "value": "sport",
@@ -1408,9 +1651,16 @@
               ]
             },
             {
-              "value": "belegungsverpflichtung_erfüllt_deutsch",
-              "displayText": "Belegungsverpflichtung erfüllt",
+              "value": "sporttheorie",
+              "displayText": "Sporttheorie",
               "dontHide": false,
+              "overrides": [
+                {
+                  "hours": 1,
+                  "semester": [1, 2, 3, 4],
+                  "conditions": []
+                }
+              ],
               "conditions": [
                 {
                   "logicType": "used_in_step",
@@ -1424,6 +1674,11 @@
         {
           "name": "Seminarfach",
           "type": "dropdown",
+          "hours": 3,
+          "semester": [
+            1,
+            2
+          ],
           "values": [
             {
               "value": "seminarfach",
@@ -1445,7 +1700,6 @@
             }
           ]
         }
-
       ]
     },
     {
@@ -1469,7 +1723,6 @@
               "dontHide": false,
               "unique": "*",
               "conditions": [
-                
               ]
             },
             {
@@ -1478,7 +1731,6 @@
               "dontHide": false,
               "unique": "*",
               "conditions": [
-                
               ]
             },
             {
@@ -1487,7 +1739,6 @@
               "dontHide": false,
               "unique": "*",
               "conditions": [
-                
               ]
             },
             {
@@ -1496,16 +1747,14 @@
               "dontHide": false,
               "unique": "*",
               "conditions": [
-                
               ]
             },
             {
               "value": "politik-wirtschaft",
               "displayText": "Politik-Wirtschaft",
               "dontHide": false,
-	            "unique": "*",
+              "unique": "*",
               "conditions": [
-
               ]
             },
             {
@@ -1514,7 +1763,6 @@
               "dontHide": false,
               "unique": "*",
               "conditions": [
-                
               ]
             },
             {
@@ -1523,7 +1771,6 @@
               "dontHide": false,
               "unique": "*",
               "conditions": [
-                
               ]
             },
             {
@@ -1532,7 +1779,6 @@
               "dontHide": false,
               "unique": "*",
               "conditions": [
-                
               ]
             },
             {
@@ -1541,7 +1787,6 @@
               "dontHide": false,
               "unique": "*",
               "conditions": [
-                
               ]
             },
             {
@@ -1550,7 +1795,6 @@
               "dontHide": false,
               "unique": "*",
               "conditions": [
-                
               ]
             },
             {
@@ -1559,7 +1803,6 @@
               "dontHide": false,
               "unique": "*",
               "conditions": [
-                
               ]
             },
             {
@@ -1568,7 +1811,6 @@
               "dontHide": false,
               "unique": "*",
               "conditions": [
-              
               ]
             },
             {
@@ -1577,7 +1819,6 @@
               "dontHide": false,
               "unique": "*",
               "conditions": [
-                
               ]
             },
             {
@@ -1586,30 +1827,147 @@
               "dontHide": false,
               "unique": "*",
               "conditions": [
-                
               ]
             },
             {
               "value": "religion",
               "displayText": "Religion",
               "dontHide": false,
-	            "unique": "*",
+              "unique": "*",
               "conditions": [
-
               ]
             },
             {
               "value": "englisch",
               "displayText": "Englisch",
-	            "unique": "*",
+              "unique": "*",
               "dontHide": false,
               "conditions": [
-              
               ]
             }
           ]
         }
       ]
     }
+  ],
+  "CategorySort": [
+    "A",
+    "B",
+    "C",
+    ""
+  ],
+  "SubjectConfig": [
+    {
+      "value": "deutsch",
+      "displayPosition": "A_0",
+      "groups": ""
+    },
+    {
+      "value": "englisch",
+      "displayPosition": "A_1",
+      "groups": ""
+    },
+    {
+      "value": "franzoesisch",
+      "displayPosition": "A_2",
+      "groups": ""
+    },
+    {
+      "value": "latein",
+      "displayPosition": "A_3",
+      "groups": ""
+    },
+    {
+      "value": "spanisch",
+      "displayPosition": "A_4",
+      "groups": ""
+    },
+    {
+      "value": "kunst",
+      "displayPosition": "A_5",
+      "groups": ""
+    },
+    {
+      "value": "musik",
+      "displayPosition": "A_6",
+      "groups": ""
+    },
+    {
+      "value": "dsp",
+      "displayPosition": "A_7",
+      "groups": ""
+    },
+    {
+      "value": "politik-wirtschaft",
+      "displayPosition": "B_0",
+      "groups": ""
+    },
+    {
+      "value": "geschichte",
+      "displayPosition": "B_1",
+      "groups": ""
+    },
+    {
+      "value": "erdkunde",
+      "displayPosition": "B_2",
+      "groups": ""
+    },
+    {
+      "value": "philosophie",
+      "displayPosition": "B_3",
+      "groups": ""
+    },
+    {
+      "value": "religion",
+      "displayPosition": "B_4",
+      "groups": ""
+    },
+    {
+      "value": "mathematik",
+      "displayPosition": "C_0",
+      "groups": ""
+    },
+    {
+      "value": "physik",
+      "displayPosition": "C_1",
+      "groups": ""
+    },
+    {
+      "value": "chemie",
+      "displayPosition": "C_2",
+      "groups": ""
+    },
+    {
+      "value": "biologie",
+      "displayPosition": "C_3",
+      "groups": ""
+    },
+    {
+      "value": "informatik",
+      "displayPosition": "C_4",
+      "groups": ""
+    },
+    {
+      "value": "sport",
+      "displayPosition": "_0",
+      "groups": ""
+    },
+    {
+      "value": "sporttheorie",
+      "displayPosition": "_1",
+      "groups": ""
+    },
+    {
+      "value": "seminarfach",
+      "displayPosition": "_2",
+      "groups": ""
+    }
+  ],
+  "FileLayout": [
+    "IGS-Buchholz",
+    "Name: $schuelername$",
+    "Klasse: $klasse$",
+    "Profil: $0_Focus$",
+    "$kurse$"
   ]
 }

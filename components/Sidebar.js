@@ -3,6 +3,8 @@ import Link from "next/link";
 import { usePathname } from 'next/navigation';
 import PropTypes from "prop-types";
 import LinkButtonPrimary from "@/components/LinkButtonPrimary";
+import ButtonPrimary from "@/components/ButtonPrimary";
+import {signOut} from "next-auth/react";
 
 export default function Sidebar() {
     const pathName = usePathname();
@@ -12,17 +14,16 @@ export default function Sidebar() {
             transition-all duration-300 fixed`}
         >
             <nav className="mt-4">
-                <h1 className={"text-center text-2xl underline font-bold"}>Admin-Bereich</h1>
+                <h1 className="font-mono text-2xl text-center mb-4">kurswahl<b className={""}>Tool</b></h1>
                 <ul>
                     <RoutingLink page={"Dashboard"} text={"Dashboard"}></RoutingLink>
                     <RoutingLink page={"Users"} text={"Nutzer"}></RoutingLink>
                     <RoutingLink page={"Selectionedit"} text={"Kursanpassung"}></RoutingLink>
                     <RoutingLink page={"Simulation"} text={"Simulation"}></RoutingLink>
-                    <RoutingLink page={"Config"} text={"Kurswahlkonfiguration"}></RoutingLink>
+                    <RoutingLink page={"Config"} text={"Kurswahl-Konfiguration"}></RoutingLink>
                     <RoutingLink page={"Settings"} text={"Einstellungen"}></RoutingLink>
-                    <li className="p-4 hover:bg-gray-700 underline font-bold">
-                        <Link href="/userarea/admin/logout">Logout</Link>
-                    </li>
+                    <RoutingLink page={"Homepage"} text={"Homepage-Konfiguration"}></RoutingLink>
+
                 </ul>
             </nav>
             <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">

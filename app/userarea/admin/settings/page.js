@@ -137,13 +137,18 @@ export default function SettingsDashboard() {
                     {/* Modus */}
                     <div className="bg-white shadow-md rounded-lg p-6">
                         <h2 className="text-xl font-bold text-blue-600">Modus</h2>
-                        <p className="text-gray-700 mt-2">Altes Design vs. neues Design</p>
+                        <p className="text-gray-700 mt-2">Altes Design vs. neues Design.</p>
                     </div>
 
                     {/* Kontaktpersonen */}
                     <div className="bg-white shadow-md rounded-lg p-6">
                         <h2 className="text-xl font-bold text-blue-600">Kontaktpersonen</h2>
-                        <p className="text-gray-700 mt-2">Name, E-Mail-Adresse, Sekreteriat-Telefonnummer</p>
+                        <p className="text-gray-700 mt-2">Name, E-Mail-Adresse, Sekreteriat-Telefonnummer.</p>
+                    </div>
+
+                    <div className="bg-white shadow-md rounded-lg p-6">
+                        <h2 className="text-xl font-bold text-blue-600">Verlinkungen</h2>
+                        <p className="text-gray-700 mt-2">Hier werden schulisch relevante Webseiten verlinkt.</p>
                     </div>
                 </div>
             </div>

@@ -10,7 +10,7 @@ export default function SelectionEditDashboard() {
             {/* Main Content Area */}
             <div className="flex-1 bg-gray-100 p-6 ml-64">
                 <header className="mb-8">
-                    <h1 className="text-3xl font-bold text-gray-800">Kurswahl-Anpassung</h1>
+                    <h1 className="text-3xl font-bold text-gray-800">Kurswahl-Übersicht</h1>
                 </header>
 
                 {/* Dashboard Content */}

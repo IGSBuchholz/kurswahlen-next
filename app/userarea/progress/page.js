@@ -2,36 +2,100 @@
 import Step1 from "@/components/steps/step1";
 import {usePathname, useSearchParams} from 'next/navigation'
 import {useEffect, useState} from "react";
-import {evaluateRules, getStepUI, setupEngine, StepUI} from "@/utils/RulesEngine";
+import {StepUI} from "@/utils/RulesEngine";
 import Link from "next/link";
 import ButtonPrimary from "@/components/ButtonPrimary";
+import HoursPreview from "@/components/HoursPreview";
+import FinalView from "@/components/FinalView";
+import ContextViewer from "@/components/vis/ContextViewer";
+import SaveDialog from "@/components/SaveDialog";
+import {NextResponse as res} from "next/server";
 
 export default function Progress() {
     const searchParams = useSearchParams();
     const pathname = usePathname()
     const initialStepNumber = parseInt(searchParams.get("step")) || 0; // Default to 0 if step is null
-    const [stepNumber, setStepNumber] = useState(initialStepNumber); // Step number state
-
+    const [stepNumber, setStepNumber] = useState(-1); // Step number state
+    const debugMode = true;
     const [currentStepData, setCurrentStepData] = useState({});
     const [context, setContext] = useState(new Map()); // State to hold the JSON data
     const [loading, setLoading] = useState(true);  // Loading state
-
+    const [saveId, setSaveId] = useState(null);
     const [canProcced, setCanProcced] = useState(false);
     const [stepData, setStepData] = useState({});
+    const [changesSinceSave, setChangesSinceSave] = useState(false);
     const [messages, setMessages] = useState(new Map([]
+    ));
+    const [cfVersion, setCfVersion] = useState(-1);
+
+    const [hours, setHours] = useState([]);
+    const [saveDialogTriggeredExternally, setSaveDialogTriggeredExternally] = useState(new Map([]
     ));
 
     useEffect(() => {
+
+        async function initializeGivenContext() {
+            let loadedContext = new Map()
+            let conTxt = [];
+            if(!searchParams.has("contextText")) {
+                setStepNumber(0);
+                return false;
+            }
+            try {
+                conTxt = JSON.parse(searchParams.get("contextText"))
+            }catch (error) {
+
+            }
+
+
+            let lastEl = "";
+            for (const key in conTxt) {
+                lastEl = key;
+                loadedContext.set(key, conTxt[key]);
+            }
+            const extractedStepNumber = parseInt(lastEl.split("_")[0])
+            setContext(loadedContext);
+            setStepNumber(extractedStepNumber);
+        }
+        initializeGivenContext();
+
+        async function initializeSaveID() {
+            if(searchParams.has("id")) {
+                setSaveId(parseInt(searchParams.get("id")));
+                if(!searchParams.has("contextText")){
+
+                    const res = await fetch("/api/progress/saved/retrievebyid?id=" + searchParams.get("id"),
+                        {
+                            method: "GET",
+                        })
+                    const json = await res.json();
+                    console.log("EEE", json)
+                    console.log("EEE", res.status)
+                    if(!(res.status === 200)) {
+                        const m = messages;
+                        m.set("Fehler beim Laden des Speichers! " + json.message, "error")
+                        setMessages(m)
+                    }
+                }
+            }
+        }
+        initializeSaveID();
+
         // Fetch JSON data from the web file
         async function fetchStepData() {
             try {
-                const response = await fetch('/crs/sample.json'); // Replace with your JSON URL
+                const response = await fetch('/api/rulesengine'); // Replace with your JSON URL
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const data = await response.json();
-                setStepData(data); // Set the fetched data
-                setCurrentStepData(data.Steps[initialStepNumber])
+                if(data.message !== "SUCCESS") {
+                    console.error(data.message);
+                }                
+
+                setStepData(JSON.parse(data.results.data)); // Set the fetched data
+                setCfVersion(data.results.id)
+                console.log("Successfully set step data")
             } catch (error) {
                 console.error("Error fetching JSON:", error);
             } finally {
@@ -39,15 +103,24 @@ export default function Progress() {
             }
         }
 
-        fetchStepData();
+        fetchStepData()
+        
+
     }, []);
 
     useEffect(() => {
+        console.log("stepss", typeof(stepData))
         if (!stepData || !stepData.Steps) {
             return
         }
         setCurrentStepData(stepData.Steps[stepNumber])
-    }, [stepNumber]);
+        console.log("Changed to Step: " + stepNumber + " from " + stepData.Steps.length)
+        if(stepNumber+1 > stepData.Steps.length) {
+            if(saveId) {
+                updateSave(saveId, context, setChangesSinceSave, cfVersion)
+            }
+        }
+    }, [stepNumber, stepData]);
 
     function renderNotifications() {
         let notifications = [];
@@ -128,19 +201,35 @@ export default function Progress() {
 
     return (
         <>
-            <div className={"absolute z-50"}>
+            <SaveDialog setDialogTriggered={setSaveDialogTriggeredExternally} dialogTriggered={saveDialogTriggeredExternally} saveID={saveId} onSave={(name)=>{updateSave(saveId, context, setChangesSinceSave)}} onSaveAs={(name)=>{saveProgressAs(name, context, setSaveId, setChangesSinceSave, cfVersion)}}></SaveDialog>
+            <div className={"absolute z-50 "}>
                 <div className="w-screen flex items-center justify-center ">
                     <div className={"block mt-24"}>
                         {renderNotifications()}
                     </div>
                 </div>
             </div>
-            <div className="grid place-items-center h-screen">
-                <div className="bg-white w-96 p-4 rounded-md">
-                    {stepData.Steps != null && stepData.Steps.length > 0 && stepNumber >= 0 ?
-                        <StepUI step={currentStepData} number={stepNumber} initialContext={context}
-                                setContext={setContext} setMessages={setMessages} messages={messages}
-                                setCanProcced={setCanProcced}></StepUI>
+            {debugMode == true ? <ContextViewer context={context} hours={hours} /> : ""}
+            <div className="grid place-items-center bg-gray-100 h-screen overflow-auto py-20">
+                <div className="bg-white min-w-96 p-4 rounded-md">
+                {stepData && stepData.Steps != null && stepData.Steps.length > 0 && stepNumber >= 0 && (currentStepData || (stepNumber+1 > stepData.Steps.length)) ?
+                        ((stepNumber+1 > stepData.Steps.length) ? <FinalView  context={context} hours={hours} categorysort={stepData.CategorySort} lines={stepData.FileLayout}></FinalView> :
+                            <div>
+                                <StepUI className={"w-full h-auto"} step={currentStepData} number={stepNumber} initialContext={context}
+                                    setContext={setContext} setMessages={setMessages} messages={messages}
+                                    setCanProcced={setCanProcced} allSteps={stepData.Steps} subjectConfig={stepData.SubjectConfig} hours={hours} setHours={setHours} changesSinceSave={changesSinceSave} setChangesSinceSave={setChangesSinceSave} saveMethod={() => {saveProgressAuto(setChangesSinceSave, setSaveDialogTriggeredExternally, saveId, context, cfVersion)}}></StepUI>
+                                <div className="flex justify-between">
+
+                                    <ButtonPrimary isActive={canProcced} text={"Weiter"} callback={() => {
+                                        setStepNumber(stepNumber + 1);
+                                        setCanProcced(false);
+                                    }}></ButtonPrimary>
+                                    {stepNumber > 0 ? <button onClick={() => {
+                                        goBack(context, setContext, stepNumber, setStepNumber)
+                                    }} className={"px-4 bg-gray-100 rounded-md"}>↵</button> : ""}
+                                </div>
+                            </div>
+                                )
                         : <h1>
                             <div role="status"
                                  className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center">
@@ -153,12 +242,62 @@ export default function Progress() {
                             </div>
                         </h1>
                     }
-                    <ButtonPrimary isActive={canProcced} text={"Weiter"} callback={() => {
-                        setStepNumber(stepNumber + 1)
-                        setCanProcced(false)
-                    }}></ButtonPrimary>
+
                 </div>
             </div>
         </>
     );
+}
+
+function goBack(context, setContext, stepNumber, setStepNumber) {
+    let newContext = context;
+
+    context.forEach((value, key) => {
+        if(key.startsWith(stepNumber)) {
+            newContext.delete(key)
+        }
+    })
+
+    setContext(newContext);
+    setStepNumber(stepNumber-1)
+}
+
+async function saveProgressAs(name, context, setId, setChangesSinceSave, cfv) {
+    const re = await fetch("/api/progress/saved/new", {
+            method: "POST",
+            body: JSON.stringify(
+                {
+                    name: name,
+                    cfv: cfv,
+                    context: Object.fromEntries(context)
+                }
+            ),
+     })
+    const json = await re.json();
+    setId(json.save.id)
+    setChangesSinceSave(false)
+}
+
+const updateSave = async (id, context, setChangesSinceSave, cfv) => {
+    if(!id) return;
+    console.log(context)
+    const re = await fetch("/api/progress/saved/update", {
+        method: "POST",
+        body: JSON.stringify(
+            {
+                id: id,
+                cfv: cfv,
+                context: Object.fromEntries(context)
+            }
+        ),
+    })
+    const json = await re.json();
+    setChangesSinceSave(false)
+}
+const saveProgressAuto = async (setChangesSinceSave, setSaveDialogTriggered, id, context, cfv) => {
+    if(id) {
+        await updateSave(id, context, setChangesSinceSave, cfv)
+        return;
+    }
+    setSaveDialogTriggered(true)
 }
