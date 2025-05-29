@@ -2,11 +2,12 @@
 import Sidebar from "@/components/Sidebar";
 import { StepUI } from "@/utils/RulesEngine";
 import { useState, useEffect } from "react";
+import useErrorLogger from "@/app/userarea/admin/dashboard/errorProjection/useErrorLogger";
 
 export default function KurswahlSimulationDashboard() {
     const [context, setContext] = useState(new Map());
     const [dataBeingEdited, setDataBeingEdited] = useState({});
-    const [, setErrors] = useErrorLogger("Einstellungen");
+    const [, setErrors] = useErrorLogger("Simulation");
 
         useEffect(() => {
             // Fetch JSON data from the web file

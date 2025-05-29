@@ -1,9 +1,10 @@
 "use client"
 import Sidebar from "@/components/Sidebar";
+import useErrorLogger from "@/app/userarea/admin/dashboard/errorProjection/useErrorLogger";
 
 export default function UsersDashboard() {
-    const [, setErrors] = useErrorLogger("Einstellungen");
-    
+    const [, setErrors] = useErrorLogger("Nutzerverwaltung");
+
     return (
         <div className="flex h-screen">
             {/* Sidebar */}

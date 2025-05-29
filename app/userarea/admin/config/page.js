@@ -25,6 +25,38 @@ export default function ConfigDashboard() {
     const [isAddingExamSubject, setIsAddingExamSubject] = useState(false); // Zustand für Hinzufügen von Prüfungsfach
     const [isAddingExamSection, setIsAddingExamSection] = useState(false); // Zustand für Hinzufügen von Prüfungssektion
     const [errors, setErrors] = useErrorLogger("Kurskonfiguration");
+    const [configValidationErrorLogged, setConfigValidationErrorLogged] = useState(false);
+
+    useEffect(() => {
+        const isScalar = (val) => typeof val === "string" || typeof val === "number" || typeof val === "boolean" || val === null;
+
+        const hasError =
+            (exam_subjects && !isScalar(exam_subjects)) ||
+            (exam_sections && !isScalar(exam_sections));
+
+        if (hasError && !configValidationErrorLogged) {
+            const error = new Error("Ungültiger Wert für ein <select>-Feld: Erwartet skalaren Wert, aber Array oder Objekt erhalten.");
+            const timestamp = new Date().toLocaleString("de-DE", {
+                hour: "2-digit",
+                minute: "2-digit",
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric"
+            });
+
+            const message = {
+                context: "Kurskonfiguration",
+                message: error.message,
+                timestamp,
+                persistent: true
+            };
+
+            const existing = JSON.parse(localStorage.getItem("errorLog") || "[]");
+            localStorage.setItem("errorLog", JSON.stringify([...existing, message]));
+            setErrors(prev => [...prev, message]);
+            setConfigValidationErrorLogged(true);
+        }
+    }, [exam_subjects, exam_sections, configValidationErrorLogged, setErrors]);
 
     useEffect(() => {
         //localStorage.clear(); // Uncomment this line to clear localStorage
