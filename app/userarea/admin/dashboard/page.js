@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
 import useErrorLogger from "@/app/userarea/admin/dashboard/errorProjection/useErrorLogger";
 
-
 export default function AdminDashboard() {
     const [courseSelection, setCourseSelection] = useState(() => {
         const submitted = localStorage.getItem("submitted");
@@ -50,11 +49,6 @@ export default function AdminDashboard() {
     }, []);
 
     useEffect(() => {
-        localStorage.setItem("submitted", courseSelection.submitted);
-        localStorage.setItem("total", courseSelection.total);
-    }, [courseSelection]);
-
-    useEffect(() => {
         const savedUsers = localStorage.getItem("userCount");
         const savedTeachers = localStorage.getItem("teacherCount");
         const savedAdmins = localStorage.getItem("adminCount");
@@ -66,12 +60,6 @@ export default function AdminDashboard() {
             admins: savedAdmins ? Number(savedAdmins) : 0
         }));
     }, []);
-
-    useEffect(() => {
-        localStorage.setItem("userCount", userStats.users);
-        localStorage.setItem("teacherCount", userStats.teachers);
-        localStorage.setItem("adminCount", userStats.admins);
-    }, [userStats.users, userStats.teachers, userStats.admins]);
 
     useEffect(() => {
         const now = new Date();
@@ -110,7 +98,6 @@ export default function AdminDashboard() {
         const timeDiff = deadlineDate - today;
         const days = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
         setDaysLeft(days);
-        localStorage.setItem("courseDeadline", deadline.toISOString());
     }, [deadline]);
 
     const triggerError = () => {
@@ -141,83 +128,13 @@ export default function AdminDashboard() {
                         <p className="text-sm text-center text-gray-600">
                             Ausstehend: {Math.max(courseSelection.total - courseSelection.submitted, 0)}
                         </p>
-                        <div className="flex justify-center gap-4 mt-4">
-                            <input
-                                type="number"
-                                min="0"
-                                value={courseSelection.submitted}
-                                onChange={(e) =>
-                                    setCourseSelection((prev) => ({
-                                        ...prev,
-                                        submitted: Math.min(Number(e.target.value), prev.total)
-                                    }))
-                                }
-                                className="p-2 border border-gray-300 rounded w-28"
-                                placeholder="Eingereicht"
-                            />
-                            <input
-                                type="number"
-                                min="1"
-                                value={courseSelection.total}
-                                onChange={(e) =>
-                                    setCourseSelection((prev) => ({
-                                        ...prev,
-                                        total: Math.max(1, Number(e.target.value))
-                                    }))
-                                }
-                                className="p-2 border border-gray-300 rounded w-28"
-                                placeholder="Gesamt"
-                            />
-                        </div>
                     </div>
 
                     <div className="bg-white shadow-lg rounded-lg p-8">
                         <h2 className="text-2xl font-bold text-blue-600">Benutzeraktivität</h2>
-                        <div className="flex items-center justify-between mt-4">
-                            <p className="text-lg text-gray-700">👤 Nutzer: <span className="font-bold">{userStats.users}</span></p>
-                            <input
-                                type="number"
-                                min="0"
-                                value={userStats.users}
-                                onChange={(e) =>
-                                    setUserStats((prev) => ({
-                                        ...prev,
-                                        users: Number(e.target.value)
-                                    }))
-                                }
-                                className="p-1 border border-gray-300 rounded w-28 text-right"
-                            />
-                        </div>
-                        <div className="flex items-center justify-between mt-2">
-                            <p className="text-lg text-gray-700">👨‍🏫 Lehrer: <span className="font-bold">{userStats.teachers}</span></p>
-                            <input
-                                type="number"
-                                min="0"
-                                value={userStats.teachers}
-                                onChange={(e) =>
-                                    setUserStats((prev) => ({
-                                        ...prev,
-                                        teachers: Number(e.target.value)
-                                    }))
-                                }
-                                className="p-1 border border-gray-300 rounded w-28 text-right"
-                            />
-                        </div>
-                        <div className="flex items-center justify-between mt-2">
-                            <p className="text-lg text-gray-700">🛠️ Admins: <span className="font-bold">{userStats.admins}</span></p>
-                            <input
-                                type="number"
-                                min="0"
-                                value={userStats.admins}
-                                onChange={(e) =>
-                                    setUserStats((prev) => ({
-                                        ...prev,
-                                        admins: Number(e.target.value)
-                                    }))
-                                }
-                                className="p-1 border border-gray-300 rounded w-28 text-right"
-                            />
-                        </div>
+                        <p className="text-lg text-gray-700">👤 Nutzer: <span className="font-bold">{userStats.users}</span></p>
+                        <p className="text-lg text-gray-700">👨‍🏫 Lehrer: <span className="font-bold">{userStats.teachers}</span></p>
+                        <p className="text-lg text-gray-700">🛠️ Admins: <span className="font-bold">{userStats.admins}</span></p>
                         <p className="text-lg text-gray-700 mt-4">
                             📅 Letzter Admin-Zugriff: <strong>{userStats.lastAdminAccess.name} ({userStats.lastAdminAccess.date}, {userStats.lastAdminAccess.time} Uhr)</strong>
                         </p>
@@ -225,19 +142,7 @@ export default function AdminDashboard() {
 
                     <div className="bg-white shadow-lg rounded-lg p-8">
                         <h2 className="text-2xl font-bold text-blue-600">Kurswahl-Deadline</h2>
-                        <div className="flex items-center justify-between mt-4">
-                            <p className="text-lg text-red-600">📅 Abgabefrist: <span className="font-bold">{deadline.toLocaleDateString("de-DE")}</span></p>
-                            <input
-                                type="date"
-                                value={deadline.toISOString().split('T')[0]}
-                                onChange={(e) => {
-                                    const date = new Date(e.target.value);
-                                    setDeadline(date);
-                                    localStorage.setItem("courseDeadline", date.toISOString());
-                                }}
-                                className="p-1 border border-gray-300 rounded w-40 text-right"
-                            />
-                        </div>
+                        <p className="text-lg text-red-600 mt-2">📅 Abgabefrist: <span className="font-bold">{deadline.toLocaleDateString("de-DE")}</span></p>
                         <p className={`mt-4 text-2xl font-bold ${daysLeft < 0 ? "text-yellow-500" : daysLeft === 0 ? "underline text-gray-600" : daysLeft <= 7 ? "text-red-600" : "text-green-600"}`}>
                             {daysLeft > 0 && `${daysLeft} Tage verbleibend`}
                             {daysLeft === 0 && new Date().toDateString() === deadline.toDateString() && "Letzter Abgabetag – heute!"}
