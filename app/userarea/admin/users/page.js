@@ -1,5 +1,6 @@
 "use client"
 import Sidebar from "@/components/Sidebar";
+
 import EmailInput from "@/components/EmailInput";
 import ButtonPrimary from "@/components/ButtonPrimary";
 import {useEffect, useState} from "react";
@@ -222,6 +223,7 @@ export default function UsersDashboard() {
                                 </div>
                             </details>
                         </div>
+                        
                     </div>
                 </section>
             </div>
