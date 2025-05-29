@@ -53,6 +53,8 @@ export async function setter(req, res)  {
     }
     await redis.del("rulesengine_version")
     await redis.del("rulesengine")
+
+    return NextResponse.json({message: "SUCCESS"}, {status: 200});
 }
 
 export { setter as POST }

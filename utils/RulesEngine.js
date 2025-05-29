@@ -193,6 +193,7 @@ export function StepUI({step, number = -1, initialContext = {}, setContext, setM
 
     useEffect(() => {
         updateUI()
+        console.log("Step", step)
     }, [step]);
 
 
