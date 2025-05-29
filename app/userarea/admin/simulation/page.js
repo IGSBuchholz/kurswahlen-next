@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 export default function KurswahlSimulationDashboard() {
     const [context, setContext] = useState(new Map());
     const [dataBeingEdited, setDataBeingEdited] = useState({});
+    const [, setErrors] = useErrorLogger("Einstellungen");
 
         useEffect(() => {
             // Fetch JSON data from the web file

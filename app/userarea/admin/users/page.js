@@ -2,6 +2,8 @@
 import Sidebar from "@/components/Sidebar";
 
 export default function UsersDashboard() {
+    const [, setErrors] = useErrorLogger("Einstellungen");
+    
     return (
         <div className="flex h-screen">
             {/* Sidebar */}

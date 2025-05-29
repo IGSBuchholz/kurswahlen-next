@@ -2,6 +2,7 @@
 import Sidebar from "@/components/Sidebar";
 import { countElementsInStep, StepUI } from "@/app/userarea/admin/StepUI-Admin/StepUI-Admin";
 import { useState, useEffect, useRef, useCallback } from "react";
+import useErrorLogger from "@/app/userarea/admin/dashboard/errorProjection/useErrorLogger";
 
 export default function ConfigDashboard() {
     const [context, setContext] = useState(new Map());
@@ -23,9 +24,14 @@ export default function ConfigDashboard() {
     const [newExamSection, setNewExamSection] = useState(""); // Neue Eingabe für Prüfungssektion
     const [isAddingExamSubject, setIsAddingExamSubject] = useState(false); // Zustand für Hinzufügen von Prüfungsfach
     const [isAddingExamSection, setIsAddingExamSection] = useState(false); // Zustand für Hinzufügen von Prüfungssektion
+    const [errors, setErrors] = useErrorLogger("Kurskonfiguration");
 
     useEffect(() => {
         //localStorage.clear(); // Uncomment this line to clear localStorage
+        const storedSubjects = JSON.parse(localStorage.getItem("exam_subjects")) || [];
+        const storedSections = JSON.parse(localStorage.getItem("exam_sections")) || [];
+        setExam_subjects(storedSubjects);
+        setExam_sections(storedSections);
         const storedData = localStorage.getItem("stepsData");
         if (storedData) {
             const parsedData = JSON.parse(storedData);
@@ -288,20 +294,24 @@ export default function ConfigDashboard() {
 
     // Funktion zum Hinzufügen eines neuen Prüfungsfachs
     const addExamSubject = () => {
-        if (newExamSubject.trim()) {
-            setExam_subjects([...exam_subjects, newExamSubject.trim()]);
-            setNewExamSubject(""); // Eingabefeld zurücksetzen
-            setIsAddingExamSubject(false); // Hinzufügen-Funktion beenden
+        if (newExamSubject.trim() !== "" && !examSubjects.includes(newExamSubject)) {
+            const updatedSubjects = [...examSubjects, newExamSubject];
+            setExam_subjects(updatedSubjects);
+            localStorage.setItem("exam_subjects", JSON.stringify(updatedSubjects));
         }
+        setNewExamSubject("");
+        setIsAddingExamSubject(false);
     };
 
     // Funktion zum Hinzufügen einer neuen Prüfungssektion
     const addExamSection = () => {
-        if (newExamSection.trim()) {
-            setExam_sections([...exam_sections, newExamSection.trim()]);
-            setNewExamSection(""); // Eingabefeld zurücksetzen
-            setIsAddingExamSection(false); // Hinzufügen-Funktion beenden
+        if (newExamSection.trim() !== "" && !examSections.includes(newExamSection)) {
+            const updatedSections = [...examSections, newExamSection];
+            setExam_sections(updatedSections);
+            localStorage.setItem("exam_sections", JSON.stringify(updatedSections));
         }
+        setNewExamSection("");
+        setIsAddingExamSection(false);
     };
 
     return (
@@ -524,7 +534,7 @@ export default function ConfigDashboard() {
                     {/* Zeige "Keine Prüfungssektionen verfügbar" wenn exam_sections leer ist */}
                     {exam_sections === "" && <option value="">Keine Prüfungssektionen verfügbar</option>}
                     {/* Zeige die Option zum Hinzufügen einer neuen Prüfungssektion */}
-                    <option value="">Hinzufügen</option>
+                    <option value="+">Hinzufügen</option>
                 </select>
 
                 {/* Eingabefeld für neue Prüfungssektion, wenn "Hinzufügen" geklickt wird */}

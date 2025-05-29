@@ -1,7 +1,11 @@
-"use client"
+"use client";
+import { useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
+import useErrorLogger from "@/app/userarea/admin/dashboard/errorProjection/useErrorLogger";
 
 export default function SettingsDashboard() {
+    const [, setErrors] = useErrorLogger("Einstellungen");
+
     return (
         <div className="flex h-screen">
             {/* Sidebar */}
