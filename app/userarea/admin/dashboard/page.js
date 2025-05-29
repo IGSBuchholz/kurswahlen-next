@@ -1,71 +1,71 @@
 "use client";
 import { useState, useEffect } from "react";
-import { usePathname } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
 import useErrorLogger from "@/app/userarea/admin/dashboard/errorProjection/useErrorLogger";
 
+
 export default function AdminDashboard() {
-    const [courseSelection, setCourseSelection] = useState({
-        submitted: 0,
-        total: 0
+    const [courseSelection, setCourseSelection] = useState(() => {
+        const submitted = localStorage.getItem("submitted");
+        const total = localStorage.getItem("total");
+        return {
+            submitted: submitted ? Number(submitted) : 0,
+            total: total ? Number(total) : 0
+        };
     });
-    const [deadline, setDeadline] = useState(new Date("2025-03-15"));
+    const [deadline, setDeadline] = useState(() => {
+        const saved = localStorage.getItem("courseDeadline");
+        return saved ? new Date(saved) : new Date("2025-03-15");
+    });
     const [daysLeft, setDaysLeft] = useState(0);
     const [errors] = useErrorLogger("Dashboard");
 
-    const [userStats, setUserStats] = useState({
-        users: 0,
-        teachers: 0,
-        admins: 0,
-        lastAdminAccess: {
-            name: "",
-            date: "",
-            time: ""
-        }
-    });
+    const [userStats, setUserStats] = useState(() => {
+        const users = localStorage.getItem("userCount");
+        const teachers = localStorage.getItem("teacherCount");
+        const admins = localStorage.getItem("adminCount");
+        const lastDate = localStorage.getItem("lastAccessDate");
+        const lastTime = localStorage.getItem("lastAccessTime");
 
-    const pathname = usePathname();
+        return {
+            users: users ? Number(users) : 0,
+            teachers: teachers ? Number(teachers) : 0,
+            admins: admins ? Number(admins) : 0,
+            lastAdminAccess: {
+                name: "Kilian",
+                date: lastDate || "Unbekannt",
+                time: lastTime || "Unbekannt"
+            }
+        };
+    });
 
     useEffect(() => {
         const savedSubmitted = localStorage.getItem("submitted");
         const savedTotal = localStorage.getItem("total");
 
-        const savedUsers = localStorage.getItem("userCount");
-        const savedTeachers = localStorage.getItem("teacherCount");
-        const savedAdmins = localStorage.getItem("adminCount");
-
-        const lastDate = localStorage.getItem("lastAccessDate");
-        const lastTime = localStorage.getItem("lastAccessTime");
-        const currentAdmin = "Kilian";
-
-        const savedDeadline = localStorage.getItem("courseDeadline");
-
         setCourseSelection({
             submitted: savedSubmitted ? Number(savedSubmitted) : 0,
             total: savedTotal ? Number(savedTotal) : 0
         });
-
-        setUserStats(prev => ({
-            ...prev,
-            users: savedUsers ? Number(savedUsers) : 0,
-            teachers: savedTeachers ? Number(savedTeachers) : 0,
-            admins: savedAdmins ? Number(savedAdmins) : 0,
-            lastAdminAccess: {
-                name: currentAdmin,
-                date: lastDate || "Unbekannt",
-                time: lastTime || "Unbekannt"
-            }
-        }));
-
-        if (savedDeadline) {
-            setDeadline(new Date(savedDeadline));
-        }
-    }, [pathname]);
+    }, []);
 
     useEffect(() => {
         localStorage.setItem("submitted", courseSelection.submitted);
         localStorage.setItem("total", courseSelection.total);
     }, [courseSelection]);
+
+    useEffect(() => {
+        const savedUsers = localStorage.getItem("userCount");
+        const savedTeachers = localStorage.getItem("teacherCount");
+        const savedAdmins = localStorage.getItem("adminCount");
+
+        setUserStats((prev) => ({
+            ...prev,
+            users: savedUsers ? Number(savedUsers) : 0,
+            teachers: savedTeachers ? Number(savedTeachers) : 0,
+            admins: savedAdmins ? Number(savedAdmins) : 0
+        }));
+    }, []);
 
     useEffect(() => {
         localStorage.setItem("userCount", userStats.users);
@@ -75,10 +75,31 @@ export default function AdminDashboard() {
 
     useEffect(() => {
         const now = new Date();
+        const currentAdmin = "Kilian";
+        const lastDate = localStorage.getItem("lastAccessDate");
+        const lastTime = localStorage.getItem("lastAccessTime");
+
+        setUserStats(prev => ({
+            ...prev,
+            lastAdminAccess: {
+                name: currentAdmin,
+                date: lastDate || "Unbekannt",
+                time: lastTime || "Unbekannt"
+            }
+        }));
+
         const formattedDate = now.toLocaleDateString("de-DE");
         const formattedTime = now.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" });
+
         localStorage.setItem("lastAccessDate", formattedDate);
         localStorage.setItem("lastAccessTime", formattedTime);
+    }, []);
+
+    useEffect(() => {
+        const savedDeadline = localStorage.getItem("courseDeadline");
+        if (savedDeadline) {
+            setDeadline(new Date(savedDeadline));
+        }
     }, []);
 
     useEffect(() => {
@@ -108,7 +129,7 @@ export default function AdminDashboard() {
                         <h2 className="text-2xl font-bold text-blue-600">Eingereichte Wahlen</h2>
                         <div className="relative w-40 h-40 mx-auto mt-6 rounded-full"
                             style={{
-                                background: `conic-gradient(#0400ff ${(courseSelection.submitted / courseSelection.total) * 100}%, #ff0000 ${(courseSelection.submitted / courseSelection.total) * 100}% 100%)`
+                                background: `conic-gradient(#000266 ${(courseSelection.submitted / courseSelection.total) * 100}%,#ff0101 ${(courseSelection.submitted / courseSelection.total) * 100}% 100%)`
                             }}
                         ></div>
                         <p className="text-lg mt-4 text-center">
