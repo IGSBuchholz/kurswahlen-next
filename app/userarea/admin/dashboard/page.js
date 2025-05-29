@@ -143,10 +143,7 @@ export default function AdminDashboard() {
 
     return (
         <div className="flex h-screen bg-gray-100">
-            {/* Sidebar */}
             <Sidebar />
-
-            {/* Main Content Area */}
             <div className="flex-1 p-6 ml-64">
                 <header className="mb-8">
                     <h1 className="text-4xl font-bold text-gray-800">Admin-Übersicht</h1>
