@@ -2,6 +2,7 @@
 import Sidebar from "@/components/Sidebar";
 import { countElementsInStep, StepUI } from "@/app/userarea/admin/StepUI-Admin/StepUI-Admin";
 import { useState, useEffect, useRef, useCallback } from "react";
+import useErrorLogger from "@/app/userarea/admin/dashboard/errorProjection/useErrorLogger";
 
 export default function ConfigDashboard() {
     const [context, setContext] = useState(new Map());
@@ -13,9 +14,56 @@ export default function ConfigDashboard() {
     const [showStep1, setShowStep1] = useState(true);
     const [activeStepIdEdit, setActiveStepIdEdit] = useState(null);
     const [editedName, setEditedName] = useState(""); // Temporärer Name
+    const [isRenaming, setIsRenaming] = useState(false); // Indikator für den Umbenennungsstatus
+    const [newValueName, setNewValueName] = useState(""); // Neuer Name für den Schwerpunkt
+    const [askingInput, setAskingInput] = useState(false); // Indikator für die Eingabeaufforderung
+    const [updatedData, setUpdatedData] = useState(null); // Zustand für die angezeigten Daten
+    const [exam_subjects, setExam_subjects] = useState(""); // Zustand für Prüfungsfächer
+    const [exam_sections, setExam_sections] = useState(""); // Zustand für Prüfungsfächer-Sektionen
+    const [newExamSubject, setNewExamSubject] = useState(""); // Neue Eingabe für Prüfungsfach
+    const [newExamSection, setNewExamSection] = useState(""); // Neue Eingabe für Prüfungssektion
+    const [isAddingExamSubject, setIsAddingExamSubject] = useState(false); // Zustand für Hinzufügen von Prüfungsfach
+    const [isAddingExamSection, setIsAddingExamSection] = useState(false); // Zustand für Hinzufügen von Prüfungssektion
+    const [errors, setErrors] = useErrorLogger("Kurskonfiguration");
+    const [configValidationErrorLogged, setConfigValidationErrorLogged] = useState(false);
+
+    useEffect(() => {
+        const isScalar = (val) => typeof val === "string" || typeof val === "number" || typeof val === "boolean" || val === null;
+
+        const hasError =
+            (exam_subjects && !isScalar(exam_subjects)) ||
+            (exam_sections && !isScalar(exam_sections));
+
+        if (hasError && !configValidationErrorLogged) {
+            const error = new Error("Ungültiger Wert für ein <select>-Feld: Erwartet skalaren Wert, aber Array oder Objekt erhalten.");
+            const timestamp = new Date().toLocaleString("de-DE", {
+                hour: "2-digit",
+                minute: "2-digit",
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric"
+            });
+
+            const message = {
+                context: "Kurskonfiguration",
+                message: error.message,
+                timestamp,
+                persistent: true
+            };
+
+            const existing = JSON.parse(localStorage.getItem("errorLog") || "[]");
+            localStorage.setItem("errorLog", JSON.stringify([...existing, message]));
+            setErrors(prev => [...prev, message]);
+            setConfigValidationErrorLogged(true);
+        }
+    }, [exam_subjects, exam_sections, configValidationErrorLogged, setErrors]);
 
     useEffect(() => {
         //localStorage.clear(); // Uncomment this line to clear localStorage
+        const storedSubjects = JSON.parse(localStorage.getItem("exam_subjects")) || [];
+        const storedSections = JSON.parse(localStorage.getItem("exam_sections")) || [];
+        setExam_subjects(storedSubjects);
+        setExam_sections(storedSections);
         const storedData = localStorage.getItem("stepsData");
         if (storedData) {
             const parsedData = JSON.parse(storedData);
@@ -122,8 +170,8 @@ export default function ConfigDashboard() {
     
         // Neues Element mit Namen und Wert erstellen
         const newValue = {
-            displayText: `Schwerpunkt ${values.length + 1}`, // Der angezeigte Name des neuen Schwerpunkts
             value: `Value_${Date.now()}`, // Der Wert des Schwerpunkts, z.B. "Value_1"
+            displayText: `Schwerpunkt ${values.length + 1}`, // Der angezeigte Name des neuen Schwerpunkts
         };
     
         // Füge das neue Element zu `values` hinzu
@@ -216,10 +264,86 @@ export default function ConfigDashboard() {
         if (activeStepIdEdit === id) {
             setActiveStepIdEdit(null); // Schließen, falls bereits aktiv
             setShowStep1(true);
+            setIsRenaming(false);
         } else {
             setActiveStepIdEdit(id); // Öffnen für diesen Schwerpunkt
             setShowStep1(false);
+            setIsRenaming(true);
         }
+    };
+
+    const handleRenameChange = (e) => {
+        setNewValueName(e.target.value);
+      };
+
+    const renamingProcess = () => {
+        if (activeStepIdEdit !== null) {
+            setDataBeingEdited(prevData => {
+                const updatedSteps = prevData.Steps.map((step, index) => {
+                    if (index === 0) { 
+                        const stepValues = Array.isArray(step.StepValues) ? step.StepValues : [];
+                        const values = stepValues[0]?.values ? stepValues[0].values : [];
+    
+                        // Prüfen, ob der Name oder Wert bereits existiert
+                        const alreadyExists = values.some(value => value.displayText === newValueName || value.value === newValueName);
+                        if (alreadyExists) {
+                            alert("Bereits vorhanden");
+                            return step;
+                        }
+    
+                        // ID finden und aktualisieren
+                        const valueIndex = values.findIndex(value => value.id === activeStepIdEdit);
+                        if (valueIndex !== -1) {
+                            const updatedValues = [...values];
+                            updatedValues[valueIndex] = {
+                                ...updatedValues[valueIndex],
+                                displayText: newValueName,
+                                value: newValueName
+                            };
+    
+                            // IDs neu zuweisen, um saubere Reihenfolge sicherzustellen
+                            const updatedValuesWithIds = assignIdsToUpdatedValues(updatedValues);
+    
+                            const updatedStepValues = [{ ...stepValues[0], values: updatedValuesWithIds }];
+                            return { ...step, StepValues: updatedStepValues };
+                        }
+                    }
+                    return step; 
+                });
+    
+                const updatedData = { ...dataBeingEdited, Steps: updatedSteps };
+                
+                // **localStorage sofort updaten**
+                localStorage.setItem("stepsData", JSON.stringify(updatedData));
+    
+                return updatedData; // Direkte Aktualisierung von dataBeingEdited
+            });
+            window.location.reload();
+    
+            console.log(`✅ Der Name wurde erfolgreich geändert: ${newValueName}`);
+        }
+    };
+
+    // Funktion zum Hinzufügen eines neuen Prüfungsfachs
+    const addExamSubject = () => {
+        if (newExamSubject.trim() !== "" && !examSubjects.includes(newExamSubject)) {
+            const updatedSubjects = [...examSubjects, newExamSubject];
+            setExam_subjects(updatedSubjects);
+            localStorage.setItem("exam_subjects", JSON.stringify(updatedSubjects));
+        }
+        setNewExamSubject("");
+        setIsAddingExamSubject(false);
+    };
+
+    // Funktion zum Hinzufügen einer neuen Prüfungssektion
+    const addExamSection = () => {
+        if (newExamSection.trim() !== "" && !examSections.includes(newExamSection)) {
+            const updatedSections = [...examSections, newExamSection];
+            setExam_sections(updatedSections);
+            localStorage.setItem("exam_sections", JSON.stringify(updatedSections));
+        }
+        setNewExamSection("");
+        setIsAddingExamSection(false);
     };
 
     return (
@@ -254,9 +378,11 @@ export default function ConfigDashboard() {
                             </div>
                         ) : ""}
 
-                        {/* Display the count of elements in step 0 */}
                         <div className="pt-20">
-                            <p className="text-sm text-gray-600">Anzahl der Elemente in Schritt 0: {elementCount}</p>
+                            <p className="text-sm text-gray-600">Inhalt von updatedSteps:</p>
+                            <pre className="bg-gray-100 p-2 text-xs text-gray-800 rounded">
+                                {JSON.stringify(updatedValuesWithIds)}
+                            </pre>
                         </div>
                         <div className="pt-20">
                             <p className="text-sm text-gray-600">Anzahl der Schwerpunkte: {updatedValuesWithIds.length}</p>
@@ -318,7 +444,6 @@ export default function ConfigDashboard() {
                                 onClick={() => handleEditStep(value.id)} // Toggle Edit-Status beim Klicken
                                 className={activeStepIdEdit === value.id ? "text-red-500 cursor-pointer" : "cursor-pointer"}
                                 >
-                                {value.displayText}
                                 </span>
 
                                 {/* Edit-Button */}
@@ -331,27 +456,173 @@ export default function ConfigDashboard() {
                             </div>
                             );
                         })}
+
+                        {isRenaming && activeStepIdEdit !== null && (
+                            <div
+                                className="absolute"
+                                style={{ top: `20px`, left: "70%", transform: "translateX(-50%)" }}
+                            >
+                                <button
+                                className="bg-red-500 text-white p-1 rounded"
+                                onClick={() => {
+                                    // Umbenennen-Button sichtbar machen
+                                    setAskingInput(true); // Toggle visibility of the rename input
+                                    setIsRenaming(false); // Toggle the renaming status
+                                }}
+                                >
+                                Umbenennen
+                                </button>
+                            </div>
+                        )}
+
+                        {askingInput && (
+                            <div
+                                className="absolute"
+                                style={{ top: `20px`, left: "70%", transform: "translateX(-50%)" }}
+                            >
+                                <input
+                                    type="text"
+                                    value={newValueName}
+                                    onChange={handleRenameChange} // Neue Name-Änderung erfassen
+                                    className="border p-1 rounded"
+                                    placeholder="Name eingeben"
+                                />
+                                <button
+                                    onClick={() => {
+                                        renamingProcess(); // Renaming-Prozess durchführen
+                                        setAskingInput(false); // Input wieder ausblenden
+                                    }}
+                                        className="bg-blue-500 text-white p-1 rounded ml-2"
+                                        style={{ transform: "translateX(40%)" }}
+                                    >
+                                        Bestätigen
+                                    </button>
+                            </div>
+                        )}
                     </div>
 
                     {/* Weitere Sektionen für Bearbeitung */}
-                    {/* Nur Step 1 und Step 2 werden hier angezeigt, ohne den Plus-Button */}
                     <div className="bg-white shadow-md rounded-lg p-6">
-                        <h2 className="text-xl font-bold underline text-blue-600">Prüfungsfächer-Bearbeitung</h2>
-                        {showStep1 && dataBeingEdited && dataBeingEdited.Steps && dataBeingEdited.Steps[1] ? (
-                            <StepUI 
-                                context={context} 
-                                setContext={setContext} 
-                                initialContext={context} 
-                                setMessages={() => {}} 
-                                setCanProcced={() => {}} 
-                                step={dataBeingEdited.Steps[1]} 
-                                number={1} 
-                                setLoading={() => {}} 
-                            />
-                        ) : ""}
+    <h2 className="text-xl font-bold underline text-blue-600">Prüfungsfächer-Bearbeitung</h2>
+
+    {showStep1 && dataBeingEdited && dataBeingEdited.Steps && dataBeingEdited.Steps[1] ? (
+        <div>
+            {/* Dropdown für Auswählbare Fächer (exam_subjects) */}
+            <div className="mb-4">
+                <label className="block text-sm font-semibold text-gray-700">Auswählbare Fächer</label>
+                <select
+                    value={exam_subjects || ""}
+                    onChange={(e) => {
+                        const value = e.target.value;
+                        setExam_subjects(value);
+                        if (value === "+") {
+                            setIsAddingExamSubject(true); // Aktiviert die Eingabe für neues Fach
+                        }
+                    }}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                >
+                    <option value="">Bitte auswählen</option>
+                    {/* Zeige "Keine Fächer verfügbar" wenn exam_subjects leer ist */}
+                    {exam_subjects === "" && <option value="">Keine Fächer verfügbar</option>}
+                    {/* Zeige die Option zum Hinzufügen eines neuen Faches */}
+                    <option value="+">Hinzufügen</option>
+                </select>
+
+                {/* Eingabefeld für neues Fach, wenn "Hinzufügen" geklickt wird */}
+                {isAddingExamSubject && (
+                    <div className="mt-2">
+                        <input
+                            type="text"
+                            value={newExamSubject}
+                            onChange={(e) => setNewExamSubject(e.target.value)}
+                            placeholder="Neues Fach eingeben"
+                            className="w-full p-2 border border-gray-300 rounded-lg"
+                        />
+                        <button
+                            onClick={addExamSubject}
+                            className="text-white bg-green-500 p-2 rounded-lg mt-2"
+                        >
+                            ✔ Hinzufügen
+                        </button>
+                    </div>
+                )}
+            </div>
+
+            {/* Dropdown für Prüfungsfächer-Sektionen (exam_sections) */}
+            <div className="mb-4">
+                <label className="block text-sm font-semibold text-gray-700">Anzahl der Prüfungsfächer</label>
+                <select
+                    value={exam_sections || ""}
+                    onChange={(e) => {
+                        const value = e.target.value;
+                        setExam_sections(value);
+                        if (value === "+") {
+                            setIsAddingExamSection(true); // Aktiviert die Eingabe für neue Prüfungssektion
+                        }
+                    }}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                >
+                    <option value="">Bitte auswählen</option>
+                    {/* Zeige "Keine Prüfungssektionen verfügbar" wenn exam_sections leer ist */}
+                    {exam_sections === "" && <option value="">Keine Prüfungssektionen verfügbar</option>}
+                    {/* Zeige die Option zum Hinzufügen einer neuen Prüfungssektion */}
+                    <option value="+">Hinzufügen</option>
+                </select>
+
+                {/* Eingabefeld für neue Prüfungssektion, wenn "Hinzufügen" geklickt wird */}
+                {isAddingExamSection && (
+                    <div className="mt-2">
+                        <input
+                            type="text"
+                            value={newExamSection}
+                            onChange={(e) => setNewExamSection(e.target.value)}
+                            placeholder="Neue Prüfungssektion eingeben"
+                            className="w-full p-2 border border-gray-300 rounded-lg"
+                        />
+                        <button
+                            onClick={addExamSection}
+                            className="text-white bg-green-500 p-2 rounded-lg mt-2"
+                        >
+                            ✔ Hinzufügen
+                        </button>
+                    </div>
+                )}
+            </div>
+
+            {/* Optional: Anzeige der ausgewählten Werte */}
+            <div className="mt-4">
+                {exam_subjects && (
+                    <div className="mb-4">
+                        <h4 className="text-md font-semibold">Ausgewähltes Auswählbare Fach:</h4>
+                        <p>{exam_subjects}</p>
+                    </div>
+                )}
+
+                {exam_sections && (
+                    <div className="mb-4">
+                        <h4 className="text-md font-semibold">Ausgewählte Anzahl der Prüfungsfächer:</h4>
+                        <p>{exam_sections}</p>
+                    </div>
+                )}
+            </div>
+        </div>
+    ) : null}
+
+
+                        {/* Falls showStep1 false ist */}
                         {!showStep1 && dataBeingEdited && dataBeingEdited.Steps && dataBeingEdited.Steps[1] ? (
                             <div className="pt-20">
-                                <p className="text-sm text-gray-600">...___Individuelle Bearbeitung___...</p>
+                                <h3 className="text-lg font-bold">Prüfungsfächer (Step 1)</h3>
+                                {dataBeingEdited.Steps[1]?.StepValues.map((stepValue, index) => (
+                                    <div key={index} className="mb-4">
+                                        <h4 className="text-md font-semibold">{stepValue.name}</h4>
+                                        <ul>
+                                            {stepValue.values?.map((subject, i) => (
+                                                <li key={i}>{subject.displayText}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                ))}
                             </div>
                         ) : ""}
                     </div>

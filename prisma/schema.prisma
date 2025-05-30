@@ -12,7 +12,7 @@ generator client {
 
 model saves {
   id        String      @id @default(uuid()) // Primary key with auto-increment
-  email     String      @relation(fields: [email])
+  email     String
   savename  String
   savedata  String
   pinned    Boolean

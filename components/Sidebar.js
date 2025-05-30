@@ -10,16 +10,18 @@ export default function Sidebar() {
     const pathName = usePathname();
     return (
         <div
-            className={`bg-gray-800 text-white h-full w-64
-      transition-all duration-300 fixed`}
+        className={`bg-blue-950 text-white h-full w-64 
+            transition-all duration-300 fixed`}
         >
             <nav className="mt-4">
                 <h1 className="font-mono text-2xl text-center mb-4">kurswahl<b className={""}>Tool</b></h1>
                 <ul>
                     <RoutingLink page={"Dashboard"} text={"Dashboard"}></RoutingLink>
                     <RoutingLink page={"Users"} text={"Nutzer"}></RoutingLink>
-                    <RoutingLink page={"Simulation"} text={"Kurswahl-Simulation"}></RoutingLink>
+                    <RoutingLink page={"Selectionedit"} text={"Kursanpassung"}></RoutingLink>
+                    <RoutingLink page={"Simulation"} text={"Simulation"}></RoutingLink>
                     <RoutingLink page={"Config"} text={"Kurswahl-Konfiguration"}></RoutingLink>
+                    <RoutingLink page={"Settings"} text={"Einstellungen"}></RoutingLink>
                     <RoutingLink page={"Homepage"} text={"Homepage-Konfiguration"}></RoutingLink>
 
                 </ul>
