@@ -4,6 +4,12 @@ const SelectRoster = ({items, onSelectionChange, placeholderText, standardvalue}
     const [isDropdownVisible, setDropdownVisible] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
 
+    // Sort items so that enabled items appear before disabled ones
+    const sortedItems = items.slice().sort((a, b) => {
+        if (a.disabled === b.disabled) return 0;
+        return a.disabled ? 1 : -1;
+    });
+
     const toggleDropdown = () => {
         setDropdownVisible(!isDropdownVisible);
     };
@@ -84,14 +90,14 @@ const SelectRoster = ({items, onSelectionChange, placeholderText, standardvalue}
 
                 {isDropdownVisible && (
                     <div
-                        className="absolute left-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
+                        className="absolute left-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none max-h-80 overflow-y-auto"
                         role="menu"
                         aria-orientation="vertical"
                         aria-labelledby="menu-button"
                         tabIndex="-1"
                     >
                         <div className="py-1" role="none">
-                            {items.map((item, index) => {
+                            {sortedItems.map((item, index) => {
                                 //console.log(item)
                                 //console.log(items.length)
                                 return <button
