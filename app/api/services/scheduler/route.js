@@ -21,7 +21,7 @@ export async function POST(req, res) {
             console.log('#                                    #');
             console.log('######################################');
             console.log('');
-            await runChecks();
+            await runChecks(true, true);
             // Perform your action here
         });
         cronScheduled = true;

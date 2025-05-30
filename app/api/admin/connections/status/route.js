@@ -10,7 +10,7 @@ async function retrieve(req) {
         return NextResponse.json({message: "NOT AUTHORIZED"}, {status: 401});
     }
 
-    let checks = await runChecks(true);
+    let checks = await runChecks(true, false);
 
 
 

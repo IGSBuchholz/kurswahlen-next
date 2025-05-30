@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@prisma/client": "^6.3.1",
+    "@radix-ui/react-hover-card": "^1.1.13",
     "@react-pdf/renderer": "^4.1.6",
     "axios": "^1.9.0",
     "clsx": "^2.1.1",
@@ -19,6 +20,7 @@
     "cytoscape": "^3.31.0",
     "cytoscape-dagre": "^2.5.0",
     "dagre": "^0.8.5",
+    "dayjs": "^1.11.13",
     "express": "^5.1.0",
     "html2pdf.js": "^0.10.2",
     "ioredis": "^5.6.0",

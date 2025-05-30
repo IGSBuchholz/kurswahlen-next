@@ -5,6 +5,7 @@ import {redis} from "@/utils/redis.js";
 import {prisma} from "@/utils/prisma";
 import fs from 'fs/promises';
 import path from 'path';
+import {runtimeStore} from "@/utils/RuntimeStore";
 // File for persisting event log
 const EVENT_LOG_FILE = path.resolve(process.cwd(), 'connectivity-event-log.json');
 
@@ -88,7 +89,7 @@ async function checkPostgresConnection() {
 }
 
 
-export async function runChecks(retrievelogs = false) {
+export async function runChecks(retrievelogs = false, storenew = true) {
     console.log('🔍 Checking service connectivity...');
     // Load persisted event log from file
     try {
@@ -104,8 +105,15 @@ export async function runChecks(retrievelogs = false) {
         checkRedisConnection(),
         checkPostgresConnection()
     ]);
+
+    let log = runtimeStore.getAllAvailabilities()
+    if(storenew) {
+        runtimeStore.addAvailability("redis", redisCon)
+        runtimeStore.addAvailability("postgres", postgreCon)
+    }
+
     await pruneOldEvents();
 
 
-    return { redis_status: redisCon, postgres_status: postgreCon, eventLog };
+    return { redis_status: redisCon, postgres_status: postgreCon, log: log };
 }

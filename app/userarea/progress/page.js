@@ -92,8 +92,11 @@ export default function Progress() {
                 if(data.message !== "SUCCESS") {
                     console.error(data.message);
                 }                
-
-                setStepData(JSON.parse(data.results.data)); // Set the fetched data
+                if(typeof (data.results.data) === "string") {
+                    setStepData(JSON.parse(data.results.data));
+                }else {
+                    setStepData((data.results.data)); // Set the fetched data
+                }
                 setCfVersion(data.results.id)
                 console.log("Successfully set step data")
             } catch (error) {

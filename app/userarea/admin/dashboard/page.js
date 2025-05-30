@@ -2,6 +2,7 @@
 import Sidebar from "@/components/Sidebar";
 import {useEffect, useState} from "react";
 import dynamic from 'next/dynamic';
+import {PingTimeTracker} from "@/components/PingTimeTracker";
 const ReactJson = dynamic(() => import('react-json-view'), { ssr: false });
 
 export default function AdminDashboard() {
@@ -15,8 +16,10 @@ export default function AdminDashboard() {
             const json = await res.json();
             console.log("STATUS MESSAGE", json)
             setServicesStatus(json);
+            console.log(json.log)
         }
         getStatus();
+
     }, []);
 
     return (
@@ -51,6 +54,7 @@ export default function AdminDashboard() {
                                                         ? `🟢 Verbunden (${pingTimeMs} ms)`
                                                         : "🔴 Nicht verbunden"}
                                             </span>
+                                            {servicesStatus.log[service.split("_")[0]] ? <PingTimeTracker data={servicesStatus.log[service.split("_")[0]]}/> : ""}
                                         </h2>
                                         {!isConnected && servicesStatus[service]?.error && (
                                             <div className="mt-2">

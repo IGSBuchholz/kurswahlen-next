@@ -74,7 +74,7 @@ function Dashboard() {
     }, [session]);
 
     function getName() {
-        return name.firstname + " " + name.lastname
+        return name.firstname + " " + name.name
     }
 
     return (
