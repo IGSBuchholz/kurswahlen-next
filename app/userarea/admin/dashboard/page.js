@@ -49,15 +49,10 @@ export default function AdminDashboard() {
   
   //~ Pull request
     useEffect(() => {
-        console.log("EFFECT")
-        async function getStatus() {
-            console.log("STAT")
-            let res = await fetch("/api/admin/connections/status");
-            const json = await res.json();
-            console.log("STATUS MESSAGE", json)
-            setServicesStatus(json);
+        const savedDeadline = localStorage.getItem("courseDeadline");
+        if (savedDeadline) {
+            setDeadline(new Date(savedDeadline));
         }
-        getStatus();
     }, []);
   //~ Pull request
   
