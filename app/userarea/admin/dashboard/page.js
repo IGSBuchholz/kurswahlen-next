@@ -8,6 +8,7 @@ const ReactJson = dynamic(() => import('react-json-view'), { ssr: false }); //~ 
 
 import useErrorLogger from "@/app/userarea/admin/dashboard/errorProjection/useErrorLogger";
 
+
 export default function AdminDashboard() {
   
     const [servicesStatus, setServicesStatus] = useState({}); //~ Pull request
@@ -49,10 +50,15 @@ export default function AdminDashboard() {
   
   //~ Pull request
     useEffect(() => {
-        const savedDeadline = localStorage.getItem("courseDeadline");
-        if (savedDeadline) {
-            setDeadline(new Date(savedDeadline));
+        console.log("EFFECT")
+        async function getStatus() {
+            console.log("STAT")
+            let res = await fetch("/api/admin/connections/status");
+            const json = await res.json();
+            console.log("STATUS MESSAGE", json)
+            setServicesStatus(json);
         }
+        getStatus();
     }, []);
   //~ Pull request
   
@@ -68,6 +74,11 @@ export default function AdminDashboard() {
     }, []);
 
     useEffect(() => {
+        localStorage.setItem("submitted", courseSelection.submitted);
+        localStorage.setItem("total", courseSelection.total);
+    }, [courseSelection]);
+
+    useEffect(() => {
         const savedUsers = localStorage.getItem("userCount");
         const savedTeachers = localStorage.getItem("teacherCount");
         const savedAdmins = localStorage.getItem("adminCount");
@@ -79,6 +90,12 @@ export default function AdminDashboard() {
             admins: savedAdmins ? Number(savedAdmins) : 0
         }));
     }, []);
+
+    useEffect(() => {
+        localStorage.setItem("userCount", userStats.users);
+        localStorage.setItem("teacherCount", userStats.teachers);
+        localStorage.setItem("adminCount", userStats.admins);
+    }, [userStats.users, userStats.teachers, userStats.admins]);
 
     useEffect(() => {
         const now = new Date();
@@ -117,6 +134,7 @@ export default function AdminDashboard() {
         const timeDiff = deadlineDate - today;
         const days = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
         setDaysLeft(days);
+        localStorage.setItem("courseDeadline", deadline.toISOString());
     }, [deadline]);
 
     const triggerError = () => {
@@ -199,6 +217,34 @@ export default function AdminDashboard() {
                         <p className="text-sm text-center text-gray-600">
                             Ausstehend: {Math.max(courseSelection.total - courseSelection.submitted, 0)}
                         </p>
+                        <div className="flex justify-center gap-4 mt-4">
+                            <input
+                                type="number"
+                                min="0"
+                                value={courseSelection.submitted}
+                                onChange={(e) =>
+                                    setCourseSelection((prev) => ({
+                                        ...prev,
+                                        submitted: Math.min(Number(e.target.value), prev.total)
+                                    }))
+                                }
+                                className="p-2 border border-gray-300 rounded w-28"
+                                placeholder="Eingereicht"
+                            />
+                            <input
+                                type="number"
+                                min="1"
+                                value={courseSelection.total}
+                                onChange={(e) =>
+                                    setCourseSelection((prev) => ({
+                                        ...prev,
+                                        total: Math.max(1, Number(e.target.value))
+                                    }))
+                                }
+                                className="p-2 border border-gray-300 rounded w-28"
+                                placeholder="Gesamt"
+                            />
+                        </div>
                     </div>
 
                     <div className="bg-white shadow-lg rounded-lg p-8">

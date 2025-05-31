@@ -1,1 +1,7 @@
-[]
+[
+  {
+    "service": "postgres_status",
+    "pingTimeMs": 1078,
+    "timestamp": 1748691912017
+  }
+]
