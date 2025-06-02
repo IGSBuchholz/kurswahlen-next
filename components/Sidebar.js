@@ -18,8 +18,6 @@ export default function Sidebar() {
                 <ul>
                     <RoutingLink page={"Dashboard"} text={"Dashboard"}></RoutingLink>
                     <RoutingLink page={"Users"} text={"Nutzer"}></RoutingLink>
-                    <RoutingLink page={"Selectionedit"} text={"Kursanpassung"}></RoutingLink>
-                    <RoutingLink page={"Simulation"} text={"Simulation"}></RoutingLink>
                     <RoutingLink page={"Config"} text={"Kurswahl-Konfiguration"}></RoutingLink>
                     <RoutingLink page={"Settings"} text={"Einstellungen"}></RoutingLink>
                     <RoutingLink page={"Homepage"} text={"Homepage-Konfiguration"}></RoutingLink>
