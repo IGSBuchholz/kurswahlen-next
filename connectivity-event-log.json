@@ -1,7 +1,12 @@
 [
   {
     "service": "postgres_status",
-    "pingTimeMs": 1078,
-    "timestamp": 1748691912017
+    "pingTimeMs": 591,
+    "timestamp": 1748897227405
+  },
+  {
+    "service": "postgres_status",
+    "pingTimeMs": 601,
+    "timestamp": 1748899810621
   }
 ]
