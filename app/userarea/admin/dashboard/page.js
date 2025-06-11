@@ -11,16 +11,13 @@ import useErrorLogger from "@/app/userarea/admin/dashboard/errorProjection/useEr
 export default function AdminDashboard() {
     const { data: session } = useSession();
     const currentAdminName = session?.user?.name || session?.user?.email || "Unbekannt";
-    const currentDate = new Date().toLocaleDateString("de-DE");
-    const currentTime = new Date().toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" });
 
+    const [previousLogin, setPreviousLogin] = useState(null);
     const [servicesStatus, setServicesStatus] = useState({});
-
     const [courseSelection, setCourseSelection] = useState({ submitted: 0, total: 0 });
     const [deadline, setDeadline] = useState(new Date("2025-03-15"));
     const [daysLeft, setDaysLeft] = useState(0);
     const [errors] = useErrorLogger("Dashboard");
-
     const [userStats, setUserStats] = useState({ users: 0, teachers: 0, admins: 0 });
 
     useEffect(() => {
@@ -31,6 +28,30 @@ export default function AdminDashboard() {
         }
         getStatus();
     }, []);
+
+    useEffect(() => {
+        async function fetchPreviousLogin() {
+            try {
+                const res = await fetch("/api/admin/last-access");
+                const contentType = res.headers.get("content-type");
+
+                if (!res.ok) {
+                    throw new Error(`Fehlerstatus ${res.status}`);
+                }
+                if (!contentType || !contentType.includes("application/json")) {
+                    throw new Error("Keine JSON-Antwort erhalten");
+                }
+
+                const data = await res.json();
+                setPreviousLogin(data.previousLoginDate);
+            } catch (e) {
+                console.log("Fehler beim Laden des letzten Zugriffs:", e);
+            }
+        }
+        if (session?.user?.email) {
+            fetchPreviousLogin();
+        }
+    }, [session]);
 
     useEffect(() => {
         const today = new Date();
@@ -127,7 +148,7 @@ export default function AdminDashboard() {
                             <p className="text-lg text-gray-700">🛠️ Admins: <span className="font-bold">{userStats.admins}</span></p>
                         </div>
                         <p className="text-lg text-gray-700 mt-4">
-                            📅 Letzter Admin-Zugriff: <strong>{currentAdminName} ({currentDate}, {currentTime} Uhr)</strong>
+                            📅 Letzter Admin-Zugriff: <strong>{currentAdminName} {previousLogin ? `(zuletzt am ${new Date(previousLogin).toLocaleDateString("de-DE")}, ${new Date(previousLogin).toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" })} Uhr)` : "(noch kein Zugriff erfasst)"}</strong>
                         </p>
                     </div>
 

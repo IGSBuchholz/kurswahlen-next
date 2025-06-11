@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import ButtonPrimary from "@/components/ButtonPrimary";
 import Link from "next/link";
-import {getSession, useSession} from "next-auth/react";
+import {getSession, signOut, useSession} from "next-auth/react";
 import crypto from 'crypto';
 
 
@@ -91,6 +91,7 @@ function Dashboard() {
                         <div className="text-4xl font-bold text-black mb-2 mt-2">
                             Hallo, <h1 className="text-blue-600 inline">{name ? getName() : "Loading..."}!</h1>
                         </div>
+                        <h4 className="" onClick={signOut}>Ausloggen</h4>
                     </header>
 
                     {/* Main Dashboard */}

@@ -26,6 +26,8 @@ model users {
   email      String   @id // Primary key
   isadmin    Boolean
   created_at DateTime @default(now())
+  lastLoginDate    DateTime?
+  previousLoginDate DateTime?
 
   @@map("users") // Maps to the database table "users"
 }
