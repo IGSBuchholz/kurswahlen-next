@@ -2,129 +2,56 @@
 
 import Sidebar from "@/components/Sidebar";
 import { useState, useEffect } from "react";
-
-import dynamic from 'next/dynamic'; //~ Pull request
-const ReactJson = dynamic(() => import('react-json-view'), { ssr: false }); //~ Pull request
+import { useSession } from "next-auth/react";
+import dynamic from 'next/dynamic';
+const ReactJson = dynamic(() => import('react-json-view'), { ssr: false });
 
 import useErrorLogger from "@/app/userarea/admin/dashboard/errorProjection/useErrorLogger";
 
-
 export default function AdminDashboard() {
-  
-    const [servicesStatus, setServicesStatus] = useState({}); //~ Pull request
-  
-    const [courseSelection, setCourseSelection] = useState(() => {
-        const submitted = localStorage.getItem("submitted");
-        const total = localStorage.getItem("total");
-        return {
-            submitted: submitted ? Number(submitted) : 0,
-            total: total ? Number(total) : 0
-        };
-    });
-    const [deadline, setDeadline] = useState(() => {
-        const saved = localStorage.getItem("courseDeadline");
-        return saved ? new Date(saved) : new Date("2025-03-15");
-    });
+    const { data: session } = useSession();
+    const currentAdminName = session?.user?.name || session?.user?.email || "Unbekannt";
+
+    const [previousLogin, setPreviousLogin] = useState(null);
+    const [servicesStatus, setServicesStatus] = useState({});
+    const [courseSelection, setCourseSelection] = useState({ submitted: 0, total: 0 });
+    const [deadline, setDeadline] = useState(new Date("2025-03-15"));
     const [daysLeft, setDaysLeft] = useState(0);
     const [errors] = useErrorLogger("Dashboard");
+    const [userStats, setUserStats] = useState({ users: 0, teachers: 0, admins: 0 });
 
-    const [userStats, setUserStats] = useState(() => {
-        const users = localStorage.getItem("userCount");
-        const teachers = localStorage.getItem("teacherCount");
-        const admins = localStorage.getItem("adminCount");
-        const lastDate = localStorage.getItem("lastAccessDate");
-        const lastTime = localStorage.getItem("lastAccessTime");
-
-        return {
-            users: users ? Number(users) : 0,
-            teachers: teachers ? Number(teachers) : 0,
-            admins: admins ? Number(admins) : 0,
-            lastAdminAccess: {
-                name: "Kilian",
-                date: lastDate || "Unbekannt",
-                time: lastTime || "Unbekannt"
-            }
-        };
-    });
-
-  
-  //~ Pull request
     useEffect(() => {
-        console.log("EFFECT")
         async function getStatus() {
-            console.log("STAT")
             let res = await fetch("/api/admin/connections/status");
             const json = await res.json();
-            console.log("STATUS MESSAGE", json)
             setServicesStatus(json);
         }
         getStatus();
     }, []);
-  //~ Pull request
-  
-  
-    useEffect(() => {
-        const savedSubmitted = localStorage.getItem("submitted");
-        const savedTotal = localStorage.getItem("total");
-
-        setCourseSelection({
-            submitted: savedSubmitted ? Number(savedSubmitted) : 0,
-            total: savedTotal ? Number(savedTotal) : 0
-        });
-    }, []);
 
     useEffect(() => {
-        localStorage.setItem("submitted", courseSelection.submitted);
-        localStorage.setItem("total", courseSelection.total);
-    }, [courseSelection]);
+        async function fetchPreviousLogin() {
+            try {
+                const res = await fetch("/api/admin/last-access");
+                const contentType = res.headers.get("content-type");
 
-    useEffect(() => {
-        const savedUsers = localStorage.getItem("userCount");
-        const savedTeachers = localStorage.getItem("teacherCount");
-        const savedAdmins = localStorage.getItem("adminCount");
+                if (!res.ok) {
+                    throw new Error(`Fehlerstatus ${res.status}`);
+                }
+                if (!contentType || !contentType.includes("application/json")) {
+                    throw new Error("Keine JSON-Antwort erhalten");
+                }
 
-        setUserStats((prev) => ({
-            ...prev,
-            users: savedUsers ? Number(savedUsers) : 0,
-            teachers: savedTeachers ? Number(savedTeachers) : 0,
-            admins: savedAdmins ? Number(savedAdmins) : 0
-        }));
-    }, []);
-
-    useEffect(() => {
-        localStorage.setItem("userCount", userStats.users);
-        localStorage.setItem("teacherCount", userStats.teachers);
-        localStorage.setItem("adminCount", userStats.admins);
-    }, [userStats.users, userStats.teachers, userStats.admins]);
-
-    useEffect(() => {
-        const now = new Date();
-        const currentAdmin = "Kilian";
-        const lastDate = localStorage.getItem("lastAccessDate");
-        const lastTime = localStorage.getItem("lastAccessTime");
-
-        setUserStats(prev => ({
-            ...prev,
-            lastAdminAccess: {
-                name: currentAdmin,
-                date: lastDate || "Unbekannt",
-                time: lastTime || "Unbekannt"
+                const data = await res.json();
+                setPreviousLogin(data.previousLoginDate);
+            } catch (e) {
+                console.log("Fehler beim Laden des letzten Zugriffs:", e);
             }
-        }));
-
-        const formattedDate = now.toLocaleDateString("de-DE");
-        const formattedTime = now.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" });
-
-        localStorage.setItem("lastAccessDate", formattedDate);
-        localStorage.setItem("lastAccessTime", formattedTime);
-    }, []);
-
-    useEffect(() => {
-        const savedDeadline = localStorage.getItem("courseDeadline");
-        if (savedDeadline) {
-            setDeadline(new Date(savedDeadline));
         }
-    }, []);
+        if (session?.user?.email) {
+            fetchPreviousLogin();
+        }
+    }, [session]);
 
     useEffect(() => {
         const today = new Date();
@@ -134,7 +61,6 @@ export default function AdminDashboard() {
         const timeDiff = deadlineDate - today;
         const days = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
         setDaysLeft(days);
-        localStorage.setItem("courseDeadline", deadline.toISOString());
     }, [deadline]);
 
     const triggerError = () => {
@@ -149,8 +75,7 @@ export default function AdminDashboard() {
                     <h1 className="text-4xl font-bold text-gray-800">Admin-Übersicht</h1>
                 </header>
 
-
-                {servicesStatus ?
+                {servicesStatus && (
                     <div className="w-full">
                         <div className="flex flex-col gap-4">
                             {["redis_status", "postgres_status"].map(service => {
@@ -160,31 +85,24 @@ export default function AdminDashboard() {
                                 const serviceData = servicesStatus[service];
                                 const isPending = serviceData === undefined;
                                 return (
-                                    <div key={service}
-                                         className={`p-4 rounded shadow ${isConnected ? "bg-green-100" : "bg-red-100"}`}>
+                                    <div key={service} className={`p-4 rounded shadow ${isConnected ? "bg-green-100" : "bg-red-100"}`}>
                                         <h2 className="text-xl capitalize flex justify-between items-center mb-2">
-                                            <span
-                                                className={`font-semibold ${isConnected ? "text-green-800" : "text-red-800"}`}>
+                                            <span className={`font-semibold ${isConnected ? "text-green-800" : "text-red-800"}`}>
                                                 {service.replace("_", " ")}
                                             </span>
-                                            <span
-                                                className={`text-sm ${isPending ? "text-yellow-800" : isConnected ? "text-green-800" : "text-red-800"}`}>
-                                                {isPending
-                                                    ? "🟡 Warten..."
-                                                    : isConnected
-                                                        ? `🟢 Verbunden (${pingTimeMs} ms)`
-                                                        : "🔴 Nicht verbunden"}
+                                            <span className={`text-sm ${isPending ? "text-yellow-800" : isConnected ? "text-green-800" : "text-red-800"}`}>
+                                                {isPending ? "🟡 Warten..." : isConnected ? `🟢 Verbunden (${pingTimeMs} ms)` : "🔴 Nicht verbunden"}
                                             </span>
                                         </h2>
-                                        {!isConnected && servicesStatus[service]?.error && (
+                                        {!isConnected && serviceData?.error && (
                                             <div className="mt-2">
                                                 <ReactJson
-                                                    src={servicesStatus[service]}
+                                                    src={serviceData}
                                                     name={false}
                                                     collapsed={false}
                                                     displayDataTypes={false}
                                                     enableClipboard={false}
-                                                    style={{fontSize: "0.8rem"}}
+                                                    style={{ fontSize: "0.8rem" }}
                                                 />
                                             </div>
                                         )}
@@ -193,23 +111,22 @@ export default function AdminDashboard() {
                             })}
                         </div>
                     </div>
-                    : ""
-                }
+                )}
+
                 <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div className="bg-white shadow-md rounded-lg p-6">
                         <h2 className="text-xl font-bold text-blue-600">Benachrichtigung</h2>
                         <p className="text-gray-700 mt-2">Hier werden ggf. Systemmeldungen angezeigt.</p>
                     </div>
+
                     <div className="bg-white shadow-lg rounded-lg p-8">
                         <h2 className="text-2xl font-bold text-blue-600">Eingereichte Wahlen</h2>
                         <div className="relative w-40 h-40 mx-auto mt-6 rounded-full"
                              style={{
                                  background: `conic-gradient(#000266 ${(courseSelection.submitted / courseSelection.total) * 100}%,#ff0101 ${(courseSelection.submitted / courseSelection.total) * 100}% 100%)`
-                             }}
-                        ></div>
+                             }}></div>
                         <p className="text-lg mt-4 text-center">
-                            Eingereicht: <span
-                            className="font-bold">{courseSelection.submitted} / {courseSelection.total}</span>
+                            Eingereicht: <span className="font-bold">{courseSelection.submitted} / {courseSelection.total}</span>
                         </p>
                         <p className="text-sm text-center text-blue-600 font-semibold">
                             {Math.round((courseSelection.submitted / courseSelection.total) * 100)}% eingereicht
@@ -217,108 +134,28 @@ export default function AdminDashboard() {
                         <p className="text-sm text-center text-gray-600">
                             Ausstehend: {Math.max(courseSelection.total - courseSelection.submitted, 0)}
                         </p>
-                        <div className="flex justify-center gap-4 mt-4">
-                            <input
-                                type="number"
-                                min="0"
-                                value={courseSelection.submitted}
-                                onChange={(e) =>
-                                    setCourseSelection((prev) => ({
-                                        ...prev,
-                                        submitted: Math.min(Number(e.target.value), prev.total)
-                                    }))
-                                }
-                                className="p-2 border border-gray-300 rounded w-28"
-                                placeholder="Eingereicht"
-                            />
-                            <input
-                                type="number"
-                                min="1"
-                                value={courseSelection.total}
-                                onChange={(e) =>
-                                    setCourseSelection((prev) => ({
-                                        ...prev,
-                                        total: Math.max(1, Number(e.target.value))
-                                    }))
-                                }
-                                className="p-2 border border-gray-300 rounded w-28"
-                                placeholder="Gesamt"
-                            />
-                        </div>
                     </div>
 
                     <div className="bg-white shadow-lg rounded-lg p-8">
                         <h2 className="text-2xl font-bold text-blue-600">Benutzeraktivität</h2>
                         <div className="flex items-center justify-between mt-4">
-                            <p className="text-lg text-gray-700">👤 Nutzer: <span
-                                className="font-bold">{userStats.users}</span></p>
-                            <input
-                                type="number"
-                                min="0"
-                                value={userStats.users}
-                                onChange={(e) =>
-                                    setUserStats((prev) => ({
-                                        ...prev,
-                                        users: Number(e.target.value)
-                                    }))
-                                }
-                                className="p-1 border border-gray-300 rounded w-28 text-right"
-                            />
+                            <p className="text-lg text-gray-700">👤 Nutzer: <span className="font-bold">{userStats.users}</span></p>
                         </div>
                         <div className="flex items-center justify-between mt-2">
-                            <p className="text-lg text-gray-700">👨‍🏫 Lehrer: <span
-                                className="font-bold">{userStats.teachers}</span></p>
-                            <input
-                                type="number"
-                                min="0"
-                                value={userStats.teachers}
-                                onChange={(e) =>
-                                    setUserStats((prev) => ({
-                                        ...prev,
-                                        teachers: Number(e.target.value)
-                                    }))
-                                }
-                                className="p-1 border border-gray-300 rounded w-28 text-right"
-                            />
+                            <p className="text-lg text-gray-700">👨‍🏫 Lehrer: <span className="font-bold">{userStats.teachers}</span></p>
                         </div>
                         <div className="flex items-center justify-between mt-2">
-                            <p className="text-lg text-gray-700">🛠️ Admins: <span
-                                className="font-bold">{userStats.admins}</span></p>
-                            <input
-                                type="number"
-                                min="0"
-                                value={userStats.admins}
-                                onChange={(e) =>
-                                    setUserStats((prev) => ({
-                                        ...prev,
-                                        admins: Number(e.target.value)
-                                    }))
-                                }
-                                className="p-1 border border-gray-300 rounded w-28 text-right"
-                            />
+                            <p className="text-lg text-gray-700">🛠️ Admins: <span className="font-bold">{userStats.admins}</span></p>
                         </div>
                         <p className="text-lg text-gray-700 mt-4">
-                            📅 Letzter
-                            Admin-Zugriff: <strong>{userStats.lastAdminAccess.name} ({userStats.lastAdminAccess.date}, {userStats.lastAdminAccess.time} Uhr)</strong>
+                            📅 Letzter Admin-Zugriff: <strong>{currentAdminName} {previousLogin ? `(zuletzt am ${new Date(previousLogin).toLocaleDateString("de-DE")}, ${new Date(previousLogin).toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" })} Uhr)` : "(noch kein Zugriff erfasst)"}</strong>
                         </p>
-
                     </div>
 
                     <div className="bg-white shadow-lg rounded-lg p-8">
                         <h2 className="text-2xl font-bold text-blue-600">Kurswahl-Deadline</h2>
                         <div className="flex items-center justify-between mt-4">
-                            <p className="text-lg text-red-600">📅 Abgabefrist: <span
-                                className="font-bold">{deadline.toLocaleDateString("de-DE")}</span></p>
-                            <input
-                                type="date"
-                                value={deadline.toISOString().split('T')[0]}
-                                onChange={(e) => {
-                                    const date = new Date(e.target.value);
-                                    setDeadline(date);
-                                    localStorage.setItem("courseDeadline", date.toISOString());
-                                }}
-                                className="p-1 border border-gray-300 rounded w-40 text-right"
-                            />
+                            <p className="text-lg text-red-600">📅 Abgabefrist: <span className="font-bold">{deadline.toLocaleDateString("de-DE")}</span></p>
                         </div>
                         <p className={`mt-4 text-2xl font-bold ${daysLeft < 0 ? "text-yellow-500" : daysLeft === 0 ? "underline text-gray-600" : daysLeft <= 7 ? "text-red-600" : "text-green-600"}`}>
                             {daysLeft > 0 && `${daysLeft} Tage verbleibend`}
@@ -345,11 +182,8 @@ export default function AdminDashboard() {
                         >
                             Fehler provozieren
                         </button>
-
                     </div>
                 </div>
-
-
             </div>
         </div>
     );

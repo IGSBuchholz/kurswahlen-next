@@ -81,22 +81,65 @@ export default function ConfigDashboard() {
         });
     };
 
-    const fetchStepData = async () => {
+    // Speichern der Konfiguration auf dem Server
+    const handleSave = async () => {
         try {
-            const response = await fetch('/crs/sample.json'); // Ersetze dies mit deiner URL
-            if (!response.ok) {
-                throw new Error(`HTTP-Fehler! Status: ${response.status}`);
-            }
-            const data = await response.json();
-            console.log("Fetched data:", data); // Debugging: Log the fetched data
-            setDataBeingEdited(data); // Setze die abgerufenen Daten
-            setElementCount(countElementsInStep(data.Steps)); // Set the count of elements in step 0
-            // Speichere die abgerufenen Daten in localStorage
-            localStorage.setItem("stepsData", JSON.stringify(data));
-        } catch (error) {
-            console.error("Fehler beim Abrufen der JSON-Daten:", error);
+            const res = await fetch("/api/admin-config/save", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(dataBeingEdited),
+            });
+            const result = await res.json();
+            if (!result.success) throw new Error(`[${result.step}] ${result.error}`);
+            alert("Konfiguration erfolgreich gespeichert.");
+        } catch (err) {
+            console.error(err);
+            alert("Fehler beim Speichern: " + err.message);
         }
     };
+
+    // Zurücksetzen auf Originalzustand (sample.json)
+    const handleReset = async () => {
+        try {
+            const res = await fetch("/api/admin-config/sample");
+            const json = await res.json();
+            setDataBeingEdited(json);
+            localStorage.setItem("stepsData", JSON.stringify(json));
+            alert("Zurückgesetzt auf Originalzustand.");
+        } catch (err) {
+            console.error(err);
+            alert("Fehler beim Zurücksetzen.");
+        }
+    };
+
+    // Wiederherstellen des letzten gespeicherten Stands
+    const handleRestoreLast = async () => {
+        try {
+            const res = await fetch("/api/admin-config/letzter-stand");
+            const json = await res.json();
+            setDataBeingEdited(json);
+            localStorage.setItem("stepsData", JSON.stringify(json));
+            alert("Letzter gespeicherter Stand wiederhergestellt.");
+        } catch (err) {
+            console.error(err);
+            alert("Fehler beim Wiederherstellen des letzten Stands.");
+        }
+    };
+
+    const fetchStepData = async () => {
+        try {
+            const response = await fetch("/api/admin-config/aktueller-stand");
+            if (!response.ok) throw new Error(`HTTP-Fehler! Status: ${response.status}`);
+            const data = await response.json();
+            console.log("Fetched data:", data);
+            setDataBeingEdited(data);
+            setElementCount(countElementsInStep(data.Steps));
+            localStorage.setItem("stepsData", JSON.stringify(data));
+        } catch (error) {
+        console.error("Fehler beim Abrufen der JSON-Daten:", error);
+        }
+    };
+
 
     // Berechnung der Position des Plus-Buttons
     const getPositionForPlusButton = () => {
@@ -643,6 +686,33 @@ export default function ConfigDashboard() {
                         ) : ""}
                     </div>
                 </div>
+                <div className="flex justify-between items-center mt-10">
+                {/* Zurücksetzen links */}
+                <button
+                    onClick={handleReset}
+                    className="bg-red-100 hover:bg-red-200 text-red-800 font-semibold px-4 py-2 rounded"
+                >
+                    🔄 Zurücksetzen
+                </button>
+
+                {/* Letzter Stand + Speichern rechts */}
+                <div className="flex gap-4">
+                    <button
+                    onClick={handleRestoreLast}
+                    className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium px-4 py-2 rounded"
+                    >
+                    Letzter Stand
+                    </button>
+                    <button
+                    onClick={handleSave}
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded"
+                    >
+                    ✅ Speichern
+                    </button>
+                </div>
+                </div>
+
+
             </div>
         </div>
     );
