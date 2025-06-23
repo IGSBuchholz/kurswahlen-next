@@ -51,6 +51,13 @@ export async function setter(req, res)  {
     if(!token || !token.isadmin) {
         return NextResponse.json({message: "NOT AUTHORIZED"}, {status: 401});
     }
+    // Parse the incoming rules engine data and store in the database
+    const rulesEngineData = await req.json();
+    await prisma.creationfiles.create({
+      data: {
+        data: rulesEngineData.engine,
+      },
+    });
     await redis.del("rulesengine_version")
     await redis.del("rulesengine")
 
