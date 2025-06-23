@@ -11,10 +11,6 @@ export default async function handler(req, res) {
     }
     console.log((await getVersion()).version)
     const results = await prisma.saves.findMany({where: {email: token.email, cfv: (await getVersion()).version}})
-    const update = await prisma.users.update({
-        where: {email: token.email},
-        data: {lastLoginDate: new Date().toISOString(), previousLoginDate: null}
-    })
     return NextResponse.json({message: "SUCCESS", results: results})
 }
 export { handler as GET }

@@ -200,6 +200,7 @@ export function StepUI({step, number = -1, initialContext = {}, setContext, setM
     useEffect(() => {
         subjectConfig.forEach((config) => {
             hashSubjectConfig.set(config.value, config)
+            console.log("hashSubjectConfig", hashSubjectConfig)
         })
     },[subjectConfig]);
 
@@ -244,6 +245,7 @@ export function StepUI({step, number = -1, initialContext = {}, setContext, setM
         setLocalContext(newMap);
         setContext(newMap);
         updateUI()
+        setHours(generateHours(newMap, allSteps, hashSubjectConfig, subjectConfig))
         let filledOut = stepEntriesInContext(localContext, number)
         if (filledOut === StepValues.length) {
             finalCheckConditions(step.Conditions, localContext, setMessages, messages, setCanProcced)
@@ -255,14 +257,13 @@ export function StepUI({step, number = -1, initialContext = {}, setContext, setM
 
 
     const updateUI = () => {
-        setHours(generateHours(localContext, allSteps))
+
         console.log("Step:",step)
         if(!StepValues){
             return;
         }
         setStepValuesUI(StepValues.map((stepValue, index) => {
             const {name, type, values, standardvalue} = stepValue;
-
             const processedValues = reprocessValues(values, name);
 
             let initialValue = standardvalue;
@@ -425,14 +426,32 @@ export function getPFachText(stepPath, allSteps) {
     return ""
 }
 
-export function generateHours(context, allSteps) {
+export function generateHours(context, allSteps, hashSubjectConfig = new Map, subjectConfig) {
+    console.log("CCC", context)
+    if(context.size > 0 && hashSubjectConfig.size === 0) {
+        subjectConfig.forEach((config) => {
+            hashSubjectConfig.set(config.value, config)
+        })
+    }
+
     console.log("generateHours", context)
     const subjects = []
     console.log("-------- GENERATE HOURS ---------")
+
     context.forEach((value, key) => {
+
+        if(hashSubjectConfig.has(value.value)) {
+            let overrideValues = hashSubjectConfig.get(value.value);
+            if(overrideValues.groups) {
+                value.groups = value.groups.concat(overrideValues.groups);
+            }
+            value.displayPosition = overrideValues.displayPosition;
+        }
+
         console.log("Key: ", (key));
         console.log("Value: ", value)
         let {hours, semester} = getSpecificHours(key, value, context, allSteps)
+
         console.log("specificHours", hours, semester)
         let displayPosition = "";
         if (value.displayPosition) {

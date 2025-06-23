@@ -324,6 +324,7 @@ export default function UsersDashboard() {
                                             />
                                             <h3 className="text-lg font-semibold text-center">{specificUserData.fullname}</h3>
                                             <h3 className="text-lg font-semibold text-center text-gray-400">{specificUserData.email}</h3>
+                                            <h3 className="text-lg font-semibold text-center text-gray-400">{new Date(specificUserData.lastLoginDate).toLocaleDateString()} {new Date(specificUserData.lastLoginDate).toLocaleTimeString()}</h3>
                                             <label className="flex items-center space-x-2">
                                     <span
                                         className={"inline bg-red-600 text-white p-0.5 rounded-md font-bold text-sm ml-1"}>ADMIN</span>
@@ -331,7 +332,9 @@ export default function UsersDashboard() {
                                                     type="checkbox"
                                                     checked={specificUserData.isadmin}
                                                     disabled={session.user.email.toLowerCase() == specificUserData.email.toLowerCase()}
-                                                    onChange={() => { setAdminChangePopup(true); }}
+                                                    onChange={() => {
+                                                        setAdminChangePopup(true);
+                                                    }}
                                                     readOnly
                                                     className="form-checkbox h-5 w-5 text-blue-600"
                                                 />

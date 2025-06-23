@@ -91,7 +91,7 @@ function Dashboard() {
                         <div className="text-4xl font-bold text-black mb-2 mt-2">
                             Hallo, <h1 className="text-blue-600 inline">{name ? getName() : "Loading..."}!</h1>
                         </div>
-                        <h4 className="" onClick={signOut}>Ausloggen</h4>
+                        <h4 className="cursor-pointer hover:underline" onClick={signOut}>Ausloggen</h4>
                     </header>
 
                     {/* Main Dashboard */}
